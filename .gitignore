@@ -1,2 +1,10 @@
 $ cat .gitignore
-/bin
+/*
+!/src
+!build.gradle
+!/gradle
+!gradlew
+!gradlew.bat
+!/lib
+!/resources
+!.gitignore
