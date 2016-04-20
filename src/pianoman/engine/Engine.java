@@ -9,13 +9,19 @@ import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import org.lwjgl.opengl.GLContext;
 
+import pianoman.engine.vecmath.Mat4;
 import pianoman.engine.vecmath.Vec3;
-
+/**
+ * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
+ * 
+ * note: You cannot call any opengl functions before first calling initialize() since it starts up OpenGL.
+ */
 public abstract class Engine {
 	private static long window;
 	
 	public static Mat4 view;
 	public static Mat4 projection = Mat4.perspective(45.0f, 1000/800, 0.1f, 100.0f);
+	
 	public static Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
 	public static Vec3 background = new Vec3(0.2f, 0.2f, 0.2f);
 	public static Camera camera = new Camera();
@@ -27,12 +33,16 @@ public abstract class Engine {
 	public static float deltaTime = 0.0f;
 	private static float lastFrame = 0.0f;
 	
+	//these are all classes that the main game must inherit
 	public abstract void setupGame();
 	
 	public abstract void tick();
 	
 	public abstract void render();
 	 
+	/**
+	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
+	 */
 	public void initialize() {
 		setupContext();
 		
@@ -68,6 +78,9 @@ public abstract class Engine {
 		camera.update();
 	}
 	
+	/**
+	 * does all that opengl context stuff at the very beginning.
+	 */
 	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("lib/native").toAbsolutePath().toString());
 		
@@ -95,6 +108,10 @@ public abstract class Engine {
 		glfwSetMouseButtonCallback(window, mouseCallback);
 	}
 	
+	/**
+	 * Clears the screen with the current clear color just before rendering.
+	 * Think it's not that important? Comment it out and see for yourself ;)
+	 */
 	public void clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}

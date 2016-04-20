@@ -5,6 +5,9 @@ import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 
+/**
+ * These are just some handy functions for turning arrays into buffers.
+ */
 public class GLBuffers {
 	public static FloatBuffer StaticBuffer(float[] contents) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(contents.length);

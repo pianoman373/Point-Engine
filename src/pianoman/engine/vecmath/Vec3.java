@@ -3,11 +3,6 @@ package pianoman.engine.vecmath;
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
-/**
- * This class represents a (x,y,z)-Vector. GLSL equivalent to vec3.
- *
- * @author Heiko Brumme
- */
 public class Vec3 {
 
     public float x;
@@ -25,10 +20,6 @@ public class Vec3 {
 
     /**
      * Creates a 3-tuple vector with specified values.
-     *
-     * @param x x value
-     * @param y y value
-     * @param z z value
      */
     public Vec3(float x, float y, float z) {
         this.x = x;
@@ -48,8 +39,6 @@ public class Vec3 {
 
     /**
      * Calculates the squared length of the vector.
-     *
-     * @return Squared length of this vector
      */
     public float lengthSquared() {
         return x * x + y * y + z * z;
@@ -57,8 +46,6 @@ public class Vec3 {
 
     /**
      * Calculates the length of the vector.
-     *
-     * @return Length of this vector
      */
     public float length() {
         return (float) Math.sqrt(lengthSquared());
@@ -66,8 +53,6 @@ public class Vec3 {
 
     /**
      * Normalizes the vector.
-     *
-     * @return Normalized vector
      */
     public Vec3 normalize() {
         float length = length();
@@ -76,9 +61,6 @@ public class Vec3 {
 
     /**
      * Adds this vector to another vector.
-     *
-     * @param other The other vector
-     * @return Sum of this + other
      */
     public Vec3 add(Vec3 other) {
         float x = this.x + other.x;
@@ -86,7 +68,9 @@ public class Vec3 {
         float z = this.z + other.z;
         return new Vec3(x, y, z);
     }
-    
+    /**
+     * Multiplies this vector to another vector.
+     */
     public Vec3 multiply(Vec3 other) {
         float x = this.x * other.x;
         float y = this.y * other.y;
@@ -94,6 +78,9 @@ public class Vec3 {
         return new Vec3(x, y, z);
     }
     
+    /**
+     * Multiplies this vector to a scalar.
+     */
     public Vec3 multiply(float scalar) {
         float x = this.x * scalar;
         float y = this.y * scalar;
@@ -103,51 +90,27 @@ public class Vec3 {
 
     /**
      * Negates this vector.
-     *
-     * @return Negated vector
      */
     public Vec3 negate() {
-        return scale(-1f);
+        return multiply(-1f);
     }
 
     /**
      * Subtracts this vector from another vector.
-     *
-     * @param other The other vector
-     * @return Difference of this - other
      */
     public Vec3 subtract(Vec3 other) {
         return this.add(other.negate());
     }
 
     /**
-     * Multiplies a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     * @return Scalar product of this * scalar
-     */
-    public Vec3 scale(float scalar) {
-        float x = this.x * scalar;
-        float y = this.y * scalar;
-        float z = this.z * scalar;
-        return new Vec3(x, y, z);
-    }
-
-    /**
      * Divides a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     * @return Scalar quotient of this / scalar
      */
     public Vec3 divide(float scalar) {
-        return scale(1f / scalar);
+        return multiply(1f / scalar);
     }
 
     /**
      * Calculates the dot product of this vector with another vector.
-     *
-     * @param other The other vector
-     * @return Dot product of this * other
      */
     public float dot(Vec3 other) {
         return this.x * other.x + this.y * other.y + this.z * other.z;
@@ -155,9 +118,6 @@ public class Vec3 {
 
     /**
      * Calculates the dot product of this vector with another vector.
-     *
-     * @param other The other vector
-     * @return Cross product of this x other
      */
     public Vec3 cross(Vec3 other) {
         float x = this.y * other.z - this.z * other.y;
@@ -169,19 +129,13 @@ public class Vec3 {
     /**
      * Calculates a linear interpolation between this vector with another
      * vector.
-     *
-     * @param other The other vector
-     * @param alpha The alpha value, must be between 0.0 and 1.0
-     * @return Linear interpolated vector
      */
     public Vec3 lerp(Vec3 other, float alpha) {
-        return this.scale(1f - alpha).add(other.scale(alpha));
+        return this.multiply(1f - alpha).add(other.multiply(alpha));
     }
 
     /**
      * Returns the Buffer representation of this vector.
-     *
-     * @return Vector as FloatBuffer
      */
     public FloatBuffer getBuffer() {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(3);

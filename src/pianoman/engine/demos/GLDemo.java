@@ -18,14 +18,17 @@ import com.bulletphysics.linearmath.Transform;
 
 import pianoman.engine.DirectionalLight;
 import pianoman.engine.Engine;
-import pianoman.engine.Mat4;
 import pianoman.engine.Mesh;
 import pianoman.engine.PointLight;
 import pianoman.engine.Primitives;
 import pianoman.engine.Shader;
 import pianoman.engine.Texture;
+import pianoman.engine.vecmath.Mat4;
 import pianoman.engine.vecmath.Vec3;
 
+/**
+ * A demo showing off 3D rendering with openGL and lighting shaders.
+ */
 public class GLDemo extends Engine {
 	private static Vec3 cubePositions[] = {
 			  new Vec3( 0.0f,  0.0f,  0.0f), 
@@ -56,11 +59,13 @@ public class GLDemo extends Engine {
 
 	@Override
 	public void setupGame() {
+		//Load all our shaders and textures from disk.
 		containerTexture = new Texture("resources/textures/container2.png");
 		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
 		
+		//Create the cube mesh object with our vertices.
 		cubeMesh = new Mesh(Primitives.cubeVertices);
 		
 		setupPhysics();
@@ -68,6 +73,7 @@ public class GLDemo extends Engine {
 
 	@Override
 	public void tick() {
+		//Move the light around and tell bullet to tick.
 		lightPos.x = (float) (Math.sin(glfwGetTime()) * 10);
 		lightPos.z = (float) (Math.cos(glfwGetTime()) * 5);
 		dynamicsWorld.stepSimulation(1 / 100.f, 10);
@@ -75,25 +81,33 @@ public class GLDemo extends Engine {
 
 	@Override
 	public void render() {
+		//Bind two textures in different indexes so the shader has both.
 		containerTexture.bind(0);
 		containerSpecTexture.bind(1);
 		
+		//The transform of the falling cube.
 		Transform trans = new Transform();
 		rigidBody.getMotionState().getWorldTransform(trans);
 		
+		//Bind our shader.
 		standardShader.bind();
 		
+		//Send material parameters and the global ambient as well.
 		standardShader.uniformVec3("ambient", ambient);
 		standardShader.uniformInt("material.diffuse", 0);
 		standardShader.uniformInt("material.specular", 1);
 		standardShader.uniformFloat("material.shininess", 16.0f);
 		
+		//Our shader currently only has one variable for directional lights. It's not like we would use a lot anyways
+		//unless we're on tatooine.
 		DirectionalLight dirLight = new DirectionalLight(new Vec3(-0.2f, -1.0f, -0.3f), new Vec3(1f, 0.9f, 0.8f));
 		standardShader.uniformDirectionalLight("dirLight", dirLight);
 		
+		//Dur shader currently only has 2 spaces for point lights hardcoded in.
 		standardShader.uniformPointLight("pointLights[0]", new PointLight(lightPos, new Vec3(1f, 1f, 1f), 0.09f, 0.032f));
 		standardShader.uniformPointLight("pointLights[1]", new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f));
 		
+		//Dind the mesh and then draw it 10 times but with different model uniforms.
 		cubeMesh.bind();
 		for(int i = 0; i < 10; i++)
 		{
@@ -105,25 +119,34 @@ public class GLDemo extends Engine {
 		  cubeMesh.draw();
 		}
 		
+		//Draw the big one in the middle
 		standardShader.uniformMat4("model", Mat4.translate(0, -5, 0).multiply(Mat4.scale(3, 3, 3)));
 		cubeMesh.draw();
 		
+		//Draw the falling one.
 		standardShader.uniformMat4("model", Mat4.translate(trans.origin.x, trans.origin.y, trans.origin.z));
 		cubeMesh.draw();
 		
+		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.
 		lightShader.bind();
+		
+		//Draw the white light at it's current position.
 		lightShader.uniformMat4("model", Mat4.translate(lightPos.x, lightPos.y, lightPos.z).multiply(Mat4.scale(0.2f, 0.2f, 0.2f)));
 		lightShader.uniformVec3("lightColor", new Vec3(1, 1, 1));
 		cubeMesh.draw();
 		
+		//Draw the red light in a static position
 		lightShader.uniformMat4("model", Mat4.translate(3.0f, 1.0f, -4.0f).multiply(Mat4.scale(0.2f, 0.2f, 0.2f)));
 		lightShader.uniformVec3("lightColor", new Vec3(1, 0, 0));
 		cubeMesh.draw();
 		
+		//Now we can unbind everything since we're done with the cube and the light shader.
+		//If we had more primitives to draw, we could bind them now and start the process again.
 		lightShader.unBind();
-		
 		cubeMesh.unBind();
 		
+		
+		//some old debug rendering
 		/*GL11.glMatrixMode(GL_MODELVIEW);
 		GL11.glLoadMatrixf(view.getBuffer());
 		
@@ -138,6 +161,9 @@ public class GLDemo extends Engine {
 	}
 	
 	private static void setupPhysics() {
+		//Not really sure what any of this does yet... I was mainly copying and pasting. What I do
+		//know is that is sets up a good bullet simulation.
+		
 		BroadphaseInterface broadphase = new DbvtBroadphase();
 
 		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();

@@ -1,9 +1,6 @@
 package pianoman.engine;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.*;
 
 import pianoman.engine.vecmath.Vec3;
 
@@ -16,7 +13,12 @@ public class Camera {
 	
 	private static float lastX = 400;
 	private static float lastY = 300;
-	
+	/**
+	 * Called by the game loop every frame. When we make GameObjects they'll all have this functionality for multiple objects. For now it's called directly
+	 * from the loop.
+	 * 
+	 * TODO: this update it's own object instead of updating Engine.camera
+	 */
 	public void update() {
 		front.x = (float) (Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw)));
 		front.y = (float) Math.sin(Math.toRadians(pitch));

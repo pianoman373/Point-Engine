@@ -19,6 +19,11 @@ import org.lwjgl.BufferUtils;
 public class Texture {
 	private int id;
 	
+	/**
+	 * Creates a new texture object that can be bound later, from the specified path.
+	 * This actually uses the entire path including the resources folder, whereas shader
+	 * already appends the resources/shaders folder. Maybe we should do the same here?
+	 */
 	public Texture(String path) {
 		id = glGenTextures();
 		//System.out.println(handle);
@@ -36,16 +41,26 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
+	/**
+	 * Binds the texture for rendering in the first texture location.
+	 */
 	public void bind() {
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 	
+	/**
+	 * Binds the texture for rendering in the specified texture location. Multiple textures can be sent
+	 * to the same shader if they are in different locations.
+	 */
 	public void bind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_2D, id);
 		glActiveTexture(GL_TEXTURE0);
 	}
 	
+	/**
+	 * All the IO stuff here.
+	 */
 	private static RawImage getRawImage(String path) {
 		InputStream in;
 		BufferedImage image;
@@ -94,6 +109,10 @@ public class Texture {
 		return new RawImage(buffer, width, height);
 	}
 }
+
+/**
+ * Don't you wish java had multiple return values? I do, that way this class wouldn't have to exist.
+ */
 class RawImage {
 	public ByteBuffer data;
 	public int width;

@@ -3,11 +3,6 @@ package pianoman.engine.vecmath;
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 
-/**
- * This class represents a (x,y,z,w)-Vector. GLSL equivalent to vec4.
- *
- * @author Heiko Brumme
- */
 public class Vec4 {
 
     public float x;
@@ -27,11 +22,6 @@ public class Vec4 {
 
     /**
      * Creates a 4-tuple vector with specified values.
-     *
-     * @param x x value
-     * @param y y value
-     * @param z z value
-     * @param w w value
      */
     public Vec4(float x, float y, float z, float w) {
         this.x = x;
@@ -42,8 +32,6 @@ public class Vec4 {
 
     /**
      * Calculates the squared length of the vector.
-     *
-     * @return Squared length of this vector
      */
     public float lengthSquared() {
         return x * x + y * y + z * z + w * w;
@@ -51,8 +39,6 @@ public class Vec4 {
 
     /**
      * Calculates the length of the vector.
-     *
-     * @return Length of this vector
      */
     public float length() {
         return (float) Math.sqrt(lengthSquared());
@@ -60,8 +46,6 @@ public class Vec4 {
 
     /**
      * Normalizes the vector.
-     *
-     * @return Normalized vector
      */
     public Vec4 normalize() {
         float length = length();
@@ -70,9 +54,6 @@ public class Vec4 {
 
     /**
      * Adds this vector to another vector.
-     *
-     * @param other The other vector
-     * @return Sum of this + other
      */
     public Vec4 add(Vec4 other) {
         float x = this.x + other.x;
@@ -84,8 +65,6 @@ public class Vec4 {
 
     /**
      * Negates this vector.
-     *
-     * @return Negated vector
      */
     public Vec4 negate() {
         return scale(-1f);
@@ -93,9 +72,6 @@ public class Vec4 {
 
     /**
      * Subtracts this vector from another vector.
-     *
-     * @param other The other vector
-     * @return Difference of this - other
      */
     public Vec4 subtract(Vec4 other) {
         return this.add(other.negate());
@@ -103,9 +79,6 @@ public class Vec4 {
 
     /**
      * Multiplies a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     * @return Scalar product of this * scalar
      */
     public Vec4 scale(float scalar) {
         float x = this.x * scalar;
@@ -117,9 +90,6 @@ public class Vec4 {
 
     /**
      * Divides a vector by a scalar.
-     *
-     * @param scalar Scalar to multiply
-     * @return Scalar quotient of this / scalar
      */
     public Vec4 divide(float scalar) {
         return scale(1f / scalar);
@@ -127,9 +97,6 @@ public class Vec4 {
 
     /**
      * Calculates the dot product of this vector with another vector.
-     *
-     * @param other The other vector
-     * @return Dot product of this * other
      */
     public float dot(Vec4 other) {
         return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;
@@ -138,10 +105,6 @@ public class Vec4 {
     /**
      * Calculates a linear interpolation between this vector with another
      * vector.
-     *
-     * @param other The other vector
-     * @param alpha The alpha value, must be between 0.0 and 1.0
-     * @return Linear interpolated vector
      */
     public Vec4 lerp(Vec4 other, float alpha) {
         return this.scale(1f - alpha).add(other.scale(alpha));
@@ -149,8 +112,6 @@ public class Vec4 {
 
     /**
      * Returns the Buffer representation of this vector.
-     *
-     * @return Vector as FloatBuffer
      */
     public FloatBuffer getBuffer() {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(4);

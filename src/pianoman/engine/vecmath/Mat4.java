@@ -1,11 +1,8 @@
-package pianoman.engine;
+package pianoman.engine.vecmath;
 
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
-
-import pianoman.engine.vecmath.Vec3;
-import pianoman.engine.vecmath.Vec4;
 
 /**
  * This class represents a 4x4-Matrix. GLSL equivalent to mat4.
@@ -28,11 +25,6 @@ public class Mat4 {
 
     /**
      * Creates a 4x4 matrix with specified columns.
-     *
-     * @param col1 Vector with values of the first column
-     * @param col2 Vector with values of the second column
-     * @param col3 Vector with values of the third column
-     * @param col4 Vector with values of the fourth column
      */
     public Mat4(Vec4 col1, Vec4 col2, Vec4 col3, Vec4 col4) {
         m00 = col1.x;
@@ -81,9 +73,6 @@ public class Mat4 {
 
     /**
      * Adds this matrix to another matrix.
-     *
-     * @param other The other matrix
-     * @return Sum of this + other
      */
     public Mat4 add(Mat4 other) {
         Mat4 result = new Mat4();
@@ -113,8 +102,6 @@ public class Mat4 {
 
     /**
      * Negates this matrix.
-     *
-     * @return Negated matrix
      */
     public Mat4 negate() {
         return multiply(-1f);
@@ -122,9 +109,6 @@ public class Mat4 {
 
     /**
      * Subtracts this matrix from another matrix.
-     *
-     * @param other The other matrix
-     * @return Difference of this - other
      */
     public Mat4 subtract(Mat4 other) {
         return this.add(other.negate());
@@ -132,9 +116,6 @@ public class Mat4 {
 
     /**
      * Multiplies this matrix with a scalar.
-     *
-     * @param scalar The scalar
-     * @return Scalar product of this * scalar
      */
     public Mat4 multiply(float scalar) {
         Mat4 result = new Mat4();
@@ -164,9 +145,6 @@ public class Mat4 {
 
     /**
      * Multiplies this matrix to a vector.
-     *
-     * @param vector The vector
-     * @return Vector product of this * other
      */
     public Vec4 multiply(Vec4 vector) {
         float x = this.m00 * vector.x + this.m01 * vector.y + this.m02 * vector.z + this.m03 * vector.w;
@@ -178,9 +156,6 @@ public class Mat4 {
 
     /**
      * Multiplies this matrix to another matrix.
-     *
-     * @param other The other matrix
-     * @return Matrix product of this * other
      */
     public Mat4 multiply(Mat4 other) {
         Mat4 result = new Mat4();
@@ -210,8 +185,6 @@ public class Mat4 {
 
     /**
      * Transposes this matrix.
-     *
-     * @return Transposed matrix
      */
     public Mat4 transpose() {
         Mat4 result = new Mat4();
@@ -279,8 +252,6 @@ public class Mat4 {
 
     /**
      * Returns the Buffer representation of this vector.
-     *
-     * @return Vector as FloatBuffer
      */
     public FloatBuffer getBuffer() {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
@@ -295,14 +266,6 @@ public class Mat4 {
     /**
      * Creates a orthographic projection matrix. Similar to
      * <code>glOrtho(left, right, bottom, top, near, far)</code>.
-     *
-     * @param left Coordinate for the left vertical clipping pane
-     * @param right Coordinate for the right vertical clipping pane
-     * @param bottom Coordinate for the bottom horizontal clipping pane
-     * @param top Coordinate for the bottom horizontal clipping pane
-     * @param near Coordinate for the near depth clipping pane
-     * @param far Coordinate for the far depth clipping pane
-     * @return Orthographic matrix
      */
     public static Mat4 orthographic(float left, float right, float bottom, float top, float near, float far) {
         Mat4 ortho = new Mat4();
@@ -324,14 +287,6 @@ public class Mat4 {
     /**
      * Creates a perspective projection matrix. Similar to
      * <code>glFrustum(left, right, bottom, top, near, far)</code>.
-     *
-     * @param left Coordinate for the left vertical clipping pane
-     * @param right Coordinate for the right vertical clipping pane
-     * @param bottom Coordinate for the bottom horizontal clipping pane
-     * @param top Coordinate for the bottom horizontal clipping pane
-     * @param near Coordinate for the near depth clipping pane, must be positive
-     * @param far Coordinate for the far depth clipping pane, must be positive
-     * @return Perspective matrix
      */
     public static Mat4 frustum(float left, float right, float bottom, float top, float near, float far) {
         Mat4 frustum = new Mat4();
@@ -356,14 +311,8 @@ public class Mat4 {
     /**
      * Creates a perspective projection matrix. Similar to
      * <code>gluPerspective(fovy, aspec, zNear, zFar)</code>.
-     *
-     * @param fovy Field of view angle in degrees
-     * @param aspect The aspect ratio is the ratio of width to height
-     * @param near Distance from the viewer to the near clipping plane, must be
      * positive
-     * @param far Distance from the viewer to the far clipping plane, must be
      * positive
-     * @return Perspective matrix
      */
     public static Mat4 perspective(float fovy, float aspect, float near, float far) {
         Mat4 perspective = new Mat4();
@@ -383,11 +332,6 @@ public class Mat4 {
     /**
      * Creates a translation matrix. Similar to
      * <code>glTranslate(x, y, z)</code>.
-     *
-     * @param x x coordinate of translation vector
-     * @param y y coordinate of translation vector
-     * @param z z coordinate of translation vector
-     * @return Translation matrix
      */
     public static Mat4 translate(float x, float y, float z) {
         Mat4 translation = new Mat4();
@@ -402,12 +346,6 @@ public class Mat4 {
     /**
      * Creates a rotation matrix. Similar to
      * <code>glRotate(angle, x, y, z)</code>.
-     *
-     * @param angle Angle of rotation in degrees
-     * @param x x coordinate of the rotation vector
-     * @param y y coordinate of the rotation vector
-     * @param z z coordinate of the rotation vector
-     * @return Rotation matrix
      */
     public static Mat4 rotate(float angle, float x, float y, float z) {
         Mat4 rotation = new Mat4();
@@ -437,11 +375,6 @@ public class Mat4 {
 
     /**
      * Creates a scaling matrix. Similar to <code>glScale(x, y, z)</code>.
-     *
-     * @param x Scale factor along the x coordinate
-     * @param y Scale factor along the y coordinate
-     * @param z Scale factor along the z coordinate
-     * @return Scaling matrix
      */
     public static Mat4 scale(float x, float y, float z) {
         Mat4 scaling = new Mat4();

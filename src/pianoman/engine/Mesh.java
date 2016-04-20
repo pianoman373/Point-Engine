@@ -15,6 +15,12 @@ public class Mesh {
 	
 	private int length;
 	
+	/**
+	 * Makes a mesh object from specified mesh data. Just like Texture and Shader, bind before rendering.
+	 * 
+	 * TODO: Currently positions, normals, and uv's are all in the verices array since OpenGL likes them in one big buffer.
+	 * someday we should have them as seperate arrays and combine them in here.
+	 */
 	public Mesh(float[] vertices, int[] indices) {
 		VAO = glGenVertexArrays();
 		glBindVertexArray(VAO);
@@ -45,6 +51,9 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	/**
+	 * Same as first constructor except without indices, don't use this yet.
+	 */
 	public Mesh(float[] vertices) {
 		VAO = glGenVertexArrays();
 		glBindVertexArray(VAO);
@@ -71,10 +80,17 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	/**
+	 * Binds the model. The usual workflow for rendering the same model multiple times would be to bind, enter position in uniforms,
+	 * and then draw. Then to draw a new model, just re-enter a new position again. No need for unBinding after every draw (as long as you're drawing the same mesh).
+	 */
 	public void bind() {
 		glBindVertexArray(VAO);
 	}
 	
+	/**
+	 * Same story as Shader.unbind()
+	 */
 	public void unBind() {
 		glBindVertexArray(0);
 	}
