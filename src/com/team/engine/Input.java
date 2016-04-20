@@ -1,4 +1,4 @@
-package pianoman.engine;
+package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;

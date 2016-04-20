@@ -1,4 +1,4 @@
-package pianoman.engine;
+package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -20,7 +20,7 @@ public abstract class Engine {
 	private static long window;
 	
 	public static Mat4 view;
-	public static Mat4 projection = Mat4.perspective(45.0f, 1000/800, 0.1f, 100.0f);
+	public static Mat4 projection = Mat4.perspective(45.0f, 1000/800, 0.1f, 1000.0f);
 	
 	public static Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
 	public static Vec3 background = new Vec3(0.2f, 0.2f, 0.2f);

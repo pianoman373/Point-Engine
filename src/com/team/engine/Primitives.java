@@ -1,4 +1,4 @@
-package pianoman.engine;
+package com.team.engine;
 
 public class Primitives {
 	public static float[] cubeVertices = new float[] {

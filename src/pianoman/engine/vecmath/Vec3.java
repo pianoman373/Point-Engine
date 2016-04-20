@@ -36,6 +36,45 @@ public class Vec3 {
     public Vec3(double x, double y, double z) {
     	this((float)x, (float)y, (float)z);
     }
+    
+    /**
+     * Rotates around the X axis.
+     */
+    public Vec3 rotatePitch(float pitch)
+    {
+        float cosine = (float)Math.cos(Math.toRadians(pitch));
+        float sine = (float)Math.sin(Math.toRadians(pitch));
+        float newX = this.x;
+        float newY = this.y * cosine + this.z * sine;
+        float newZ = this.z * cosine - this.y * sine;
+        return new Vec3(newX, newY, newZ);
+    }
+    
+    /**
+     * Rotates around the Y axis.
+     */
+    public Vec3 rotateYaw(float yaw)
+    {
+        float cosine = (float)Math.cos(Math.toRadians(yaw));
+        float sine = (float)Math.sin(Math.toRadians(yaw));
+        float newX = this.x * cosine + this.z * sine;
+        float newY = this.y;
+        float newZ = this.z * cosine - this.x * sine;
+        return new Vec3(newX, newY, newZ);
+    }
+    
+    /**
+     * Rotates around the X axis.
+     */
+    public Vec3 rotateRoll(float roll)
+    {
+        float cosine = (float)Math.cos(Math.toRadians(roll));
+        float sine = (float)Math.sin(Math.toRadians(roll));
+        float newX = this.x * cosine + this.y * sine;
+        float newY = this.y * cosine + this.x * sine;
+        float newZ = this.z;
+        return new Vec3(newX, newY, newZ);
+    }
 
     /**
      * Calculates the squared length of the vector.

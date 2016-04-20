@@ -15,14 +15,14 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
+import com.team.engine.DirectionalLight;
+import com.team.engine.Engine;
+import com.team.engine.Mesh;
+import com.team.engine.PointLight;
+import com.team.engine.Primitives;
+import com.team.engine.Shader;
+import com.team.engine.Texture;
 
-import pianoman.engine.DirectionalLight;
-import pianoman.engine.Engine;
-import pianoman.engine.Mesh;
-import pianoman.engine.PointLight;
-import pianoman.engine.Primitives;
-import pianoman.engine.Shader;
-import pianoman.engine.Texture;
 import pianoman.engine.vecmath.Mat4;
 import pianoman.engine.vecmath.Vec3;
 
@@ -31,16 +31,22 @@ import pianoman.engine.vecmath.Vec3;
  */
 public class GLDemo extends Engine {
 	private static Vec3 cubePositions[] = {
-			  new Vec3( 0.0f,  0.0f,  0.0f), 
-			  new Vec3( 2.0f,  5.0f, -15.0f), 
-			  new Vec3(-1.5f, -2.2f, -2.5f),  
-			  new Vec3(-3.8f, -2.0f, -12.3f),  
-			  new Vec3( 2.4f, -0.4f, -3.5f),  
-			  new Vec3(-1.7f,  3.0f, -7.5f),  
-			  new Vec3( 1.3f, -2.0f, -2.5f),  
-			  new Vec3( 1.5f,  2.0f, -2.5f), 
-			  new Vec3( 1.5f,  0.2f, -1.5f), 
-			  new Vec3(-1.3f,  1.0f, -1.5f)  
+		new Vec3( 2.0f,  5.0f, -15.0f), 
+		new Vec3(-1.5f, -2.2f, -2.5f),  
+		new Vec3(-3.8f, -2.0f, -12.3f),  
+		new Vec3( 2.4f, -0.4f, -3.5f),  
+		new Vec3(-1.7f,  3.0f, -7.5f),  
+		new Vec3( 1.3f, -2.0f, -2.5f),  
+		new Vec3( 1.5f,  2.0f, -2.5f), 
+		new Vec3( 1.5f,  0.2f, -1.5f), 
+		new Vec3(-1.3f,  1.0f, -1.5f)  
+	};
+	
+	private static PointLight lights[] = {
+		new PointLight(new Vec3(-1, 0, -3), new Vec3(1f, 1f, 1f), 0.09f, 0.032f),
+		new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f),
+		new PointLight(new Vec3(-1.0f, -5.0f, 4.0f), new Vec3(1f, 0.5f, 0f), 0.09f, 0.032f),
+		new PointLight(new Vec3(5.0f, 1.0f, 2.0f), new Vec3(0f, 0.5f, 1f), 0.09f, 0.032f)
 	};
 	
 	private static RigidBody rigidBody;
@@ -93,7 +99,7 @@ public class GLDemo extends Engine {
 		standardShader.bind();
 		
 		//Send material parameters and the global ambient as well.
-		standardShader.uniformVec3("ambient", ambient);
+		standardShader.uniformVec3("ambient", new Vec3(0.01f, 0.01f, 0.01f));
 		standardShader.uniformInt("material.diffuse", 0);
 		standardShader.uniformInt("material.specular", 1);
 		standardShader.uniformFloat("material.shininess", 16.0f);
@@ -103,13 +109,17 @@ public class GLDemo extends Engine {
 		DirectionalLight dirLight = new DirectionalLight(new Vec3(-0.2f, -1.0f, -0.3f), new Vec3(1f, 0.9f, 0.8f));
 		standardShader.uniformDirectionalLight("dirLight", dirLight);
 		
-		//Dur shader currently only has 2 spaces for point lights hardcoded in.
-		standardShader.uniformPointLight("pointLights[0]", new PointLight(lightPos, new Vec3(1f, 1f, 1f), 0.09f, 0.032f));
-		standardShader.uniformPointLight("pointLights[1]", new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f));
+		//Our shader currently only has 2 spaces for point lights hardcoded in.
+		standardShader.uniformInt("pointLightCount", lights.length);
+		for (int i = 0; i < lights.length; i++) {
+			standardShader.uniformPointLight("pointLights[" + i + "]", lights[i]);
+		}
+		//standardShader.uniformPointLight("pointLights[0]", new PointLight(lightPos, new Vec3(1f, 1f, 1f), 0.09f, 0.032f));
+		//standardShader.uniformPointLight("pointLights[1]", new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f));
 		
-		//Dind the mesh and then draw it 10 times but with different model uniforms.
+		//Bind the mesh and then draw it 10 times but with different model uniforms.
 		cubeMesh.bind();
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < cubePositions.length; i++)
 		{
 		  Mat4 model = Mat4.translate(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
 		  float angle = 20.0f * i;
@@ -120,7 +130,7 @@ public class GLDemo extends Engine {
 		}
 		
 		//Draw the big one in the middle
-		standardShader.uniformMat4("model", Mat4.translate(0, -5, 0).multiply(Mat4.scale(3, 3, 3)));
+		standardShader.uniformMat4("model", Mat4.translate(0, -55, 0).multiply(Mat4.scale(100, 100, 100)));
 		cubeMesh.draw();
 		
 		//Draw the falling one.
@@ -130,15 +140,11 @@ public class GLDemo extends Engine {
 		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.
 		lightShader.bind();
 		
-		//Draw the white light at it's current position.
-		lightShader.uniformMat4("model", Mat4.translate(lightPos.x, lightPos.y, lightPos.z).multiply(Mat4.scale(0.2f, 0.2f, 0.2f)));
-		lightShader.uniformVec3("lightColor", new Vec3(1, 1, 1));
-		cubeMesh.draw();
-		
-		//Draw the red light in a static position
-		lightShader.uniformMat4("model", Mat4.translate(3.0f, 1.0f, -4.0f).multiply(Mat4.scale(0.2f, 0.2f, 0.2f)));
-		lightShader.uniformVec3("lightColor", new Vec3(1, 0, 0));
-		cubeMesh.draw();
+		for (PointLight light : lights) {
+			lightShader.uniformMat4("model", Mat4.translate(light.position.x, light.position.y, light.position.z).multiply(Mat4.scale(0.2f, 0.2f, 0.2f)));
+			lightShader.uniformVec3("lightColor", light.color);
+			cubeMesh.draw();
+		}
 		
 		//Now we can unbind everything since we're done with the cube and the light shader.
 		//If we had more primitives to draw, we could bind them now and start the process again.
@@ -177,13 +183,14 @@ public class GLDemo extends Engine {
 		
 		CollisionShape boxCollisionShape = new BoxShape(new Vector3f(1.0f, 1.0f, 1.0f));
 		CollisionShape boxCollisionShape2 = new BoxShape(new Vector3f(3.0f, 3.0f, 3.0f));
-		DefaultMotionState motionstate = new DefaultMotionState(new Transform());
 		
+		//the little box
+		DefaultMotionState motionstate = new DefaultMotionState(new Transform());
 		rigidBody = new RigidBody(1, motionstate, boxCollisionShape, new Vector3f(0,0,0));
 		dynamicsWorld.addRigidBody(rigidBody);
 		
 		
-		
+		//the big box
 		Transform trans = new Transform();
 		trans.origin.y = -4f;
 		DefaultMotionState motionstate2 = new DefaultMotionState(trans);

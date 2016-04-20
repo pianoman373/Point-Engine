@@ -1,4 +1,4 @@
-package pianoman.engine;
+package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -9,6 +9,7 @@ public class Camera {
 	public Vec3 front = new Vec3(0.0f, 0.0f, 0.0f);
 	public float pitch = 0.0f;
 	public float yaw = -90.0f;
+	public float roll = 0;
 	public Vec3 up = new Vec3(0.0f, 1.0f, 0.0f);
 	
 	private static float lastX = 400;
@@ -27,7 +28,7 @@ public class Camera {
 		front = front.normalize();
 
 		
-		float cameraSpeed = 5.0f * Engine.deltaTime;
+		float cameraSpeed = 20.0f * Engine.deltaTime;
 	    if(Input.isKeyDown(GLFW_KEY_W)) {
 	        position = position.add((front.multiply(cameraSpeed)));
 	    }
@@ -40,6 +41,20 @@ public class Camera {
 	    if(Input.isKeyDown(GLFW_KEY_D)) {
 	    	position = position.add(((front.cross(up)).normalize()).multiply(cameraSpeed));
 	    }
+	    if(Input.isKeyDown(GLFW_KEY_Q)) {
+	    	//roll += 0.5f;
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_E)) {
+	    	///roll -= 0.5f;
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_R)) {
+	    	position = position.add(new Vec3(0, cameraSpeed, 0));
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_F)) {
+	    	position = position.add(new Vec3(0, -cameraSpeed, 0));
+	    }
+	    
+	    up = new Vec3(0.0f, 1.0f, 0.0f).rotateRoll(roll);
 	    
 	    if (Input.mouseGrabbed == true) {
 			if(Input.firstMouse)
@@ -57,9 +72,11 @@ public class Camera {
 			float sensitivity = 0.05f;
 			xoffset *= sensitivity;
 			yoffset *= sensitivity;
+			
+			Vec3 offsetVec = new Vec3(xoffset, yoffset, 0).rotateRoll(roll);
 
-			Engine.camera.yaw   += xoffset;
-			Engine.camera.pitch += yoffset;  
+			Engine.camera.yaw   += offsetVec.x;
+			Engine.camera.pitch += offsetVec.y;
 
 			if(Engine.camera.pitch > 89.0f)
 				Engine.camera.pitch =  89.0f;
