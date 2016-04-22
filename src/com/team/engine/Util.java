@@ -1,8 +1,8 @@
 package com.team.engine;
 
-import pianoman.engine.vecmath.Mat4;
-import pianoman.engine.vecmath.Vec3;
-import pianoman.engine.vecmath.Vec4;
+import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Vec4;
 
 public class Util {
 	//yeah.... this is a mess from when I tried to do raytracing on my own. We have bullet now so don't worry about this.

@@ -9,8 +9,8 @@ import java.nio.file.Paths;
 import javax.swing.JOptionPane;
 import org.lwjgl.opengl.GLContext;
 
-import pianoman.engine.vecmath.Mat4;
-import pianoman.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec3;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
  * 

@@ -9,9 +9,9 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import pianoman.engine.vecmath.Mat4;
-import pianoman.engine.vecmath.Vec3;
-import pianoman.engine.vecmath.Vec4;
+import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Vec4;
 
 /**
  * Main class for handling shaders and using them as objects.

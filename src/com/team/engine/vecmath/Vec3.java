@@ -1,4 +1,4 @@
-package pianoman.engine.vecmath;
+package com.team.engine.vecmath;
 
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;

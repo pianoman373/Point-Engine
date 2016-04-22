@@ -2,7 +2,7 @@ package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-import pianoman.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Vec3;
 
 public class Camera {
 	public Vec3 position = new Vec3(0.0f, 0.0f, 5.0f);

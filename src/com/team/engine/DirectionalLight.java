@@ -1,6 +1,6 @@
 package com.team.engine;
 
-import pianoman.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Vec3;
 
 /**
  *	Directional light class for sending to our default shader's uniforms.

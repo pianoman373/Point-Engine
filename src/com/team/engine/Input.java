@@ -7,7 +7,7 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
-import pianoman.engine.vecmath.Vec2;
+import com.team.engine.vecmath.Vec2;
 
 public class Input {
 	private static boolean isWireframe = false;

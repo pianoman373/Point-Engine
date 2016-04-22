@@ -1,4 +1,4 @@
-package pianoman.engine.demos;
+package com.team.engine.demos;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
@@ -22,9 +22,8 @@ import com.team.engine.PointLight;
 import com.team.engine.Primitives;
 import com.team.engine.Shader;
 import com.team.engine.Texture;
-
-import pianoman.engine.vecmath.Mat4;
-import pianoman.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec3;
 
 /**
  * A demo showing off 3D rendering with openGL and lighting shaders.
