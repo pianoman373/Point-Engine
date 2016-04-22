@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/stack-alloc.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/libtiled.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

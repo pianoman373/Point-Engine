@@ -16,8 +16,11 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
+import com.team.engine.vecmath.Vec2;
+
 public class Texture {
 	private int id;
+	public Vec2 dimensions;
 	
 	public Texture(String path) {
 		this(path, false);
@@ -34,6 +37,8 @@ public class Texture {
 		glBindTexture(GL_TEXTURE_2D, id);
 	
 		RawImage img = getRawImage(path);
+		
+		dimensions = new Vec2(img.width, img.height);
 	
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.data);
 	
@@ -86,10 +91,10 @@ public class Texture {
 			return null;
 		}
 	
-		AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);
-		transform.translate(0, -image.getHeight());
-		AffineTransformOp operation = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-		image = operation.filter(image, null);
+		//AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);
+		//transform.translate(0, -image.getHeight());
+		//AffineTransformOp operation = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		//image = operation.filter(image, null);
 	
 		int width = image.getWidth();
 		int height = image.getHeight();
