@@ -1,10 +1,7 @@
 $ cat .gitignore
 /*
 !/src
-!build.gradle
-!/gradle
-!gradlew
-!gradlew.bat
 !.gitignore
-!setup.bat
-!setup.sh
+!/lib
+!/resources
+!.classpath
