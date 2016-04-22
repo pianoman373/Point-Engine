@@ -1,7 +1,1 @@
-$ cat .gitignore
-/*
-!/src
-!/lib
-!/resources
-!.gitignore
-!/README.md
+*.class
