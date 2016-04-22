@@ -20,6 +20,8 @@ public class Mesh {
 	 * 
 	 * TODO: Currently positions, normals, and uv's are all in the verices array since OpenGL likes them in one big buffer.
 	 * someday we should have them as seperate arrays and combine them in here.
+	 * 
+	 * The mesh is currently set up to ignore indices though, so don't use this yet.
 	 */
 	public Mesh(float[] vertices, int[] indices) {
 		VAO = glGenVertexArrays();
@@ -52,7 +54,7 @@ public class Mesh {
 	}
 	
 	/**
-	 * Same as first constructor except without indices, don't use this yet.
+	 * Same as first constructor except without indices.
 	 */
 	public Mesh(float[] vertices) {
 		VAO = glGenVertexArrays();

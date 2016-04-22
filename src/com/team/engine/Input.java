@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
+import org.lwjgl.glfw.GLFWScrollCallback;
 
 import com.team.engine.vecmath.Vec2;
 
@@ -17,6 +18,7 @@ public class Input {
 	public static Vec2 mousePos = new Vec2(0, 0);
 	public static boolean firstMouse = true;
 	public static boolean mouseGrabbed = false;
+	public static double scrollingAmount = 0;
 	
 	public static boolean isKeyDown(int key) {
 		return keys[key];
@@ -60,6 +62,10 @@ public class Input {
 			}
 		}
 	}
+	
+	public static void scrollEvent(long window, double scrollAmount) {
+		scrollingAmount += scrollAmount;
+	}
 }
 
 class KeyCallback extends GLFWKeyCallback {
@@ -80,6 +86,14 @@ class MouseCallback extends GLFWMouseButtonCallback {
 	@Override
 	public void invoke(long window, int button, int action, int mods) {
 		Input.mouseEvent(window, button, action, mods);
+	}
+}
+
+class ScrollCallback extends GLFWScrollCallback {
+
+	@Override
+	public void invoke(long window, double arg1, double scrollAmount) {
+		Input.scrollEvent(window, scrollAmount);
 	}
 	
 }

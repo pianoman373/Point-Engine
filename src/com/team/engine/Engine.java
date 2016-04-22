@@ -22,18 +22,21 @@ public abstract class Engine {
 	public static Engine instance;
 	
 	public Mat4 view;
-	public Mat4 projection = Mat4.perspective(45.0f, 1000/800, 0.1f, 1000.0f);
+	public Mat4 projection;
 	
 	public Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
 	public Vec3 background = new Vec3(0.2f, 0.2f, 0.2f);
-	public Camera camera = new Camera();
+	public Camera camera;
 	
 	private KeyCallback keyCallback;
 	private CursorCallback cursorCallback;
 	private MouseCallback mouseCallback;
+	private ScrollCallback scrollCallback;
 	
 	public float deltaTime = 0.0f;
 	private float lastFrame = 0.0f;
+	
+	private boolean is2d = false;
 	
 	//these are all classes that the main game must inherit
 	public abstract void setupGame();
@@ -45,17 +48,27 @@ public abstract class Engine {
 	/**
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
 	 */
-	public void initialize() {
+	public void initialize(boolean is2d) {
 		instance = this;
+		this.is2d = is2d;
 		setupContext();
 		
 		setupGame();
 		
 		glClearColor(background.x, background.y, background.z, 1.0f);
-		glEnable(GL_DEPTH_TEST);  
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 		//glEnable(GL_CULL_FACE);
 		
 		//setupPhysics();
+		
+		if (is2d) {
+			this.camera = new OrthographicCamera();
+		}
+		else {
+			this.camera = new FPSCamera();
+		}
 		
 		while (glfwWindowShouldClose(window) != GL_TRUE) {
 			glfwPollEvents();
@@ -64,7 +77,8 @@ public abstract class Engine {
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
 			
-			view = Mat4.LookAt(camera.position, camera.position.add(camera.front), camera.up);
+			view = camera.getView();
+			projection = camera.getProjection();
 			
 			this.update();
 			this.clear();
@@ -105,10 +119,12 @@ public abstract class Engine {
 		keyCallback = new KeyCallback();
 		cursorCallback = new CursorCallback();
 		mouseCallback = new MouseCallback();
+		scrollCallback = new ScrollCallback();
 		
 		glfwSetKeyCallback(window, keyCallback);
 		glfwSetCursorPosCallback(window, cursorCallback);
 		glfwSetMouseButtonCallback(window, mouseCallback);
+		glfwSetScrollCallback(window, scrollCallback);
 	}
 	
 	/**

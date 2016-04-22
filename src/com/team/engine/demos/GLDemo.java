@@ -44,7 +44,7 @@ public class GLDemo extends Engine {
 	private static PointLight lights[] = {
 		new PointLight(new Vec3(-1, 0, -3), new Vec3(1f, 1f, 1f), 0.09f, 0.032f),
 		new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f),
-		new PointLight(new Vec3(-1.0f, -5.0f, 4.0f), new Vec3(1f, 0.5f, 0f), 0.09f, 0.032f),
+		new PointLight(new Vec3(-1.0f, -3.0f, 4.0f), new Vec3(1f, 0.5f, 0f), 0.09f, 0.032f),
 		new PointLight(new Vec3(5.0f, 1.0f, 2.0f), new Vec3(0f, 0.5f, 1f), 0.09f, 0.032f)
 	};
 	
@@ -55,11 +55,13 @@ public class GLDemo extends Engine {
 	private Shader lightShader;
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
+	private Texture brickTexture;
 	private Mesh cubeMesh;
+	private Mesh planeMesh;
 	private Vec3 lightPos = new Vec3(0.0f, 1.0f, 0.0f);
 	
 	public static void main(String[] args) {
-		new GLDemo().initialize();
+		new GLDemo().initialize(false);
 	}
 
 	@Override
@@ -67,11 +69,13 @@ public class GLDemo extends Engine {
 		//Load all our shaders and textures from disk.
 		containerTexture = new Texture("resources/textures/container2.png");
 		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
+		brickTexture = new Texture("resources/textures/brickwall.jpg");
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
 		
 		//Create the cube mesh object with our vertices.
-		cubeMesh = new Mesh(Primitives.cubeVertices);
+		cubeMesh = new Mesh(Primitives.cube(1.0f));
+		planeMesh = new Mesh(Primitives.plane(50.0f));
 		
 		setupPhysics();
 	}
@@ -128,10 +132,6 @@ public class GLDemo extends Engine {
 		  cubeMesh.draw();
 		}
 		
-		//Draw the big one in the middle
-		standardShader.uniformMat4("model", Mat4.translate(0, -55, 0).multiply(Mat4.scale(100, 100, 100)));
-		cubeMesh.draw();
-		
 		//Draw the falling one.
 		standardShader.uniformMat4("model", Mat4.translate(trans.origin.x, trans.origin.y, trans.origin.z));
 		cubeMesh.draw();
@@ -146,9 +146,26 @@ public class GLDemo extends Engine {
 		}
 		
 		//Now we can unbind everything since we're done with the cube and the light shader.
-		//If we had more primitives to draw, we could bind them now and start the process again.
 		lightShader.unBind();
 		cubeMesh.unBind();
+		
+		planeMesh.bind();
+		//Draw the big cube in the middle with a new mesh.
+		
+		//Bind our shader.
+		standardShader.bind();
+		
+		brickTexture.bind(0);
+		containerSpecTexture.unBind(1);
+		
+		//Send material parameters and the global ambient as well.
+		standardShader.uniformVec3("ambient", new Vec3(0.01f, 0.01f, 0.01f));
+		standardShader.uniformInt("material.diffuse", 0);
+		standardShader.uniformInt("material.specular", 1);
+		standardShader.uniformFloat("material.shininess", 16.0f);
+		standardShader.uniformMat4("model", Mat4.translate(0, -5, 0).multiply(Mat4.scale(100, 1, 100)));
+		planeMesh.draw();
+		planeMesh.unBind();
 		
 		
 		//some old debug rendering
@@ -180,18 +197,18 @@ public class GLDemo extends Engine {
 		dynamicsWorld = new DiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 		dynamicsWorld.setGravity(new Vector3f(0,-9.81f,0));
 		
-		CollisionShape boxCollisionShape = new BoxShape(new Vector3f(1.0f, 1.0f, 1.0f));
-		CollisionShape boxCollisionShape2 = new BoxShape(new Vector3f(3.0f, 3.0f, 3.0f));
+		CollisionShape boxCollisionShape = new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f));
+		CollisionShape boxCollisionShape2 = new BoxShape(new Vector3f(100.0f, 100.0f, 100.0f));
 		
 		//the little box
 		DefaultMotionState motionstate = new DefaultMotionState(new Transform());
-		rigidBody = new RigidBody(1, motionstate, boxCollisionShape, new Vector3f(0,0,0));
+		rigidBody = new RigidBody(1, motionstate, boxCollisionShape, new Vector3f(1,100,0));
 		dynamicsWorld.addRigidBody(rigidBody);
 		
 		
 		//the big box
 		Transform trans = new Transform();
-		trans.origin.y = -4f;
+		trans.origin.y = -5f;
 		DefaultMotionState motionstate2 = new DefaultMotionState(trans);
 		RigidBody rigidBody2 = new RigidBody(0, motionstate2, boxCollisionShape2, new Vector3f(0, 0 ,0));
 		dynamicsWorld.addRigidBody(rigidBody2);

@@ -19,12 +19,16 @@ import org.lwjgl.BufferUtils;
 public class Texture {
 	private int id;
 	
+	public Texture(String path) {
+		this(path, false);
+	}
+	
 	/**
 	 * Creates a new texture object that can be bound later, from the specified path.
 	 * This actually uses the entire path including the resources folder, whereas shader
 	 * already appends the resources/shaders folder. Maybe we should do the same here?
 	 */
-	public Texture(String path) {
+	public Texture(String path, boolean pixelated) {
 		id = glGenTextures();
 		//System.out.println(handle);
 		glBindTexture(GL_TEXTURE_2D, id);
@@ -35,7 +39,10 @@ public class Texture {
 	
 		glGenerateMipmap(GL_TEXTURE_2D);
 		
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -55,6 +62,12 @@ public class Texture {
 	public void bind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_2D, id);
+		glActiveTexture(GL_TEXTURE0);
+	}
+	
+	public void unBind(int num) {
+		glActiveTexture(GL_TEXTURE0 + num);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glActiveTexture(GL_TEXTURE0);
 	}
 	
