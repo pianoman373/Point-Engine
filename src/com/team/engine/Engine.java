@@ -17,21 +17,23 @@ import com.team.engine.vecmath.Vec3;
  * note: You cannot call any opengl functions before first calling initialize() since it starts up OpenGL.
  */
 public abstract class Engine {
-	private static long window;
+	private long window;
 	
-	public static Mat4 view;
-	public static Mat4 projection = Mat4.perspective(45.0f, 1000/800, 0.1f, 1000.0f);
+	public static Engine instance;
 	
-	public static Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
-	public static Vec3 background = new Vec3(0.2f, 0.2f, 0.2f);
-	public static Camera camera = new Camera();
+	public Mat4 view;
+	public Mat4 projection = Mat4.perspective(45.0f, 1000/800, 0.1f, 1000.0f);
 	
-	private static KeyCallback keyCallback;
-	private static CursorCallback cursorCallback;
-	private static MouseCallback mouseCallback;
+	public Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
+	public Vec3 background = new Vec3(0.2f, 0.2f, 0.2f);
+	public Camera camera = new Camera();
 	
-	public static float deltaTime = 0.0f;
-	private static float lastFrame = 0.0f;
+	private KeyCallback keyCallback;
+	private CursorCallback cursorCallback;
+	private MouseCallback mouseCallback;
+	
+	public float deltaTime = 0.0f;
+	private float lastFrame = 0.0f;
 	
 	//these are all classes that the main game must inherit
 	public abstract void setupGame();
@@ -44,6 +46,7 @@ public abstract class Engine {
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
 	 */
 	public void initialize() {
+		instance = this;
 		setupContext();
 		
 		setupGame();
@@ -81,7 +84,7 @@ public abstract class Engine {
 	/**
 	 * does all that opengl context stuff at the very beginning.
 	 */
-	private static void setupContext() {
+	private void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("lib/native").toAbsolutePath().toString());
 		
 		glfwInit();

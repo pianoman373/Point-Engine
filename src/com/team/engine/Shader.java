@@ -52,8 +52,8 @@ public class Shader {
 	 */
 	public void bind() {
 		glUseProgram(this.id);
-		this.uniformMat4("view", Engine.view);
-		this.uniformMat4("projection", Engine.projection);
+		this.uniformMat4("view", Engine.instance.view);
+		this.uniformMat4("projection", Engine.instance.projection);
 	}
 	
 	/**

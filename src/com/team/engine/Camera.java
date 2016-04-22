@@ -28,7 +28,7 @@ public class Camera {
 		front = front.normalize();
 
 		
-		float cameraSpeed = 20.0f * Engine.deltaTime;
+		float cameraSpeed = 20.0f * Engine.instance.deltaTime;
 	    if(Input.isKeyDown(GLFW_KEY_W)) {
 	        position = position.add((front.multiply(cameraSpeed)));
 	    }
@@ -75,13 +75,13 @@ public class Camera {
 			
 			Vec3 offsetVec = new Vec3(xoffset, yoffset, 0).rotateRoll(roll);
 
-			Engine.camera.yaw   += offsetVec.x;
-			Engine.camera.pitch += offsetVec.y;
+			Engine.instance.camera.yaw   += offsetVec.x;
+			Engine.instance.camera.pitch += offsetVec.y;
 
-			if(Engine.camera.pitch > 89.0f)
-				Engine.camera.pitch =  89.0f;
-			if(Engine.camera.pitch < -89.0f)
-				Engine.camera.pitch = -89.0f;
+			if(Engine.instance.camera.pitch > 89.0f)
+				Engine.instance.camera.pitch =  89.0f;
+			if(Engine.instance.camera.pitch < -89.0f)
+				Engine.instance.camera.pitch = -89.0f;
 		}
 		
 		lastX = (float)Input.mousePos.x;
