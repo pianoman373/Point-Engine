@@ -39,7 +39,7 @@ public class GLDemo extends Engine {
 		new Vec3( 1.3f, -2.0f, -2.5f),  
 		new Vec3( 1.5f,  2.0f, -2.5f), 
 		new Vec3( 1.5f,  0.2f, -1.5f), 
-		new Vec3(-1.3f,  1.0f, -1.5f)  
+		new Vec3(-1.3f,  1.0f, -1.2f)  
 	};
 	
 	private static PointLight lights[] = {
