@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
@@ -77,6 +78,14 @@ public class Shader {
 	public void uniformVec3(String name, Vec3 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		glUniform3f(vertexColorLocation, value.x, value.y, value.z);
+	}
+	
+	/**
+	 * Translates a Vec2 object into the glsl uniform.
+	 */
+	public void uniformVec2(String name, Vec2 value) {
+		int vertexColorLocation = glGetUniformLocation(this.id, name);
+		glUniform2f(vertexColorLocation, value.x, value.y);
 	}
 	
 	/**

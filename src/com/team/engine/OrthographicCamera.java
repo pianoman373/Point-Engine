@@ -39,7 +39,7 @@ public class OrthographicCamera extends Camera {
 
 	@Override
 	public Mat4 getProjection() {
-		return Mat4.orthographic(-10 * zoom, 10 * zoom, -8 * zoom, 8 * zoom, 0, 100);
+		return Mat4.orthographic(-10 * zoom * .1f, 10 * zoom * .1f, -8 * zoom * .1f, 8 * zoom * .1f, -100, 100);
 	} 
 	
 }
