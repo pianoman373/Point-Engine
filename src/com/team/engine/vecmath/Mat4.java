@@ -247,7 +247,7 @@ public class Mat4 {
     		mat.m21 = -forward.y;
     		mat.m22 = -forward.z;
 
-    		return mat.translate(-eye.x, -eye.y, -eye.z);
+    		return mat.translate(new Vec3(-eye.x, -eye.y, -eye.z));
     }
 
     /**
@@ -333,12 +333,12 @@ public class Mat4 {
      * Creates a translation matrix. Similar to
      * <code>glTranslate(x, y, z)</code>.
      */
-    public Mat4 translate(float x, float y, float z) {
+    public Mat4 translate(Vec3 translate) {
         Mat4 translation = new Mat4();
 
-        translation.m03 = x;
-        translation.m13 = y;
-        translation.m23 = z;
+        translation.m03 = translate.x;
+        translation.m13 = translate.y;
+        translation.m23 = translate.z;
 
         return this.multiply(translation);
     }
@@ -347,28 +347,28 @@ public class Mat4 {
      * Creates a rotation matrix. Similar to
      * <code>glRotate(angle, x, y, z)</code>.
      */
-    public Mat4 rotate(float angle, float x, float y, float z) {
+    public Mat4 rotate(Vec4 rot) {
         Mat4 rotation = new Mat4();
 
-        float c = (float) Math.cos(Math.toRadians(angle));
-        float s = (float) Math.sin(Math.toRadians(angle));
-        Vec3 vec = new Vec3(x, y, z);
+        float c = (float) Math.cos(Math.toRadians(rot.w));
+        float s = (float) Math.sin(Math.toRadians(rot.w));
+        Vec3 vec = new Vec3(rot.x, rot.y, rot.z);
         if (vec.length() != 1f) {
             vec = vec.normalize();
-            x = vec.x;
-            y = vec.y;
-            z = vec.z;
+            rot.x = vec.x;
+            rot.y = vec.y;
+            rot.z = vec.z;
         }
 
-        rotation.m00 = x * x * (1f - c) + c;
-        rotation.m10 = y * x * (1f - c) + z * s;
-        rotation.m20 = x * z * (1f - c) - y * s;
-        rotation.m01 = x * y * (1f - c) - z * s;
-        rotation.m11 = y * y * (1f - c) + c;
-        rotation.m21 = y * z * (1f - c) + x * s;
-        rotation.m02 = x * z * (1f - c) + y * s;
-        rotation.m12 = y * z * (1f - c) - x * s;
-        rotation.m22 = z * z * (1f - c) + c;
+        rotation.m00 = vec.x * vec.x * (1f - c) + c;
+        rotation.m10 = vec.y * vec.x * (1f - c) + vec.z * s;
+        rotation.m20 = vec.x * vec.z * (1f - c) - vec.y * s;
+        rotation.m01 = vec.x * vec.y * (1f - c) - vec.z * s;
+        rotation.m11 = vec.y * vec.y * (1f - c) + c;
+        rotation.m21 = vec.y * vec.z * (1f - c) + vec.x * s;
+        rotation.m02 = vec.x * vec.z * (1f - c) + vec.y * s;
+        rotation.m12 = vec.y * vec.z * (1f - c) - vec.x * s;
+        rotation.m22 = vec.z * vec.z * (1f - c) + c;
 
         return this.multiply(rotation);
     }
@@ -376,12 +376,22 @@ public class Mat4 {
     /**
      * Creates a scaling matrix. Similar to <code>glScale(x, y, z)</code>.
      */
-    public Mat4 scale(float x, float y, float z) {
+    public Mat4 scale(Vec3 scale) {
         Mat4 scaling = new Mat4();
 
-        scaling.m00 = x;
-        scaling.m11 = y;
-        scaling.m22 = z;
+        scaling.m00 = scale.x;
+        scaling.m11 = scale.y;
+        scaling.m22 = scale.z;
+
+        return this.multiply(scaling);
+    }
+    
+    public Mat4 scale(float scale) {
+        Mat4 scaling = new Mat4();
+
+        scaling.m00 = scale;
+        scaling.m11 = scale;
+        scaling.m22 = scale;
 
         return this.multiply(scaling);
     }

@@ -13,7 +13,9 @@ public class GameObject {
 	public void update() {
 	}
 	
-	public void render() {
-		
+	public void render(Scene scene) {
+		if (mesh != null) {
+			
+		}
 	}
 }

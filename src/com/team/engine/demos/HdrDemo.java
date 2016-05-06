@@ -18,7 +18,7 @@ import com.team.engine.vecmath.Vec3;
 /**
  * A demo showing off 3D rendering with openGL and lighting shaders.
  */
-public class FramebufferDemo extends Engine {
+public class HdrDemo extends Engine {
 	private static Vec3 cubePositions[] = {
 		new Vec3( 2.0f,  -4.5f, -15.0f), 
 		new Vec3(-1.5f, -4.5f, -2.5f),  
@@ -28,16 +28,13 @@ public class FramebufferDemo extends Engine {
 	};
 	
 	private static PointLight lights[] = {
-		new PointLight(new Vec3(-3, 0, -3), new Vec3(1f, 1f, 1f), 0.09f, 0.032f),
-		new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f),
-		new PointLight(new Vec3(-1.0f, -3.0f, 4.0f), new Vec3(1f, 0.5f, 0f), 0.09f, 0.032f),
-		new PointLight(new Vec3(5.0f, 1.0f, 2.0f), new Vec3(0f, 0.5f, 1f), 0.09f, 0.032f),
+		new PointLight(new Vec3(-3, 0, -3), new Vec3(10f, 10f, 10f), 0.09f, 0.032f),
 		new PointLight(new Vec3(1.0f, 1.0f, -15.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f)
 	};
 	
 	private Shader standardShader;
 	private Shader lightShader;
-	private Shader framebufferShader;
+	private Shader hdrShader;
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
 	private Texture brickTexture;
@@ -48,7 +45,7 @@ public class FramebufferDemo extends Engine {
 	
 	
 	public static void main(String[] args) {
-		new FramebufferDemo().initialize(false);
+		new HdrDemo().initialize(false);
 	}
 
 	@Override
@@ -59,7 +56,7 @@ public class FramebufferDemo extends Engine {
 		brickTexture = new Texture("resources/textures/brickwall.jpg");
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
-		framebufferShader = new Shader("framebuffer");
+		hdrShader = new Shader("hdr");
 		
 		this.background = new Vec3(0.1f, 0.1f, 0.1f);
 		this.ambient = new Vec3(0.1f, 0.1f, 0.1f);
@@ -139,7 +136,7 @@ public class FramebufferDemo extends Engine {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 		
 		framebufferMesh.bind();
-		framebufferShader.bind();
+		hdrShader.bind();
 		//brickTexture.bind();
 		fbuffer.tex.bind();
 		
