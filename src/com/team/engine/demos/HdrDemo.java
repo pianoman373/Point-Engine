@@ -2,10 +2,12 @@ package com.team.engine.demos;
 
 import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.DirectionalLight;
 import com.team.engine.Engine;
 import com.team.engine.Framebuffer;
+import com.team.engine.Input;
 import com.team.engine.Mesh;
 import com.team.engine.PointLight;
 import com.team.engine.Primitives;
@@ -29,7 +31,7 @@ public class HdrDemo extends Engine {
 	
 	private static PointLight lights[] = {
 		new PointLight(new Vec3(-3, 0, -3), new Vec3(10f, 10f, 10f), 0.09f, 0.032f),
-		new PointLight(new Vec3(1.0f, 1.0f, -15.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f)
+		new PointLight(new Vec3(10.0f, -2.0f, -25.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f)
 	};
 	
 	private Shader standardShader;
@@ -42,6 +44,7 @@ public class HdrDemo extends Engine {
 	private Mesh planeMesh;
 	private Mesh framebufferMesh;
 	private Framebuffer fbuffer;
+	private float exposure = 1.0f;
 	
 	
 	public static void main(String[] args) {
@@ -70,7 +73,14 @@ public class HdrDemo extends Engine {
 
 	@Override
 	public void tick() {
+		if (Input.isKeyDown(GLFW_KEY_COMMA)) {
+			exposure -= 0.01;
+		}
+		if (Input.isKeyDown(GLFW_KEY_PERIOD)) {
+			exposure += 0.01;
+		}
 		
+		if (exposure < 0) exposure = 0;
 	}
 
 	@Override
@@ -137,6 +147,7 @@ public class HdrDemo extends Engine {
 		
 		framebufferMesh.bind();
 		hdrShader.bind();
+		hdrShader.uniformFloat("exposure", exposure);
 		//brickTexture.bind();
 		fbuffer.tex.bind();
 		
