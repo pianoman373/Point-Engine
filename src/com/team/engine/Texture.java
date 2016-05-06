@@ -14,14 +14,19 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
-import com.team.engine.vecmath.Vec2;
+import com.team.engine.vecmath.Vec2i;
 
 public class Texture {
 	private int id;
-	public Vec2 dimensions;
+	public Vec2i dimensions;
 	
 	public Texture(String path) {
 		this(path, false);
+	}
+	
+	public Texture(int id, Vec2i dimensions) {
+		this.id = id;
+		this.dimensions = dimensions;
 	}
 	
 	/**
@@ -36,7 +41,7 @@ public class Texture {
 	
 		RawImage img = getRawImage(path);
 		
-		dimensions = new Vec2(img.width, img.height);
+		dimensions = new Vec2i(img.width, img.height);
 	
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.data);
 	
@@ -68,7 +73,7 @@ public class Texture {
 		glActiveTexture(GL_TEXTURE0);
 	}
 	
-	public void unBind(int num) {
+	public static void unBind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glActiveTexture(GL_TEXTURE0);
