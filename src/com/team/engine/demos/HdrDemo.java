@@ -22,7 +22,7 @@ import com.team.engine.vecmath.Vec3;
  */
 public class HdrDemo extends Engine {
 	private static Vec3 cubePositions[] = {
-		new Vec3( 2.0f,  -4.5f, -15.0f), 
+		new Vec3( 2.0f, -4.5f, -15.0f), 
 		new Vec3(-1.5f, -4.5f, -2.5f),  
 		new Vec3( 2.4f, -4.5f, -3.5f),  
 		new Vec3( 1.3f, -4.5f, -2.5f),  
@@ -42,8 +42,6 @@ public class HdrDemo extends Engine {
 	private Texture brickTexture;
 	private Mesh cubeMesh;
 	private Mesh planeMesh;
-	private Mesh framebufferMesh;
-	private Framebuffer fbuffer;
 	private float exposure = 1.0f;
 	
 	
@@ -67,8 +65,8 @@ public class HdrDemo extends Engine {
 		//Create the cube mesh object with our vertices.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		planeMesh = new Mesh(Primitives.plane(20.0f));
-		framebufferMesh = new Mesh(Primitives.framebuffer());
-		fbuffer = new Framebuffer(new Vec2i(1000, 800));
+		
+		this.setFramebuffer(hdrShader);
 	}
 
 	@Override
@@ -84,10 +82,7 @@ public class HdrDemo extends Engine {
 	}
 
 	@Override
-	public void render() {
-		fbuffer.bind();
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
+	public void render() {		
 		//Bind two textures in different indexes so the shader has both.
 		containerTexture.bind(0);
 		containerSpecTexture.bind(1);
@@ -143,16 +138,10 @@ public class HdrDemo extends Engine {
 		//Now we can unbind everything since we're done with the cube and the light shader.
 		lightShader.unBind();
 		cubeMesh.unBind();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		
-		framebufferMesh.bind();
-		hdrShader.bind();
-		hdrShader.uniformFloat("exposure", exposure);
-		//brickTexture.bind();
-		fbuffer.tex.bind();
-		
-		framebufferMesh.draw();
-		
-		framebufferMesh.unBind();
+	}
+
+	@Override
+	public void postRenderUniforms(Shader shader) {
+		shader.uniformFloat("exposure", exposure);
 	}
 }

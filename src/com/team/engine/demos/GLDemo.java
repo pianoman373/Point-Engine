@@ -129,7 +129,7 @@ public class GLDemo extends Engine {
 		{
 		  Mat4 model = new Mat4().translate(cubePositions[i]);
 		  float angle = 20.0f * i;
-		  model = model.rotate(new Vec4(angle, 1.0f, 0.3f, 0.5f));
+		  model = model.rotate(new Vec4(1.0f, 0.3f, 0.5f, angle));
 		  standardShader.uniformMat4("model", model);
 
 		  cubeMesh.draw();
@@ -143,6 +143,7 @@ public class GLDemo extends Engine {
 		lightShader.bind();
 		
 		for (PointLight light : lights) {
+			lightShader.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
 			lightShader.uniformVec3("lightColor", light.color);
 			cubeMesh.draw();
 		}
@@ -151,7 +152,7 @@ public class GLDemo extends Engine {
 		lightShader.unBind();
 		cubeMesh.unBind();
 		
-		planeMesh.bind();
+		//planeMesh.bind();
 		//Draw the big cube in the middle with a new mesh.
 		
 		//Bind our shader.
@@ -216,5 +217,11 @@ public class GLDemo extends Engine {
 		DefaultMotionState motionstate2 = new DefaultMotionState(trans2);
 		RigidBody rigidBody2 = new RigidBody(0, motionstate2, boxCollisionShape2, new Vector3f(0, 0 ,0));
 		dynamicsWorld.addRigidBody(rigidBody2);
+	}
+
+	@Override
+	public void postRenderUniforms(Shader shader) {
+		// TODO Auto-generated method stub
+		
 	}
 }

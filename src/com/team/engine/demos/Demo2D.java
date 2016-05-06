@@ -2,6 +2,7 @@ package com.team.engine.demos;
 
 import com.team.engine.Engine;
 import com.team.engine.Grid2D;
+import com.team.engine.Shader;
 import com.team.engine.Tileset2D;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
@@ -48,5 +49,11 @@ public class Demo2D extends Engine {
 		//cubeMesh.draw();
 		
 		//cubeMesh.unBind();
+	}
+
+	@Override
+	public void postRenderUniforms(Shader shader) {
+		// TODO Auto-generated method stub
+		
 	}
 }

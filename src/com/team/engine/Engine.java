@@ -2,6 +2,8 @@ package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.file.Paths;
@@ -10,6 +12,7 @@ import javax.swing.JOptionPane;
 import org.lwjgl.opengl.GLContext;
 
 import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec2i;
 import com.team.engine.vecmath.Vec3;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
@@ -33,6 +36,10 @@ public abstract class Engine {
 	private MouseCallback mouseCallback;
 	private ScrollCallback scrollCallback;
 	
+	private Shader framebufferShader;
+	private Framebuffer fbuffer;
+	private Mesh framebufferMesh;
+	
 	public float deltaTime = 0.0f;
 	private float lastFrame = 0.0f;
 	
@@ -44,6 +51,12 @@ public abstract class Engine {
 	public abstract void tick();
 	
 	public abstract void render();
+	
+	public abstract void postRenderUniforms(Shader shader);
+	
+	public void setFramebuffer(Shader shader) {
+		this.framebufferShader = shader;
+	}
 	 
 	/**
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
@@ -52,6 +65,10 @@ public abstract class Engine {
 		instance = this;
 		this.is2d = is2d;
 		setupContext();
+		
+		framebufferShader = new Shader("framebuffer");
+		framebufferMesh = new Mesh(Primitives.framebuffer());
+		fbuffer = new Framebuffer(new Vec2i(1000, 800));
 		
 		setupGame();
 		
@@ -81,8 +98,20 @@ public abstract class Engine {
 			projection = camera.getProjection();
 			
 			this.update();
+			fbuffer.bind();
 			this.clear();
 			this.render();
+			Framebuffer.unbind();
+			
+			this.clear();
+			framebufferMesh.bind();
+			framebufferShader.bind();
+			this.postRenderUniforms(framebufferShader);
+			fbuffer.tex.bind();
+			
+			framebufferMesh.draw();
+			
+			framebufferMesh.unBind();
 			
 			glfwSwapBuffers(window);
 		}
