@@ -2,8 +2,6 @@ package com.team.engine.demos;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
-import java.util.Random;
-
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
@@ -58,7 +56,7 @@ public class GLDemo extends Engine {
 	private Shader lightShader;
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
-	private Texture brickTexture;
+	//private Texture brickTexture;
 	private Mesh cubeMesh;
 	private Mesh planeMesh;
 	private Vec3 lightPos = new Vec3(0.0f, 1.0f, 0.0f);
@@ -72,7 +70,7 @@ public class GLDemo extends Engine {
 		//Load all our shaders and textures from disk.
 		containerTexture = new Texture("resources/textures/container2.png");
 		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
-		brickTexture = new Texture("resources/textures/brickwall.jpg");
+		//brickTexture = new Texture("resources/textures/brickwall.jpg");
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
 		

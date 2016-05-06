@@ -63,7 +63,7 @@ public abstract class Engine {
 		
 		//setupPhysics();
 		
-		if (is2d) {
+		if (this.is2d) {
 			this.camera = new OrthographicCamera();
 		}
 		else {
