@@ -1,12 +1,8 @@
 package com.team.engine.demos;
 
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.glfw.GLFW.*;
 
-import com.team.engine.DirectionalLight;
 import com.team.engine.Engine;
-import com.team.engine.Framebuffer;
 import com.team.engine.Input;
 import com.team.engine.Mesh;
 import com.team.engine.PointLight;
@@ -14,7 +10,6 @@ import com.team.engine.Primitives;
 import com.team.engine.Shader;
 import com.team.engine.Texture;
 import com.team.engine.vecmath.Mat4;
-import com.team.engine.vecmath.Vec2i;
 import com.team.engine.vecmath.Vec3;
 
 /**
@@ -62,10 +57,11 @@ public class HdrDemo extends Engine {
 		this.background = new Vec3(0.1f, 0.1f, 0.1f);
 		this.ambient = new Vec3(0.1f, 0.1f, 0.1f);
 		
-		//Create the cube mesh object with our vertices.
+		//Create the cube and plane mesh objects from primitives.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		planeMesh = new Mesh(Primitives.plane(20.0f));
 		
+		//set the engines framebuffer shader to our hdr shader.
 		this.setFramebuffer(hdrShader);
 	}
 
@@ -95,11 +91,6 @@ public class HdrDemo extends Engine {
 		standardShader.uniformInt("material.diffuse", 0);
 		standardShader.uniformInt("material.specular", 1);
 		standardShader.uniformFloat("material.shininess", 16.0f);
-		
-		//Our shader currently only has one variable for directional lights. It's not like we would use a lot anyways
-		//unless we're on tatooine.
-		DirectionalLight dirLight = new DirectionalLight(new Vec3(-0.2f, -1.0f, -0.3f), new Vec3(1f, 0.9f, 0.8f));
-		standardShader.uniformDirectionalLight("dirLight", dirLight);
 		
 		//Our shader currently only has 2 spaces for point lights hardcoded in.
 		standardShader.uniformInt("pointLightCount", lights.length);
@@ -142,6 +133,7 @@ public class HdrDemo extends Engine {
 
 	@Override
 	public void postRenderUniforms(Shader shader) {
+		//Send our exposure uniform to the post processing shader.
 		shader.uniformFloat("exposure", exposure);
 	}
 }

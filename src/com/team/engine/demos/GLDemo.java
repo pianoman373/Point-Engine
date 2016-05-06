@@ -15,7 +15,6 @@ import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
-import com.team.engine.DirectionalLight;
 import com.team.engine.Engine;
 import com.team.engine.Mesh;
 import com.team.engine.PointLight;
@@ -57,9 +56,7 @@ public class GLDemo extends Engine {
 	private Shader lightShader;
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
-	//private Texture brickTexture;
 	private Mesh cubeMesh;
-	private Mesh planeMesh;
 	private Vec3 lightPos = new Vec3(0.0f, 1.0f, 0.0f);
 	
 	public static void main(String[] args) {
@@ -71,16 +68,14 @@ public class GLDemo extends Engine {
 		//Load all our shaders and textures from disk.
 		containerTexture = new Texture("resources/textures/container2.png");
 		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
-		//brickTexture = new Texture("resources/textures/brickwall.jpg");
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
 		
 		this.background = new Vec3(0.1f, 0.1f, 0.1f);
 		this.ambient = new Vec3(0.1f, 0.1f, 0.1f);
 		
-		//Create the cube mesh object with our vertices.
+		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
-		planeMesh = new Mesh(Primitives.plane(20.0f));
 		
 		setupPhysics();
 	}
@@ -112,12 +107,6 @@ public class GLDemo extends Engine {
 		standardShader.uniformInt("material.specular", 1);
 		standardShader.uniformFloat("material.shininess", 16.0f);
 		
-		//Our shader currently only has one variable for directional lights. It's not like we would use a lot anyways
-		//unless we're on tatooine.
-		DirectionalLight dirLight = new DirectionalLight(new Vec3(-0.2f, -1.0f, -0.3f), new Vec3(1f, 0.9f, 0.8f));
-		standardShader.uniformDirectionalLight("dirLight", dirLight);
-		
-		//Our shader currently only has 2 spaces for point lights hardcoded in.
 		standardShader.uniformInt("pointLightCount", lights.length);
 		for (int i = 0; i < lights.length; i++) {
 			standardShader.uniformPointLight("pointLights[" + i + "]", lights[i]);
@@ -151,38 +140,6 @@ public class GLDemo extends Engine {
 		//Now we can unbind everything since we're done with the cube and the light shader.
 		lightShader.unBind();
 		cubeMesh.unBind();
-		
-		//planeMesh.bind();
-		//Draw the big cube in the middle with a new mesh.
-		
-		//Bind our shader.
-		/*standardShader.bind();
-		
-		brickTexture.bind(0);
-		containerSpecTexture.unBind(1);
-		
-		//Send material parameters and the global ambient as well.
-		standardShader.uniformVec3("ambient", this.ambient);
-		standardShader.uniformInt("material.diffuse", 0);
-		standardShader.uniformInt("material.specular", 1);
-		standardShader.uniformFloat("material.shininess", 16.0f);
-		standardShader.uniformMat4("model", Mat4.translate(0, -5, 0).multiply(Mat4.scale(100, 1, 100)));
-		planeMesh.draw();
-		planeMesh.unBind();*/
-		
-		
-		//some old debug rendering
-		/*GL11.glMatrixMode(GL_MODELVIEW);
-		GL11.glLoadMatrixf(view.getBuffer());
-		
-		GL11.glMatrixMode(GL_PROJECTION);
-		GL11.glLoadMatrixf(projection.getBuffer());
-		
-		GL11.glBegin(GL_LINES);
-		GL11.glVertex3f(ray_start.x, ray_start.y, ray_start.z);
-		GL11.glVertex3f(ray_end.x, ray_end.y, ray_end.z);
-		GL11.glEnd();*/
-		
 	}
 	
 	private static void setupPhysics() {
@@ -220,8 +177,5 @@ public class GLDemo extends Engine {
 	}
 
 	@Override
-	public void postRenderUniforms(Shader shader) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void postRenderUniforms(Shader shader) {}
 }

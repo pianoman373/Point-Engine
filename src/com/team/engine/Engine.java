@@ -2,8 +2,6 @@ package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
-import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.file.Paths;
@@ -52,6 +50,9 @@ public abstract class Engine {
 	
 	public abstract void render();
 	
+	/**
+	 * Add any uniforms you want to the currently bound framebuffer shader before rendering.
+	 */
 	public abstract void postRenderUniforms(Shader shader);
 	
 	public void setFramebuffer(Shader shader) {
