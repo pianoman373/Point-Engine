@@ -15,7 +15,7 @@ public class OrthographicCamera extends Camera {
 
 	@Override
 	public Mat4 getView() {
-		return Mat4.translate(-position.x, -position.y, 0);
+		return new Mat4().translate(-position.x, -position.y, 0);
 	}
 	
 	public void update() {

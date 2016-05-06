@@ -109,7 +109,7 @@ public class FramebufferDemo extends Engine {
 		cubeMesh.bind();
 		for(int i = 0; i < cubePositions.length; i++)
 		{
-		  Mat4 model = Mat4.translate(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
+		  Mat4 model = new Mat4().translate(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
 		  standardShader.uniformMat4("model", model);
 
 		  cubeMesh.draw();
@@ -120,7 +120,7 @@ public class FramebufferDemo extends Engine {
 		brickTexture.bind(0);
 		Texture.unBind(1);
 		
-		standardShader.uniformMat4("model", Mat4.translate(0, -5, 0).multiply(Mat4.scale(100, 100, 100)));
+		standardShader.uniformMat4("model", new Mat4().translate(0, -5, 0).scale(100, 100, 100));
 		
 		planeMesh.draw();
 		
@@ -128,7 +128,7 @@ public class FramebufferDemo extends Engine {
 		lightShader.bind();
 		
 		for (PointLight light : lights) {
-			lightShader.uniformMat4("model", Mat4.translate(light.position.x, light.position.y, light.position.z).multiply(Mat4.scale(0.2f, 0.2f, 0.2f)));
+			lightShader.uniformMat4("model", new Mat4().translate(light.position.x, light.position.y, light.position.z).scale(0.2f, 0.2f, 0.2f));
 			lightShader.uniformVec3("lightColor", light.color);
 			cubeMesh.draw();
 		}

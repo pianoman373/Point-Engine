@@ -70,7 +70,7 @@ public class Grid2D {
 				
 				Vec2 offset = idToOffset(tiles[x][y]);
 				
-				spriteShader.uniformMat4("model", Mat4.translate(x, -y, 0.0f));
+				spriteShader.uniformMat4("model", new Mat4().translate(x, -y, 0.0f));
 				spriteShader.uniformVec2("uvOffset", new Vec2((1 / tileset.image.dimensions.x) * 16 * offset.x, (1 / tileset.image.dimensions.y) * 16 * offset.y));
 				tileset.mesh.draw();
 			}

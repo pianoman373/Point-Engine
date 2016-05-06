@@ -128,23 +128,23 @@ public class GLDemo extends Engine {
 		cubeMesh.bind();
 		for(int i = 0; i < cubePositions.length; i++)
 		{
-		  Mat4 model = Mat4.translate(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
+		  Mat4 model = new Mat4().translate(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z);
 		  float angle = 20.0f * i;
-		  model = model.multiply(Mat4.rotate(angle, 1.0f, 0.3f, 0.5f));
+		  model = model.rotate(angle, 1.0f, 0.3f, 0.5f);
 		  standardShader.uniformMat4("model", model);
 
 		  cubeMesh.draw();
 		}
 		
 		//Draw the falling one.
-		standardShader.uniformMat4("model", Mat4.translate(trans.origin.x, trans.origin.y, trans.origin.z));
+		standardShader.uniformMat4("model", new Mat4().translate(trans.origin.x, trans.origin.y, trans.origin.z));
 		cubeMesh.draw();
 		
 		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.
 		lightShader.bind();
 		
 		for (PointLight light : lights) {
-			lightShader.uniformMat4("model", Mat4.translate(light.position.x, light.position.y, light.position.z).multiply(Mat4.scale(0.2f, 0.2f, 0.2f)));
+			lightShader.uniformMat4("model", new Mat4().translate(light.position.x, light.position.y, light.position.z).scale(0.2f, 0.2f, 0.2f));
 			lightShader.uniformVec3("lightColor", light.color);
 			cubeMesh.draw();
 		}

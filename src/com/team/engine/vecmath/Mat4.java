@@ -247,7 +247,7 @@ public class Mat4 {
     		mat.m21 = -forward.y;
     		mat.m22 = -forward.z;
 
-    		return mat.multiply(Mat4.translate(-eye.x, -eye.y, -eye.z));
+    		return mat.translate(-eye.x, -eye.y, -eye.z);
     }
 
     /**
@@ -333,21 +333,21 @@ public class Mat4 {
      * Creates a translation matrix. Similar to
      * <code>glTranslate(x, y, z)</code>.
      */
-    public static Mat4 translate(float x, float y, float z) {
+    public Mat4 translate(float x, float y, float z) {
         Mat4 translation = new Mat4();
 
         translation.m03 = x;
         translation.m13 = y;
         translation.m23 = z;
 
-        return translation;
+        return this.multiply(translation);
     }
 
     /**
      * Creates a rotation matrix. Similar to
      * <code>glRotate(angle, x, y, z)</code>.
      */
-    public static Mat4 rotate(float angle, float x, float y, float z) {
+    public Mat4 rotate(float angle, float x, float y, float z) {
         Mat4 rotation = new Mat4();
 
         float c = (float) Math.cos(Math.toRadians(angle));
@@ -370,20 +370,20 @@ public class Mat4 {
         rotation.m12 = y * z * (1f - c) - x * s;
         rotation.m22 = z * z * (1f - c) + c;
 
-        return rotation;
+        return this.multiply(rotation);
     }
 
     /**
      * Creates a scaling matrix. Similar to <code>glScale(x, y, z)</code>.
      */
-    public static Mat4 scale(float x, float y, float z) {
+    public Mat4 scale(float x, float y, float z) {
         Mat4 scaling = new Mat4();
 
         scaling.m00 = x;
         scaling.m11 = y;
         scaling.m22 = z;
 
-        return scaling;
+        return this.multiply(scaling);
     }
     
     private static float determinant3x3(float t00, float t01, float t02, float t10, float t11, float t12, float t20, float t21, float t22) {
