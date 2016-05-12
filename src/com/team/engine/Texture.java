@@ -17,7 +17,7 @@ import org.lwjgl.BufferUtils;
 import com.team.engine.vecmath.Vec2i;
 
 public class Texture {
-	private int id;
+	public int id;
 	public Vec2i dimensions;
 	
 	public Texture(String path) {
@@ -82,7 +82,7 @@ public class Texture {
 	/**
 	 * All the IO stuff here.
 	 */
-	private static RawImage getRawImage(String path) {
+	public static RawImage getRawImage(String path) {
 		InputStream in;
 		BufferedImage image;
 		try {

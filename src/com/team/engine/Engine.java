@@ -23,6 +23,7 @@ public abstract class Engine {
 	public static Engine instance;
 	
 	public Mat4 view;
+	public Vec3 viewPos;
 	public Mat4 projection;
 	
 	public Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
@@ -96,6 +97,7 @@ public abstract class Engine {
 			lastFrame = currentFrame;
 			
 			view = camera.getView();
+			viewPos = camera.getPosition();
 			projection = camera.getProjection();
 			
 			this.update();

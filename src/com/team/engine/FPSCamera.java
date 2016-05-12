@@ -99,4 +99,9 @@ public class FPSCamera extends Camera {
 	public Mat4 getProjection() {
 		return Mat4.perspective(45.0f, 1000/800, 0.1f, 1000.0f);
 	}
+
+	@Override
+	public Vec3 getPosition() {
+		return this.position;
+	}
 }

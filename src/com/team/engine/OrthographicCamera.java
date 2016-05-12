@@ -41,6 +41,11 @@ public class OrthographicCamera extends Camera {
 	@Override
 	public Mat4 getProjection() {
 		return Mat4.orthographic(-10 * zoom * .1f, 10 * zoom * .1f, -8 * zoom * .1f, 8 * zoom * .1f, -100, 100);
+	}
+
+	@Override
+	public Vec3 getPosition() {
+		return new Vec3(this.position.x, this.position.y, 0);
 	} 
 	
 }
