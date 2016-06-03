@@ -104,4 +104,10 @@ public class FPSCamera extends Camera {
 	public Vec3 getPosition() {
 		return this.position;
 	}
+
+	@Override
+	public void render(Scene scene) {
+		// TODO Auto-generated method stub
+		
+	}
 }

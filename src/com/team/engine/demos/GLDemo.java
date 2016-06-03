@@ -47,7 +47,7 @@ public class GLDemo extends Engine {
 		new PointLight(new Vec3(-1, 0, -3), new Vec3(1f, 1f, 1f), 0.09f, 0.032f),
 		new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f),
 		new PointLight(new Vec3(-1.0f, -3.0f, 4.0f), new Vec3(1f, 0.5f, 0f), 0.09f, 0.032f),
-		new PointLight(new Vec3(5.0f, 1.0f, 2.0f), new Vec3(0f, 0.5f, 1f), 0.09f, 0.032f),
+		new PointLight(new Vec3(5.0f, 1.0f, 0.0f), new Vec3(0f, 0.5f, 1f), 0.09f, 0.032f),
 		new PointLight(new Vec3(1.0f, 1.0f, -15.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f)
 	};
 	
@@ -56,13 +56,10 @@ public class GLDemo extends Engine {
 	
 	private Shader standardShader;
 	private Shader lightShader;
-	private Shader skyboxShader;
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
 	private Mesh cubeMesh;
-	private Mesh skyboxMesh;
 	private Vec3 lightPos = new Vec3(0.0f, 1.0f, 0.0f);
-	private Cubemap skybox;
 	
 	public static void main(String[] args) {
 		new GLDemo().initialize(false);
@@ -75,16 +72,13 @@ public class GLDemo extends Engine {
 		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
-		skyboxShader = new Shader("skybox");
-		
-		this.background = new Vec3(0.1f, 0.1f, 0.1f);
-		this.ambient = new Vec3(0.1f, 0.1f, 0.1f);
+		this.ambient = new Vec3(0.3f, 0.3f, 0.3f);
 		
 		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
-		skyboxMesh = new Mesh(Primitives.skybox());
 		
-		skybox = new Cubemap(new String[] {
+		
+		this.skybox = new Cubemap(new String[] {
 				"right.jpg",
 				"left.jpg",
 				"top.jpg",
@@ -106,20 +100,12 @@ public class GLDemo extends Engine {
 
 	@Override
 	public void render() {
-		glDepthMask(false);
-		skyboxShader.bind();
-		skyboxMesh.bind();
 		
-		skyboxMesh.draw();
-		
-		skyboxShader.unBind();
-		skyboxMesh.unBind();
-		glDepthMask(true);
 		
 		//Bind two textures in different indexes so the shader has both.
 		containerTexture.bind(0);
 		containerSpecTexture.bind(1);
-		skybox.bind(2);
+		this.skybox.bind(2);
 		
 		//The transform of the falling cube.
 		Transform trans = new Transform();
@@ -132,7 +118,7 @@ public class GLDemo extends Engine {
 		standardShader.uniformVec3("ambient", this.ambient);
 		standardShader.uniformInt("material.diffuse", 0);
 		standardShader.uniformInt("material.specular", 1);
-		standardShader.uniformFloat("material.shininess", 16.0f);
+		standardShader.uniformFloat("material.shininess", 64.0f);
 		standardShader.uniformInt("skybox", 2);
 		
 		standardShader.uniformInt("pointLightCount", lights.length);

@@ -106,6 +106,20 @@ public class Shader {
 	}
 	
 	/**
+	 * Sends a boolean to the glsl uniform.
+	 */
+	public void uniformBool(String name, boolean value) {
+		int vertexColorLocation = glGetUniformLocation(this.id, name);
+		
+		if (value) {
+			glUniform1i(vertexColorLocation, 1);
+		}
+		else {
+			glUniform1i(vertexColorLocation, 0);
+		}
+	}
+	
+	/**
 	 * Translates a Mat4 object into the glsl uniform.
 	 */
 	public void uniformMat4(String name, Mat4 value) {

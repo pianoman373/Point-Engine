@@ -1,5 +1,6 @@
 package com.team.engine;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -22,6 +23,16 @@ public class GLBuffers {
 	public static IntBuffer StaticBuffer(int[] contents) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(contents.length);
 		for (int i : contents) {
+			buffer.put(i);
+		}
+		buffer.flip();
+		
+		return buffer;
+	}
+	
+	public static ByteBuffer StaticBuffer(byte[] contents) {
+		ByteBuffer buffer = BufferUtils.createByteBuffer(contents.length);
+		for (byte i : contents) {
 			buffer.put(i);
 		}
 		buffer.flip();

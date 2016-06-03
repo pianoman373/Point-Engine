@@ -5,8 +5,18 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import java.awt.List;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.ArrayList;
+import java.util.Set;
+import java.util.Vector;
+
+import jassimp.AiMesh;
+import jassimp.AiPostProcessSteps;
+import jassimp.AiScene;
+import jassimp.Jassimp;
 
 public class Mesh {
 	private int VAO;
@@ -82,6 +92,21 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	public Mesh(String file) {
+		try {
+			AiScene scene = Jassimp.importFile(file);
+			
+			AiMesh mesh = scene.getMeshes().get(0);
+			
+			FloatBuffer positions = mesh.getPositionBuffer();
+			IntBuffer indices = mesh.getIndexBuffer();
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Binds the model. The usual workflow for rendering the same model multiple times would be to bind, enter position in uniforms,
 	 * and then draw. Then to draw a new model, just re-enter a new position again. No need for unBinding after every draw (as long as you're drawing the same mesh).
@@ -98,6 +123,8 @@ public class Mesh {
 	}
 	
 	public void draw() {
+		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, length);
+		glBindVertexArray(0);
 	}
 }

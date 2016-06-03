@@ -1,21 +1,11 @@
 package com.team.engine;
 
-public class GameObject {
-	public Transform transform;
+public abstract class GameObject {
+	public Transform transform = new Transform();
 	public Mesh mesh = null;
 	public Shader shader;
 	
-	public GameObject() {
-		this.transform = new Transform();
-		this.shader = new Shader("standard");
-	}
+	public abstract void update();
 	
-	public void update() {
-	}
-	
-	public void render(Scene scene) {
-		if (mesh != null) {
-			
-		}
-	}
+	public abstract void render(Scene scene);
 }

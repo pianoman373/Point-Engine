@@ -2,6 +2,7 @@ package com.team.engine.demos;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import com.team.engine.Cubemap;
 import com.team.engine.Engine;
 import com.team.engine.Input;
 import com.team.engine.Mesh;
@@ -25,8 +26,9 @@ public class HdrDemo extends Engine {
 	};
 	
 	private static PointLight lights[] = {
-		new PointLight(new Vec3(-3, 0, -3), new Vec3(10f, 10f, 10f), 0.09f, 0.032f),
-		new PointLight(new Vec3(10.0f, -2.0f, -25.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f)
+		new PointLight(new Vec3(-3, 0, -3), new Vec3(4f, 4f, 4f), 0.09f, 0.032f),
+		new PointLight(new Vec3(10.0f, -2.0f, -25.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f),
+		new PointLight(new Vec3(6, -2, 3), new Vec3(1f, 0.2f, 0.2f), 0.09f, 0.032f),
 	};
 	
 	private Shader standardShader;
@@ -54,8 +56,8 @@ public class HdrDemo extends Engine {
 		lightShader = new Shader("light");
 		hdrShader = new Shader("hdr");
 		
-		this.background = new Vec3(0.1f, 0.1f, 0.1f);
-		this.ambient = new Vec3(0.1f, 0.1f, 0.1f);
+		this.background = new Vec3(0.0f, 0.0f, 0.0f);
+		this.ambient = new Vec3(0.0f, 0.0f, 0.0f);
 		
 		//Create the cube and plane mesh objects from primitives.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
@@ -90,7 +92,7 @@ public class HdrDemo extends Engine {
 		standardShader.uniformVec3("ambient", this.ambient);
 		standardShader.uniformInt("material.diffuse", 0);
 		standardShader.uniformInt("material.specular", 1);
-		standardShader.uniformFloat("material.shininess", 16.0f);
+		standardShader.uniformFloat("material.shininess", 64.0f);
 		
 		//Our shader currently only has 2 spaces for point lights hardcoded in.
 		standardShader.uniformInt("pointLightCount", lights.length);

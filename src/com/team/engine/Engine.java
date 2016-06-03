@@ -27,7 +27,6 @@ public abstract class Engine {
 	public Mat4 projection;
 	
 	public Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
-	public Vec3 background = new Vec3(0.2f, 0.2f, 0.2f);
 	public Camera camera;
 	
 	private KeyCallback keyCallback;
@@ -36,8 +35,17 @@ public abstract class Engine {
 	private ScrollCallback scrollCallback;
 	
 	private Shader framebufferShader;
+	private Shader blurShader;
+	private Shader skyboxShader;
+	
+	public Cubemap skybox = null;
+	public Vec3 background = new Vec3(0.0f, 0.0f, 0.0f);
+	
 	private Framebuffer fbuffer;
+	private Framebuffer pingPong1;
+	private Framebuffer pingPong2;
 	private Mesh framebufferMesh;
+	private Mesh skyboxMesh;
 	
 	public float deltaTime = 0.0f;
 	private float lastFrame = 0.0f;
@@ -69,8 +77,15 @@ public abstract class Engine {
 		setupContext();
 		
 		framebufferShader = new Shader("framebuffer");
+		blurShader = new Shader("blur");
+		skyboxShader = new Shader("skybox");
+		
 		framebufferMesh = new Mesh(Primitives.framebuffer());
-		fbuffer = new Framebuffer(new Vec2i(1000, 800));
+		skyboxMesh = new Mesh(Primitives.skybox());
+		
+		fbuffer = new Framebuffer(new Vec2i(1000, 800), 2, true);
+		pingPong1 = new Framebuffer(new Vec2i(1000, 800), 1, false);
+		pingPong2 = new Framebuffer(new Vec2i(1000, 800), 1, false);
 		
 		setupGame();
 		
@@ -103,14 +118,34 @@ public abstract class Engine {
 			this.update();
 			fbuffer.bind();
 			this.clear();
-			this.render();
-			Framebuffer.unbind();
 			
+			if (this.skybox != null) {
+				glDepthMask(false);
+				skyboxShader.bind();
+				skyboxMesh.bind();
+				skybox.bind();
+				
+				skyboxMesh.draw();
+				
+				skyboxShader.unBind();
+				skyboxMesh.unBind();
+				glDepthMask(true);
+			}
+			
+			this.render();
+			
+			//do bloom
+			doBloom();
+			
+			Framebuffer.unbind();
 			this.clear();
 			framebufferMesh.bind();
 			framebufferShader.bind();
 			this.postRenderUniforms(framebufferShader);
-			fbuffer.tex.bind();
+			pingPong2.tex[0].bind(1);
+			fbuffer.tex[0].bind(0);
+			framebufferShader.uniformInt("screenTexture", 0);
+			framebufferShader.uniformInt("bloomTexture", 1);
 			
 			framebufferMesh.draw();
 			
@@ -119,6 +154,49 @@ public abstract class Engine {
 			glfwSwapBuffers(window);
 		}
 		this.end();
+	}
+	
+	private void doBloom() {
+		boolean horizontal = true;
+		boolean first = true;
+		int amount = 10;
+		
+		for (int i = 0; i < amount; i++) {
+			if (horizontal) {
+				pingPong1.bind();
+				//this.clear();
+			}
+			else {
+				pingPong2.bind();
+				//this.clear();
+			}
+			blurShader.bind();
+			blurShader.uniformBool("horizontal", horizontal);
+			
+			if (first) {
+				fbuffer.tex[1].bind();
+			}
+			else {
+				if (horizontal) {
+					pingPong2.tex[0].bind();
+				}
+				else {
+					pingPong1.tex[0].bind();
+				}
+			}
+			
+			framebufferMesh.bind();
+			framebufferMesh.draw();
+			framebufferMesh.unBind();
+			
+			horizontal = !horizontal;
+			
+			if (first) {
+				first = false;
+			}
+		}
+		
+		Framebuffer.unbind();
 	}
 	
 	private void update() {
