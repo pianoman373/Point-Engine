@@ -62,7 +62,6 @@ public class Grid2D {
 	public void render() {
 		spriteShader.bind();
 		tileset.image.bind();
-		tileset.mesh.bind();
 		
 		for (int x = 0; x < dimensions.x; x++) {
 			for (int y = 0; y < dimensions.y; y++) {
@@ -76,8 +75,6 @@ public class Grid2D {
 				tileset.mesh.draw();
 			}
 		}
-		
-		tileset.mesh.unBind();
 	}
 	
 	private Vec2 idToOffset(int id) {

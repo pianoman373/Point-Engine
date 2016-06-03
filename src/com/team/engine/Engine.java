@@ -122,13 +122,11 @@ public abstract class Engine {
 			if (this.skybox != null) {
 				glDepthMask(false);
 				skyboxShader.bind();
-				skyboxMesh.bind();
 				skybox.bind();
 				
 				skyboxMesh.draw();
 				
 				skyboxShader.unBind();
-				skyboxMesh.unBind();
 				glDepthMask(true);
 			}
 			
@@ -139,7 +137,6 @@ public abstract class Engine {
 			
 			Framebuffer.unbind();
 			this.clear();
-			framebufferMesh.bind();
 			framebufferShader.bind();
 			this.postRenderUniforms(framebufferShader);
 			pingPong2.tex[0].bind(1);
@@ -148,8 +145,6 @@ public abstract class Engine {
 			framebufferShader.uniformInt("bloomTexture", 1);
 			
 			framebufferMesh.draw();
-			
-			framebufferMesh.unBind();
 			
 			glfwSwapBuffers(window);
 		}
@@ -185,9 +180,7 @@ public abstract class Engine {
 				}
 			}
 			
-			framebufferMesh.bind();
 			framebufferMesh.draw();
-			framebufferMesh.unBind();
 			
 			horizontal = !horizontal;
 			

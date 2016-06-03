@@ -107,21 +107,6 @@ public class Mesh {
 		}
 	}
 	
-	/**
-	 * Binds the model. The usual workflow for rendering the same model multiple times would be to bind, enter position in uniforms,
-	 * and then draw. Then to draw a new model, just re-enter a new position again. No need for unBinding after every draw (as long as you're drawing the same mesh).
-	 */
-	public void bind() {
-		glBindVertexArray(VAO);
-	}
-	
-	/**
-	 * Same story as Shader.unbind()
-	 */
-	public void unBind() {
-		glBindVertexArray(0);
-	}
-	
 	public void draw() {
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, length);

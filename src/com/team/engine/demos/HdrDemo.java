@@ -100,8 +100,7 @@ public class HdrDemo extends Engine {
 			standardShader.uniformPointLight("pointLights[" + i + "]", lights[i]);
 		}
 		
-		//Bind the mesh and then draw it 10 times but with different model uniforms.
-		cubeMesh.bind();
+		//draw the same mesh with different model matrices each time
 		for(int i = 0; i < cubePositions.length; i++)
 		{
 		  Mat4 model = new Mat4().translate(cubePositions[i]);
@@ -110,8 +109,6 @@ public class HdrDemo extends Engine {
 		  cubeMesh.draw();
 		}
 		
-		planeMesh.bind();
-		
 		brickTexture.bind(0);
 		Texture.unBind(1);
 		
@@ -119,7 +116,6 @@ public class HdrDemo extends Engine {
 		
 		planeMesh.draw();
 		
-		cubeMesh.bind();
 		lightShader.bind();
 		
 		for (PointLight light : lights) {
@@ -130,7 +126,6 @@ public class HdrDemo extends Engine {
 		
 		//Now we can unbind everything since we're done with the cube and the light shader.
 		lightShader.unBind();
-		cubeMesh.unBind();
 	}
 
 	@Override
