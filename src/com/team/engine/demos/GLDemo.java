@@ -1,7 +1,6 @@
 package com.team.engine.demos;
 
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
-import static org.lwjgl.opengl.GL11.*;
 
 import javax.vecmath.Vector3f;
 

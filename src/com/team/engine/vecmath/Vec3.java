@@ -1,6 +1,7 @@
 package com.team.engine.vecmath;
 
 import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferUtils;
 
 public class Vec3 {

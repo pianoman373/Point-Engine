@@ -1,8 +1,8 @@
 package com.team.engine.demos;
 
-import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_COMMA;
+import static org.lwjgl.glfw.GLFW.GLFW_KEY_PERIOD;
 
-import com.team.engine.Cubemap;
 import com.team.engine.Engine;
 import com.team.engine.Input;
 import com.team.engine.Mesh;
