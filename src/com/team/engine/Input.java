@@ -10,11 +10,6 @@ import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_FILL;
-import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_LINE;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
-import static org.lwjgl.opengl.GL11.glPolygonMode;
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -23,10 +18,14 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 
 import com.team.engine.vecmath.Vec2;
 
+/**
+ * This is the main class for receiving any sort of input.
+ * 
+ * Needs a few more hooks, but for now all you'll really be
+ * using are mousePos and isKeydown.
+ * 
+ */
 public class Input {
-	private static boolean isWireframe = false;
-	
-	
 	public static boolean[] keys = new boolean[1024];
 	public static Vec2 mousePos = new Vec2(0, 0);
 	public static boolean firstMouse = true;
@@ -37,32 +36,30 @@ public class Input {
 		return keys[key];
 	}
 	
-	public static void keyEvent(long window, int key, int action) {
+	protected static void keyEvent(long window, int key, int action) {
 		if(action == GLFW_PRESS)
 			keys[key] = true;
 		else if(action == GLFW_RELEASE)
 			keys[key] = false;  
 		
 		if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-			glfwSetWindowShouldClose(window, GL_TRUE);
+			glfwSetWindowShouldClose(window, true);
 		
 		if(key == GLFW_KEY_M && action == GLFW_PRESS) {
-			if (!isWireframe) {
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-				isWireframe = true;
+			if (!Engine.instance.wireframe) {
+				Engine.instance.wireframe = true;
 			}
 			else {
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-				isWireframe = false;
+				Engine.instance.wireframe = false;
 			}
 		}
 	}
 	
-	public static void cursorEvent(long window, double xpos, double ypos) {
+	protected static void cursorEvent(long window, double xpos, double ypos) {
 		mousePos = new Vec2((float)xpos, (float)ypos);
 	}
 	
-	public static void mouseEvent(long window, int button, int action, int mods) {
+	protected static void mouseEvent(long window, int button, int action, int mods) {
 		if (button == GLFW_MOUSE_BUTTON_1) {
 			if (action == GLFW_PRESS) {
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -76,7 +73,7 @@ public class Input {
 		}
 	}
 	
-	public static void scrollEvent(long window, double scrollAmount) {
+	protected static void scrollEvent(long window, double scrollAmount) {
 		scrollingAmount += scrollAmount;
 	}
 }

@@ -1,44 +1,15 @@
 package com.team.engine;
 
-import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MAJOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CONTEXT_VERSION_MINOR;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_CORE_PROFILE;
-import static org.lwjgl.glfw.GLFW.GLFW_OPENGL_PROFILE;
-import static org.lwjgl.glfw.GLFW.GLFW_SAMPLES;
-import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
-import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
-import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-import static org.lwjgl.glfw.GLFW.glfwWindowHint;
-import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
-import static org.lwjgl.opengl.GL11.glBlendFunc;
-import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glClearColor;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.file.Paths;
 
 import javax.swing.JOptionPane;
 
-import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.GL;
 
-import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2i;
 import com.team.engine.vecmath.Vec3;
 /**
@@ -51,10 +22,6 @@ public abstract class Engine {
 	
 	public static Engine instance;
 	
-	public Mat4 view;
-	public Vec3 viewPos;
-	public Mat4 projection;
-	
 	public Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
 	public Camera camera;
 	
@@ -63,9 +30,10 @@ public abstract class Engine {
 	private MouseCallback mouseCallback;
 	private ScrollCallback scrollCallback;
 	
-	private Shader framebufferShader;
-	private Shader blurShader;
-	private Shader skyboxShader;
+	public Shader framebufferShader;
+	public Shader blurShader;
+	public Shader skyboxShader;
+	public Shader lightShader;
 	
 	public Cubemap skybox = null;
 	public Vec3 background = new Vec3(0.0f, 0.0f, 0.0f);
@@ -75,11 +43,15 @@ public abstract class Engine {
 	private Framebuffer pingPong2;
 	private Mesh framebufferMesh;
 	private Mesh skyboxMesh;
+	public Mesh cubeMesh;
 	
 	public float deltaTime = 0.0f;
 	private float lastFrame = 0.0f;
 	
 	private boolean is2d = false;
+	
+	public boolean wireframe = false;
+	
 	
 	//these are all classes that the main game must inherit
 	public abstract void setupGame();
@@ -88,10 +60,13 @@ public abstract class Engine {
 	
 	public abstract void render();
 	
+	public abstract void kill();
+	
 	/**
 	 * Add any uniforms you want to the currently bound framebuffer shader before rendering.
 	 */
 	public abstract void postRenderUniforms(Shader shader);
+	
 	
 	public void setFramebuffer(Shader shader) {
 		this.framebufferShader = shader;
@@ -108,9 +83,11 @@ public abstract class Engine {
 		framebufferShader = new Shader("framebuffer");
 		blurShader = new Shader("blur");
 		skyboxShader = new Shader("skybox");
+		lightShader = new Shader("light");
 		
 		framebufferMesh = new Mesh(Primitives.framebuffer());
 		skyboxMesh = new Mesh(Primitives.skybox());
+		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		
 		fbuffer = new Framebuffer(new Vec2i(1000, 800), 2, true);
 		pingPong1 = new Framebuffer(new Vec2i(1000, 800), 1, false);
@@ -120,6 +97,7 @@ public abstract class Engine {
 		
 		glClearColor(background.x, background.y, background.z, 1.0f);
 		glEnable(GL_DEPTH_TEST);
+		//glDepthFunc(GL_LESS);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 		//glEnable(GL_CULL_FACE);
@@ -133,16 +111,12 @@ public abstract class Engine {
 			this.camera = new FPSCamera();
 		}
 		
-		while (glfwWindowShouldClose(window) != GL_TRUE) {
+		while (!glfwWindowShouldClose(window)) {
 			glfwPollEvents();
 			
 			float currentFrame = (float) glfwGetTime();
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
-			
-			view = camera.getView();
-			viewPos = camera.getPosition();
-			projection = camera.getProjection();
 			
 			this.update();
 			fbuffer.bind();
@@ -159,9 +133,16 @@ public abstract class Engine {
 				glDepthMask(true);
 			}
 			
+			if (wireframe) {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+			}
+			
 			this.render();
 			
-			//do bloom
+			if (wireframe) {
+				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			}
+			
 			doBloom();
 			
 			Framebuffer.unbind();
@@ -232,6 +213,9 @@ public abstract class Engine {
 	 */
 	private void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("lib/native").toAbsolutePath().toString());
+		System.setProperty("java.library.path", Paths.get("lib").toAbsolutePath().toString());
+		
+		System.out.println(System.getProperty("java.library.path"));
 		
 		glfwInit();
 		glfwWindowHint(GLFW_SAMPLES, 4);
@@ -246,7 +230,6 @@ public abstract class Engine {
 		}
 		
 		glfwMakeContextCurrent(window);
-		GLContext.createFromCurrent();
 		
 		keyCallback = new KeyCallback();
 		cursorCallback = new CursorCallback();
@@ -257,6 +240,8 @@ public abstract class Engine {
 		glfwSetCursorPosCallback(window, cursorCallback);
 		glfwSetMouseButtonCallback(window, mouseCallback);
 		glfwSetScrollCallback(window, scrollCallback);
+		
+		GL.createCapabilities();
 	}
 	
 	/**
@@ -268,6 +253,7 @@ public abstract class Engine {
 	}
 	
 	private void end() {
+		kill();
 		glfwTerminate();
 	}
 }

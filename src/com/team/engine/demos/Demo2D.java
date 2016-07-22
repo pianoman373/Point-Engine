@@ -56,4 +56,9 @@ public class Demo2D extends Engine {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void kill() {
+		
+	}
 }

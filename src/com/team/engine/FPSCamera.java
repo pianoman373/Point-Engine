@@ -1,20 +1,14 @@
 package com.team.engine;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_E;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_F;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_Q;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_R;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Vec4;
 
 public class FPSCamera extends Camera {
-	public Vec3 position = new Vec3(0.0f, 0.0f, 0.0f);
-	public Vec3 front = new Vec3(0.0f, 0.0f, 0.0f);
+	public Vec3 position = new Vec3(0.0f, 0.0f, 15.0f);
+	public Vec3 front = new Vec3(0.0f, 0.0f, -1.0f);
 	public float pitch = 0.0f;
 	public float yaw = -90.0f;
 	public float roll = 0;
@@ -30,7 +24,7 @@ public class FPSCamera extends Camera {
 	 * TODO: this update it's own object instead of updating Engine.camera
 	 */
 	public void update() {
-		front.x = (float) (Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw)));
+		/*front.x = (float) (Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw)));
 		front.y = (float) Math.sin(Math.toRadians(pitch));
 		front.z = (float) (Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)));
 		
@@ -91,10 +85,78 @@ public class FPSCamera extends Camera {
 				this.pitch =  89.0f;
 			if(this.pitch < -89.0f)
 				this.pitch = -89.0f;
+		}*/
+		
+		Vec3 right = front.cross(up);
+		
+		if (Input.mouseGrabbed == true) {
+			if(Input.firstMouse)
+			{
+				lastX = (float) Input.mousePos.x;
+				lastY = (float) Input.mousePos.y;
+				Input.firstMouse = false;
+			}
+
+			float xoffset = (float)Input.mousePos.x - lastX;
+			float yoffset = lastY - (float)Input.mousePos.y;
+			lastX = (float)Input.mousePos.x;
+			lastY = (float)Input.mousePos.y;
+
+			float sensitivity = 0.05f;
+			xoffset *= sensitivity;
+			yoffset *= sensitivity;
+			
+			//vertical
+			Mat4 mat = new Mat4().rotate(new Vec4(right.x, right.y, right.z, yoffset));
+			Vec4 vec = mat.multiply(new Vec4(front.x, front.y, front.z, 1.0f));
+			front = new Vec3(vec.x, vec.y, vec.z);
+			
+			Vec4 vec2 = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
+			up = new Vec3(vec2.x, vec2.y, vec2.z);
+			
+			//horizontal
+			Mat4 mat2 = new Mat4().rotate(new Vec4(up.x, up.y, up.z, -xoffset));
+			Vec4 vec3 = mat2.multiply(new Vec4(front.x, front.y, front.z, 1.0f));
+			front = new Vec3(vec3.x, vec3.y, vec3.z);
 		}
+		
+		
 		
 		lastX = (float)Input.mousePos.x;
 		lastY = (float)Input.mousePos.y;
+		
+		if (Input.isKeyDown(GLFW_KEY_E)) {
+			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, 0.3f));
+			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
+			up = new Vec3(vec.x, vec.y, vec.z);
+		}
+		if (Input.isKeyDown(GLFW_KEY_Q)) {
+			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -0.3f));
+			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
+			up = new Vec3(vec.x, vec.y, vec.z);
+		}
+		
+		if (Input.scrollingAmount <= 1) Input.scrollingAmount = 1;
+		
+		float cameraSpeed = 500.0f * Engine.instance.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
+	    if(Input.isKeyDown(GLFW_KEY_W)) {
+	        position = position.add((front.multiply(cameraSpeed)));
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_S)) {
+	    	position = position.subtract((front.multiply(cameraSpeed)));
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_A)) {
+	    	position = position.subtract(right.multiply(cameraSpeed));
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_D)) {
+	    	position = position.add(right.multiply(cameraSpeed));
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_R)) {
+	    	position = position.add(up.multiply(cameraSpeed));
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_F)) {
+	    	position = position.subtract(up.multiply(cameraSpeed));
+	    }
 	}
 
 	@Override
@@ -104,17 +166,11 @@ public class FPSCamera extends Camera {
 
 	@Override
 	public Mat4 getProjection() {
-		return Mat4.perspective(45.0f, 1000/800, 0.1f, 1000.0f);
+		return Mat4.perspective(45.0f, 1000/800, 0.1f, 10000000.0f);
 	}
 
 	@Override
 	public Vec3 getPosition() {
 		return this.position;
-	}
-
-	@Override
-	public void render(Scene scene) {
-		// TODO Auto-generated method stub
-		
 	}
 }

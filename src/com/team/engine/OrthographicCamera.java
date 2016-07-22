@@ -47,11 +47,5 @@ public class OrthographicCamera extends Camera {
 	public Vec3 getPosition() {
 		return new Vec3(this.position.x, this.position.y, 0);
 	}
-
-	@Override
-	public void render(Scene scene) {
-		// TODO Auto-generated method stub
-		
-	} 
 	
 }

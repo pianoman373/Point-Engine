@@ -1,5 +1,6 @@
 package com.team.engine.demos;
 
+import com.team.engine.Camera;
 import com.team.engine.GameObject;
 import com.team.engine.Scene;
 
@@ -16,8 +17,8 @@ public class Crate extends GameObject {
 	}
 
 	@Override
-	public void render(Scene scene) {
-		// TODO Auto-generated method stub
+	public void render(Scene scene, Camera cam) {
+		
 		
 	}
 }

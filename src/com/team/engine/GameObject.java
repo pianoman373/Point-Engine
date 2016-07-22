@@ -7,5 +7,5 @@ public abstract class GameObject {
 	
 	public abstract void update();
 	
-	public abstract void render(Scene scene);
+	public abstract void render(Scene scene, Camera cam);
 }

@@ -1,7 +1,5 @@
 package com.team.engine.demos;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
-
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
@@ -43,11 +41,10 @@ public class GLDemo extends Engine {
 	};
 	
 	private static PointLight lights[] = {
-		new PointLight(new Vec3(-1, 0, -3), new Vec3(1f, 1f, 1f), 0.09f, 0.032f),
-		new PointLight(new Vec3(3.0f, 1.0f, -4.0f), new Vec3(1f, 0f, 0f), 0.09f, 0.032f),
-		new PointLight(new Vec3(-1.0f, -3.0f, 4.0f), new Vec3(1f, 0.5f, 0f), 0.09f, 0.032f),
-		new PointLight(new Vec3(5.0f, 1.0f, 0.0f), new Vec3(0f, 0.5f, 1f), 0.09f, 0.032f),
-		new PointLight(new Vec3(1.0f, 1.0f, -15.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f)
+		new PointLight(new Vec3(-1, 0, -3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f),
+		new PointLight(new Vec3(1, 0, -3), new Vec3(1f, 0.8f, 0.9f), 0.09f, 0.032f),
+		new PointLight(new Vec3(-1, 0, 3), new Vec3(1f, 0.8f, 0.9f), 0.09f, 0.032f),
+		new PointLight(new Vec3(1, 0, 3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f)
 	};
 	
 	private static RigidBody rigidBody;
@@ -58,7 +55,6 @@ public class GLDemo extends Engine {
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
 	private Mesh cubeMesh;
-	private Vec3 lightPos = new Vec3(0.0f, 1.0f, 0.0f);
 	
 	public static void main(String[] args) {
 		new GLDemo().initialize(false);
@@ -69,9 +65,13 @@ public class GLDemo extends Engine {
 		//Load all our shaders and textures from disk.
 		containerTexture = new Texture("resources/textures/container2.png");
 		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
+		
+		
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
 		this.ambient = new Vec3(0.3f, 0.3f, 0.3f);
+		
+		this.setFramebuffer(new Shader("hdr"));
 		
 		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
@@ -91,20 +91,16 @@ public class GLDemo extends Engine {
 
 	@Override
 	public void tick() {
-		//Move the light around and tell bullet to tick.
-		lightPos.x = (float) (Math.sin(glfwGetTime()) * 10);
-		lightPos.z = (float) (Math.cos(glfwGetTime()) * 5);
+		//tell bullet to tick
 		dynamicsWorld.stepSimulation(1 / 100.f, 10);
 	}
 
 	@Override
 	public void render() {
-		
-		
 		//Bind two textures in different indexes so the shader has both.
 		containerTexture.bind(0);
 		containerSpecTexture.bind(1);
-		this.skybox.bind(2);
+		//this.skybox.bind(2);
 		
 		//The transform of the falling cube.
 		Transform trans = new Transform();
@@ -116,6 +112,7 @@ public class GLDemo extends Engine {
 		//Send material parameters and the global ambient as well.
 		standardShader.uniformVec3("ambient", this.ambient);
 		standardShader.uniformInt("material.diffuse", 0);
+		standardShader.uniformInt("material.useTex", 1);
 		standardShader.uniformInt("material.specular", 1);
 		standardShader.uniformFloat("material.shininess", 64.0f);
 		standardShader.uniformInt("skybox", 2);
@@ -188,5 +185,13 @@ public class GLDemo extends Engine {
 	}
 
 	@Override
-	public void postRenderUniforms(Shader shader) {}
+	public void postRenderUniforms(Shader shader) {
+		//Send our exposure uniform to the post processing shader.
+		shader.uniformFloat("exposure", 2.0f);
+	}
+
+	@Override
+	public void kill() {
+		
+	}
 }

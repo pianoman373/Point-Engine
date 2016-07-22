@@ -8,6 +8,7 @@ import com.team.engine.Input;
 import com.team.engine.Mesh;
 import com.team.engine.PointLight;
 import com.team.engine.Primitives;
+import com.team.engine.Scene;
 import com.team.engine.Shader;
 import com.team.engine.Texture;
 import com.team.engine.vecmath.Mat4;
@@ -32,7 +33,6 @@ public class HdrDemo extends Engine {
 	};
 	
 	private Shader standardShader;
-	private Shader lightShader;
 	private Shader hdrShader;
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
@@ -40,6 +40,8 @@ public class HdrDemo extends Engine {
 	private Mesh cubeMesh;
 	private Mesh planeMesh;
 	private float exposure = 1.0f;
+	
+	private Scene scene;
 	
 	
 	public static void main(String[] args) {
@@ -53,7 +55,6 @@ public class HdrDemo extends Engine {
 		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
 		brickTexture = new Texture("resources/textures/brickwall.jpg");
 		standardShader = new Shader("standard");
-		lightShader = new Shader("light");
 		hdrShader = new Shader("hdr");
 		
 		this.background = new Vec3(0.0f, 0.0f, 0.0f);
@@ -61,10 +62,15 @@ public class HdrDemo extends Engine {
 		
 		//Create the cube and plane mesh objects from primitives.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
-		planeMesh = new Mesh(Primitives.plane(20.0f));
+		planeMesh = Primitives.planeMesh(20.0f);
 		
 		//set the engines framebuffer shader to our hdr shader.
 		this.setFramebuffer(hdrShader);
+		
+		scene = new Scene();
+		scene.lights.add(new PointLight(new Vec3(-3, 0, -3), new Vec3(4f, 4f, 4f), 0.09f, 0.032f));
+		scene.lights.add(new PointLight(new Vec3(10.0f, -2.0f, -25.0f), new Vec3(0.5f, 1.0f, 0.5f), 0.09f, 0.032f));
+		scene.lights.add(new PointLight(new Vec3(6, -2, 3), new Vec3(1f, 0.2f, 0.2f), 0.09f, 0.032f));
 	}
 
 	@Override
@@ -113,19 +119,14 @@ public class HdrDemo extends Engine {
 		Texture.unBind(1);
 		
 		standardShader.uniformMat4("model", new Mat4().translate(new Vec3(0, -5, 0)).scale(new Vec3(100, 100, 100)));
-		
 		planeMesh.draw();
 		
-		lightShader.bind();
-		
-		for (PointLight light : lights) {
-			lightShader.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
-			lightShader.uniformVec3("lightColor", light.color);
-			cubeMesh.draw();
-		}
-		
-		//Now we can unbind everything since we're done with the cube and the light shader.
-		lightShader.unBind();
+		scene.render(Engine.instance.camera);
+	}
+	
+	public void kill() {
+		cubeMesh.delete();
+		planeMesh.delete();
 	}
 
 	@Override

@@ -183,4 +183,8 @@ public class Vec3 {
         buffer.flip();
         return buffer;
     }
+    
+    public String toString() {
+    	return "(" + this.x + ", " + this.y + ", " + this.z + ")";
+    }
 }

@@ -1,26 +1,12 @@
 package com.team.engine;
 
-import static org.lwjgl.opengl.GL11.GL_FLOAT;
-import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15.glGenBuffers;
-import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
-import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL30.*;
 
-import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-
-import jassimp.AiMesh;
-import jassimp.AiScene;
-import jassimp.Jassimp;
 
 public class Mesh {
 	private int VAO;
@@ -28,6 +14,7 @@ public class Mesh {
 	private int VBO;
 	
 	private int length;
+	private boolean indexed = false;
 	
 	/**
 	 * Makes a mesh object from specified mesh data. Just like Texture and Shader, bind before rendering.
@@ -38,6 +25,7 @@ public class Mesh {
 	 * The mesh is currently set up to ignore indices though, so don't use this yet.
 	 */
 	public Mesh(float[] vertices, int[] indices) {
+		indexed = true;
 		VAO = glGenVertexArrays();
 		glBindVertexArray(VAO);
 		
@@ -49,11 +37,66 @@ public class Mesh {
 		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(vertices);
 		IntBuffer indexBuffer = GLBuffers.StaticBuffer(indices);
 		
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
+		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 		
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0);
+		glEnableVertexAttribArray(0);
+		
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * 4, 3 * 4);
+		glEnableVertexAttribArray(1);
+		
+		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 6 * 4);
+		glEnableVertexAttribArray(2);
+		
+		glBindVertexArray(0);
+	}
+	
+	public Mesh(float[] positions, float[] normals, float[] uvs, int[] indices) {
+		int size = positions.length + normals.length + uvs.length;
+		
+		float[] vertices = new float[size];
+		
+		int j = 0;
+		int k = 0;
+		for (int i = 0; i < size; i += 8) {
+			vertices[i] = positions[j];
+			vertices[i + 1] = positions[j + 1];
+			vertices[i + 2] = positions[j + 2];
+			
+			vertices[i + 3] = normals[j];
+			vertices[i + 4] = normals[j + 1];
+			vertices[i + 5] = normals[j + 2];
+			
+			vertices[i + 6] = uvs[k];
+			vertices[i + 7] = uvs[k + 1];
+			
+			j += 3;
+			k += 2;
+		}
+		
+		
+		
+		indexed = true;
+		VAO = glGenVertexArrays();
+		glBindVertexArray(VAO);
+		
+		EBO = glGenBuffers();
+		VBO = glGenBuffers();
+		
+		length = indices.length;
+		
+		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(vertices);
+		IntBuffer indexBuffer = GLBuffers.StaticBuffer(indices);
+		
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
+		
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 		
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0);
 		glEnableVertexAttribArray(0);
@@ -96,24 +139,21 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
-	public Mesh(String file) {
-		try {
-			AiScene scene = Jassimp.importFile(file);
-			
-			AiMesh mesh = scene.getMeshes().get(0);
-			
-			FloatBuffer positions = mesh.getPositionBuffer();
-			IntBuffer indices = mesh.getIndexBuffer();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
 	public void draw() {
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, length);
+		if (indexed) {
+			//System.out.println("rendering indexed");
+			glDrawElements(GL_TRIANGLES, length, GL_UNSIGNED_INT, 0);
+		}
+		else {
+			glDrawArrays(GL_TRIANGLES, 0, length);
+		}
 		glBindVertexArray(0);
+	}
+	
+	public void delete() {
+		glDeleteVertexArrays(VAO);
+	    glDeleteBuffers(VBO);
+	    glDeleteBuffers(EBO);
 	}
 }
