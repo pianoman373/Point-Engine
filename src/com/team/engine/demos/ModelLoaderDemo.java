@@ -25,8 +25,20 @@ public class ModelLoaderDemo extends Engine {
 	private Shader lightShader;
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
+	
+	private Texture floorAlbedo;
+	private Texture floorSpec;
+	
+	private Texture wallAlbedo;
+	private Texture wallSpec;
+	
+	private Texture roofAlbedo;
+	private Texture roofSpec;
+	
 	private Mesh cubeMesh;
 	private Mesh objMesh;
+	private Mesh objMesh2;
+	private Mesh objMesh3;
 	
 	public static void main(String[] args) {
 		new ModelLoaderDemo().initialize(false);
@@ -35,8 +47,14 @@ public class ModelLoaderDemo extends Engine {
 	@Override
 	public void setupGame() {
 		//Load all our shaders and textures from disk.
-		containerTexture = new Texture("resources/textures/HallwayWallsAlbedo.png");
-		containerSpecTexture = new Texture("resources/textures/HallwayWallsSpecularGloss.png");
+		floorAlbedo = new Texture("resources/textures/HallwayFloorAlbedo.png");
+		floorSpec = new Texture("resources/textures/HallwayFloorSpecularGloss.png");
+		
+		wallAlbedo = new Texture("resources/textures/HallwayWallsAlbedo.png");
+		wallSpec = new Texture("resources/textures/HallwayWallsSpecularGloss.png");
+		
+		roofAlbedo = new Texture("resources/textures/HallwayRoofAlbedo.png");
+		roofSpec = new Texture("resources/textures/HallwayRoofSpecularGloss.png");
 		
 		
 		standardShader = new Shader("standard");
@@ -48,7 +66,9 @@ public class ModelLoaderDemo extends Engine {
 		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		
-		objMesh = ObjLoader.loadFile("resources/hallway.obj");
+		objMesh = ObjLoader.loadFile("resources/hallway_floor.obj");
+		objMesh2 = ObjLoader.loadFile("resources/hallway_walls.obj");
+		objMesh3 = ObjLoader.loadFile("resources/hallway_roof.obj");
 		
 		this.background = new Vec3(0, 0, 0);
 	}
@@ -61,8 +81,6 @@ public class ModelLoaderDemo extends Engine {
 	@Override
 	public void render() {
 		//Bind two textures in different indexes so the shader has both.
-		containerTexture.bind(0);
-		containerSpecTexture.bind(1);
 		
 		//Bind our shader.
 		standardShader.bind();
@@ -70,9 +88,12 @@ public class ModelLoaderDemo extends Engine {
 		//Send material parameters and the global ambient as well.
 		standardShader.uniformVec3("ambient", this.ambient);
 		standardShader.uniformInt("material.diffuse", 0);
-		standardShader.uniformInt("material.useTex", 1);
+		standardShader.uniformBool("material.diffuseTextured", true);
+		
 		standardShader.uniformInt("material.specular", 1);
-		standardShader.uniformFloat("material.shininess", 64.0f);
+		standardShader.uniformBool("material.specularTextured", true);
+		standardShader.uniformVec3("material.specularColor", new Vec3(0.5,0.5,0.5));
+		standardShader.uniformFloat("material.shininess", 2.0f);
 		standardShader.uniformInt("skybox", 2);
 		
 		standardShader.uniformInt("pointLightCount", lights.length);
@@ -82,8 +103,19 @@ public class ModelLoaderDemo extends Engine {
 		
 		//Draw the falling one.
 		for (int i = 0; i < 10; i++) {
-			standardShader.uniformMat4("model", new Mat4().translate(new Vec3(0, 0, i * 7.8)));
+			standardShader.uniformMat4("model", new Mat4().translate(new Vec3(0, 0, i * 8)));
+			
+			floorAlbedo.bind(0);
+			floorSpec.bind(1);
 			objMesh.draw();
+			
+			wallAlbedo.bind(0);
+			wallSpec.bind(1);
+			objMesh2.draw();
+			
+			roofAlbedo.bind(0);
+			roofSpec.bind(1);
+			objMesh3.draw();
 		}
 		
 		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.

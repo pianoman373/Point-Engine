@@ -16,6 +16,7 @@ import com.bulletphysics.linearmath.Transform;
 import com.team.engine.Cubemap;
 import com.team.engine.Engine;
 import com.team.engine.Mesh;
+import com.team.engine.ObjLoader;
 import com.team.engine.PointLight;
 import com.team.engine.Primitives;
 import com.team.engine.Shader;
@@ -55,6 +56,7 @@ public class GLDemo extends Engine {
 	private Texture containerTexture;
 	private Texture containerSpecTexture;
 	private Mesh cubeMesh;
+	private Mesh objMesh;
 	
 	public static void main(String[] args) {
 		new GLDemo().initialize(false);
@@ -69,12 +71,13 @@ public class GLDemo extends Engine {
 		
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
-		this.ambient = new Vec3(0.3f, 0.3f, 0.3f);
+		this.ambient = new Vec3(0.6f, 0.6f, 0.7f);
 		
 		this.setFramebuffer(new Shader("hdr"));
 		
 		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
+		objMesh = ObjLoader.loadFile("resources/monkey.obj");
 		
 		
 		this.skybox = new Cubemap(new String[] {
@@ -100,7 +103,7 @@ public class GLDemo extends Engine {
 		//Bind two textures in different indexes so the shader has both.
 		containerTexture.bind(0);
 		containerSpecTexture.bind(1);
-		//this.skybox.bind(2);
+		this.skybox.bind(2);
 		
 		//The transform of the falling cube.
 		Transform trans = new Transform();
@@ -111,9 +114,15 @@ public class GLDemo extends Engine {
 		
 		//Send material parameters and the global ambient as well.
 		standardShader.uniformVec3("ambient", this.ambient);
+		
 		standardShader.uniformInt("material.diffuse", 0);
-		standardShader.uniformInt("material.useTex", 1);
+		standardShader.uniformVec3("material.diffuseColor", new Vec3(0.5, 0.5, 0.5));
+		standardShader.uniformBool("material.diffuseTextured", true);
+		
 		standardShader.uniformInt("material.specular", 1);
+		standardShader.uniformVec3("material.specularColor", new Vec3(0.5, 0.5, 0.5));
+		standardShader.uniformBool("material.specularTextured", true);
+		
 		standardShader.uniformFloat("material.shininess", 64.0f);
 		standardShader.uniformInt("skybox", 2);
 		
@@ -132,6 +141,8 @@ public class GLDemo extends Engine {
 
 		  cubeMesh.draw();
 		}
+		standardShader.uniformMat4("model", new Mat4());
+		objMesh.draw();
 		
 		//Draw the falling one.
 		standardShader.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, trans.origin.z)));

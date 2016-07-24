@@ -98,6 +98,8 @@ public class HdrDemo extends Engine {
 		standardShader.uniformVec3("ambient", this.ambient);
 		standardShader.uniformInt("material.diffuse", 0);
 		standardShader.uniformInt("material.specular", 1);
+		standardShader.uniformBool("material.diffuseTextured", true);
+		standardShader.uniformBool("material.specularTextured", true);
 		standardShader.uniformFloat("material.shininess", 64.0f);
 		
 		//Our shader currently only has 2 spaces for point lights hardcoded in.

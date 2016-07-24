@@ -35,7 +35,7 @@ public class OrthographicCamera extends Camera {
 	    	position.x += cameraSpeed;
 	    }
 	    
-	    zoom = (float)(-Input.scrollingAmount > 0.1 ? -Input.scrollingAmount : 0.1);
+	    zoom = (float)(-Input.scrollingAmount > 0.1 ? -Input.scrollingAmount : 0.1) + 2;
 	}
 
 	@Override

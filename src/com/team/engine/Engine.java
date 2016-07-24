@@ -2,6 +2,7 @@ package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.file.Paths;
@@ -205,7 +206,7 @@ public abstract class Engine {
 	private void update() {
 		this.tick();
 		
-		camera.update();
+		this.camera.update();
 	}
 	
 	/**
