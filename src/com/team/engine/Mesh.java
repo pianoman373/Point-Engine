@@ -110,6 +110,56 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	public Mesh(float[] positions, float[] normals, float[] uvs) {
+		int size = positions.length + normals.length + uvs.length;
+		
+		float[] vertices = new float[size];
+		
+		int j = 0;
+		int k = 0;
+		for (int i = 0; i < size; i += 8) {
+			vertices[i] = positions[j];
+			vertices[i + 1] = positions[j + 1];
+			vertices[i + 2] = positions[j + 2];
+			
+			vertices[i + 3] = normals[j];
+			vertices[i + 4] = normals[j + 1];
+			vertices[i + 5] = normals[j + 2];
+			
+			vertices[i + 6] = uvs[k];
+			vertices[i + 7] = uvs[k + 1];
+			
+			j += 3;
+			k += 2;
+		}
+		
+		
+		
+		indexed = false;
+		VAO = glGenVertexArrays();
+		glBindVertexArray(VAO);
+		
+		VBO = glGenBuffers();
+		
+		length = positions.length;
+		
+		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(vertices);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
+		
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0);
+		glEnableVertexAttribArray(0);
+		
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * 4, 3 * 4);
+		glEnableVertexAttribArray(1);
+		
+		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 6 * 4);
+		glEnableVertexAttribArray(2);
+		
+		glBindVertexArray(0);
+	}
+	
 	/**
 	 * Same as first constructor except without indices.
 	 */

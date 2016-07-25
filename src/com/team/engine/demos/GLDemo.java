@@ -71,7 +71,7 @@ public class GLDemo extends Engine {
 		
 		standardShader = new Shader("standard");
 		lightShader = new Shader("light");
-		this.ambient = new Vec3(0.6f, 0.6f, 0.7f);
+		this.ambient = new Vec3(0.3f, 0.3f, 0.3f);
 		
 		this.setFramebuffer(new Shader("hdr"));
 		
@@ -123,7 +123,7 @@ public class GLDemo extends Engine {
 		standardShader.uniformVec3("material.specularColor", new Vec3(0.5, 0.5, 0.5));
 		standardShader.uniformBool("material.specularTextured", true);
 		
-		standardShader.uniformFloat("material.shininess", 64.0f);
+		standardShader.uniformFloat("material.shininess", 16.0f);
 		standardShader.uniformInt("skybox", 2);
 		
 		standardShader.uniformInt("pointLightCount", lights.length);
