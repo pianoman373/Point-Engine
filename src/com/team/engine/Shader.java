@@ -73,7 +73,7 @@ public class Shader {
 	public void bind() {
 		glUseProgram(this.id);
 		this.uniformMat4("view", Engine.instance.camera.getView());
-		this.uniformVec3("cameraPos", Engine.instance.camera.getPosition());
+		this.uniformVec3("eyePos", Engine.instance.camera.getPosition());
 		this.uniformMat4("projection", Engine.instance.camera.getProjection());
 	}
 	

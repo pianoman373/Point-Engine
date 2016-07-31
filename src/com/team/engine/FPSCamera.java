@@ -138,7 +138,7 @@ public class FPSCamera extends Camera {
 		
 		if (Input.scrollingAmount <= 1) Input.scrollingAmount = 1;
 		
-		float cameraSpeed = 500.0f * Engine.instance.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
+		float cameraSpeed = 50.0f * Engine.instance.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
 	    if(Input.isKeyDown(GLFW_KEY_W)) {
 	        position = position.add((front.multiply(cameraSpeed)));
 	    }

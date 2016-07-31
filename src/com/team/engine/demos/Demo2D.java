@@ -33,8 +33,6 @@ public class Demo2D extends Engine {
 	private Grid2D grid;
 	
 	private Mesh sprite;
-	private Texture tex;
-	private Shader spriteShader;
 	
 	private static RigidBody rigidBody;
 	private static RigidBody rigidBody2;
@@ -47,7 +45,9 @@ public class Demo2D extends Engine {
 	@Override
 	public void setupGame() {
 		this.background = new Vec3(0.0f, 0.5f, 1.0f);
-		spriteShader = new Shader("sprite");
+		
+		loadShader("sprite");
+		loadTexture("container.jpg");
 		
 		byte[][] map = new byte[][] {
 				{-1,  6,  3,  3,  0},
@@ -70,7 +70,6 @@ public class Demo2D extends Engine {
 		};
 		
 		sprite = new Mesh(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)));
-		tex = new Texture("resources/textures/container.jpg");
 		
 		grid = new Grid2D(map, uvmap, 16, 16, 5, 5);
 		
@@ -87,16 +86,17 @@ public class Demo2D extends Engine {
 		Transform trans = new Transform();
 		rigidBody.getMotionState().getWorldTransform(trans);
 		
-		spriteShader.bind();
-		spriteShader.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, 1)));
-		tex.bind(0);
+		Shader s = getShader("sprite");
+		s.bind();
+		s.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, 1)));
+		getTexture("container.jpg").bind();
 		sprite.draw();
 		
 		rigidBody2.getMotionState().getWorldTransform(trans);
-		spriteShader.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, 1)));
+		s.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, 1)));
 		sprite.draw();
 		
-		spriteShader.uniformMat4("model", new Mat4());
+		s.uniformMat4("model", new Mat4());
 		sprite.draw();
 		
 		grid.render();

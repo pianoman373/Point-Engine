@@ -21,20 +21,6 @@ public class ModelLoaderDemo extends Engine {
 		new PointLight(new Vec3(1, 4.7, 3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f)
 	};
 	
-	private Shader standardShader;
-	private Shader lightShader;
-	private Texture containerTexture;
-	private Texture containerSpecTexture;
-	
-	private Texture floorAlbedo;
-	private Texture floorSpec;
-	
-	private Texture wallAlbedo;
-	private Texture wallSpec;
-	
-	private Texture roofAlbedo;
-	private Texture roofSpec;
-	
 	private Mesh cubeMesh;
 	private Mesh objMesh;
 	private Mesh objMesh2;
@@ -46,20 +32,17 @@ public class ModelLoaderDemo extends Engine {
 
 	@Override
 	public void setupGame() {
-		//Load all our shaders and textures from disk.
-		floorAlbedo = new Texture("resources/textures/HallwayFloorAlbedo.png");
-		floorSpec = new Texture("resources/textures/HallwayFloorSpecularGloss.png");
+		loadTexture("HallwayFloorAlbedo.png");
+		loadTexture("HallwayFloorSpecularGloss.png");
 		
-		wallAlbedo = new Texture("resources/textures/HallwayWallsAlbedo.png");
-		wallSpec = new Texture("resources/textures/HallwayWallsSpecularGloss.png");
+		loadTexture("HallwayWallsAlbedo.png");
+		loadTexture("HallwayWallsSpecularGloss.png");
 		
-		roofAlbedo = new Texture("resources/textures/HallwayRoofAlbedo.png");
-		roofSpec = new Texture("resources/textures/HallwayRoofSpecularGloss.png");
+		loadTexture("HallwayRoofAlbedo.png");
+		loadTexture("HallwayRoofSpecularGloss.png");
 		
-		
-		standardShader = new Shader("standard");
-		lightShader = new Shader("light");
-		this.ambient = new Vec3(0.3f, 0.3f, 0.3f);
+		loadShader("standard");
+		loadShader("light");
 		
 		this.setFramebuffer(new Shader("hdr"));
 		
@@ -80,55 +63,53 @@ public class ModelLoaderDemo extends Engine {
 
 	@Override
 	public void render() {
-		//Bind two textures in different indexes so the shader has both.
-		
 		//Bind our shader.
-		standardShader.bind();
+		Shader s = getShader("standard");
+		s.bind();
 		
 		//Send material parameters and the global ambient as well.
-		standardShader.uniformVec3("ambient", this.ambient);
-		standardShader.uniformInt("material.diffuse", 0);
-		standardShader.uniformBool("material.diffuseTextured", true);
+		s.uniformFloat("ambient", 0.2f);
+		s.uniformInt("material.diffuse", 0);
+		s.uniformBool("material.diffuseTextured", true);
 		
-		standardShader.uniformInt("material.specular", 1);
-		standardShader.uniformBool("material.specularTextured", true);
-		standardShader.uniformVec3("material.specularColor", new Vec3(0.5,0.5,0.5));
-		standardShader.uniformFloat("material.shininess", 2.0f);
-		standardShader.uniformInt("skybox", 2);
+		s.uniformInt("material.specular", 1);
+		s.uniformBool("material.specularTextured", true);
+		s.uniformVec3("material.specularColor", new Vec3(0.5,0.5,0.5));
+		s.uniformFloat("material.shininess", 64.0f);
+		s.uniformInt("skybox", 2);
+		s.uniformFloat("exposure", 1.0f);
 		
-		standardShader.uniformInt("pointLightCount", lights.length);
+		s.uniformInt("pointLightCount", lights.length);
 		for (int i = 0; i < lights.length; i++) {
-			standardShader.uniformPointLight("pointLights[" + i + "]", lights[i]);
+			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
 		}
 		
 		//Draw the falling one.
 		for (int i = 0; i < 10; i++) {
-			standardShader.uniformMat4("model", new Mat4().translate(new Vec3(0, 0, i * 8)));
+			s.uniformMat4("model", new Mat4().translate(new Vec3(0, 0, i * 8)));
 			
-			floorAlbedo.bind(0);
-			floorSpec.bind(1);
+			getTexture("HallwayFloorAlbedo.png").bind(0);
+			getTexture("HallwayFloorSpecularGloss.png").bind(1);
 			objMesh.draw();
 			
-			wallAlbedo.bind(0);
-			wallSpec.bind(1);
+			getTexture("HallwayWallsAlbedo.png").bind(0);
+			getTexture("HallwayWallsSpecularGloss.png").bind(1);
 			objMesh2.draw();
 			
-			roofAlbedo.bind(0);
-			roofSpec.bind(1);
+			getTexture("HallwayRoofAlbedo.png").bind(0);
+			getTexture("HallwayRoofSpecularGloss.png").bind(1);
 			objMesh3.draw();
 		}
 		
 		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.
-		lightShader.bind();
+		Shader s2 = getShader("light");
+		s2.bind();
 		
 		for (PointLight light : lights) {
-			lightShader.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
-			lightShader.uniformVec3("lightColor", light.color);
+			s2.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
+			s2.uniformVec3("lightColor", light.color);
 			cubeMesh.draw();
 		}
-		
-		//Now we can unbind everything since we're done with the cube and the light shader.
-		lightShader.unBind();
 	}
 
 	@Override

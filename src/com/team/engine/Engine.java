@@ -6,6 +6,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
@@ -23,7 +24,6 @@ public abstract class Engine {
 	
 	public static Engine instance;
 	
-	public Vec3 ambient = new Vec3(0.2f, 0.2f, 0.2f);
 	public Camera camera;
 	
 	private KeyCallback keyCallback;
@@ -52,6 +52,9 @@ public abstract class Engine {
 	private boolean is2d = false;
 	
 	public boolean wireframe = false;
+	
+	private static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
+	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	
 	
 	//these are all classes that the main game must inherit
@@ -256,5 +259,23 @@ public abstract class Engine {
 	private void end() {
 		kill();
 		glfwTerminate();
+	}
+	
+	public static void loadShader(String path) {
+		Shader s = new Shader(path);
+		shaders.put(path, s);
+	}
+	
+	public static Shader getShader(String path) {
+		return shaders.get(path);
+	}
+	
+	public static void loadTexture(String path) {
+		Texture s = new Texture("resources/textures/" + path);
+		textures.put(path, s);
+	}
+	
+	public static Texture getTexture(String path) {
+		return textures.get(path);
 	}
 }

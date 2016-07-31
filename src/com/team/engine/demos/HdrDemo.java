@@ -51,21 +51,20 @@ public class HdrDemo extends Engine {
 	@Override
 	public void setupGame() {
 		//Load all our shaders and textures from disk.
-		containerTexture = new Texture("resources/textures/container2.png");
-		containerSpecTexture = new Texture("resources/textures/container2_specular.png");
-		brickTexture = new Texture("resources/textures/brickwall.jpg");
-		standardShader = new Shader("standard");
-		hdrShader = new Shader("hdr");
+		loadTexture("container2.png");
+		loadTexture("container2_specular.png");
+		loadTexture("brickwall.jpg");
+		loadShader("standard");
+		loadShader("hdr");
 		
 		this.background = new Vec3(0.0f, 0.0f, 0.0f);
-		this.ambient = new Vec3(0.0f, 0.0f, 0.0f);
 		
 		//Create the cube and plane mesh objects from primitives.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		planeMesh = Primitives.planeMesh(20.0f);
 		
 		//set the engines framebuffer shader to our hdr shader.
-		this.setFramebuffer(hdrShader);
+		this.setFramebuffer(getShader("hdr"));
 		
 		scene = new Scene();
 		scene.lights.add(new PointLight(new Vec3(-3, 0, -3), new Vec3(4f, 4f, 4f), 0.09f, 0.032f));
@@ -88,39 +87,44 @@ public class HdrDemo extends Engine {
 	@Override
 	public void render() {		
 		//Bind two textures in different indexes so the shader has both.
-		containerTexture.bind(0);
-		containerSpecTexture.bind(1);
+		getTexture("container2.png").bind(0);
+		getTexture("container2_specular.png").bind(1);
+		
+		Shader s = getShader("standard");
 		
 		//Bind our shader.
-		standardShader.bind();
+		s.bind();
 		
 		//Send material parameters and the global ambient as well.
-		standardShader.uniformVec3("ambient", this.ambient);
-		standardShader.uniformInt("material.diffuse", 0);
-		standardShader.uniformInt("material.specular", 1);
-		standardShader.uniformBool("material.diffuseTextured", true);
-		standardShader.uniformBool("material.specularTextured", true);
-		standardShader.uniformFloat("material.shininess", 64.0f);
+		s.uniformFloat("exposure", exposure);
+		s.uniformFloat("ambient", 0.05f);
+		s.uniformInt("material.diffuse", 0);
+		s.uniformInt("material.specular", 1);
+		s.uniformBool("material.diffuseTextured", true);
+		s.uniformBool("material.specularTextured", true);
+		s.uniformFloat("material.shininess", 64.0f);
 		
 		//Our shader currently only has 2 spaces for point lights hardcoded in.
-		standardShader.uniformInt("pointLightCount", lights.length);
+		s.uniformInt("pointLightCount", lights.length);
 		for (int i = 0; i < lights.length; i++) {
-			standardShader.uniformPointLight("pointLights[" + i + "]", lights[i]);
+			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
 		}
 		
 		//draw the same mesh with different model matrices each time
 		for(int i = 0; i < cubePositions.length; i++)
 		{
 		  Mat4 model = new Mat4().translate(cubePositions[i]);
-		  standardShader.uniformMat4("model", model);
+		  s.uniformMat4("model", model);
 
 		  cubeMesh.draw();
 		}
 		
-		brickTexture.bind(0);
+		getTexture("brickwall.jpg").bind(0);
 		Texture.unBind(1);
 		
-		standardShader.uniformMat4("model", new Mat4().translate(new Vec3(0, -5, 0)).scale(new Vec3(100, 100, 100)));
+		s.uniformMat4("model", new Mat4().translate(new Vec3(0, -5, 0)).scale(new Vec3(100, 100, 100)));
+		s.uniformBool("material.specularTextured", false);
+		s.uniformVec3("material.specularColor", new Vec3(0.6, 0.6, 0.6));
 		planeMesh.draw();
 		
 		scene.render(Engine.instance.camera);
