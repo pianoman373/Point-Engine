@@ -1,6 +1,10 @@
 package com.team.engine;
 
-import static org.lwjgl.glfw.GLFW.*;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Controller;
+import org.lwjgl.input.Controllers;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
@@ -24,85 +28,19 @@ public class FPSCamera extends Camera {
 	 * TODO: this update it's own object instead of updating Engine.camera
 	 */
 	public void update() {
-		/*front.x = (float) (Math.cos(Math.toRadians(pitch)) * Math.cos(Math.toRadians(yaw)));
-		front.y = (float) Math.sin(Math.toRadians(pitch));
-		front.z = (float) (Math.cos(Math.toRadians(pitch)) * Math.sin(Math.toRadians(yaw)));
-		
-		front = front.normalize();
-
-		
-		float cameraSpeed = 20.0f * Engine.instance.deltaTime;
-	    if(Input.isKeyDown(GLFW_KEY_W)) {
-	        position = position.add((front.multiply(cameraSpeed)));
-	    }
-	    if(Input.isKeyDown(GLFW_KEY_S)) {
-	    	position = position.subtract((front.multiply(cameraSpeed)));
-	    }
-	    if(Input.isKeyDown(GLFW_KEY_A)) {
-	    	position = position.subtract(((front.cross(up)).normalize()).multiply(cameraSpeed));
-	    }
-	    if(Input.isKeyDown(GLFW_KEY_D)) {
-	    	position = position.add(((front.cross(up)).normalize()).multiply(cameraSpeed));
-	    }
-	    if(Input.isKeyDown(GLFW_KEY_Q)) {
-	    	//roll += 0.5f;
-	    }
-	    if(Input.isKeyDown(GLFW_KEY_E)) {
-	    	///roll -= 0.5f;
-	    }
-	    if(Input.isKeyDown(GLFW_KEY_R)) {
-	    	position = position.add(new Vec3(0, cameraSpeed, 0));
-	    }
-	    if(Input.isKeyDown(GLFW_KEY_F)) {
-	    	position = position.add(new Vec3(0, -cameraSpeed, 0));
-	    }
-	    
-	    up = new Vec3(0.0f, 1.0f, 0.0f).rotateRoll(roll);
-	    
-	    if (Input.mouseGrabbed == true) {
-			if(Input.firstMouse)
-			{
-				lastX = (float) Input.mousePos.x;
-				lastY = (float) Input.mousePos.y;
-				Input.firstMouse = false;
-			}
-
-			float xoffset = (float)Input.mousePos.x - lastX;
-			float yoffset = lastY - (float)Input.mousePos.y;
-			lastX = (float)Input.mousePos.x;
-			lastY = (float)Input.mousePos.y;
-
-			float sensitivity = 0.05f;
-			xoffset *= sensitivity;
-			yoffset *= sensitivity;
-			
-			Vec3 offsetVec = new Vec3(xoffset, yoffset, 0).rotateRoll(roll);
-
-			this.yaw   += offsetVec.x;
-			this.pitch += offsetVec.y;
-
-			if(this.pitch > 89.0f)
-				this.pitch =  89.0f;
-			if(this.pitch < -89.0f)
-				this.pitch = -89.0f;
-		}*/
-		
 		Vec3 right = front.cross(up);
 		
-		if (Input.mouseGrabbed == true) {
-			if(Input.firstMouse)
-			{
-				lastX = (float) Input.mousePos.x;
-				lastY = (float) Input.mousePos.y;
-				Input.firstMouse = false;
-			}
-
-			float xoffset = (float)Input.mousePos.x - lastX;
-			float yoffset = lastY - (float)Input.mousePos.y;
-			lastX = (float)Input.mousePos.x;
-			lastY = (float)Input.mousePos.y;
-
-			float sensitivity = 0.05f;
+		if (Mouse.isButtonDown(0)) {
+			float sensitivity = 0.3f;
+			
+			Mouse.setGrabbed(true);
+			float mouseSpeed = 0.1f;
+			double mouseX = Mouse.getEventX();
+			double mouseY = Mouse.getEventY();
+			float xoffset = -(float) (mouseSpeed * (Engine.WINDOW_WIDTH /2 - mouseX));
+			float yoffset = -(float) (mouseSpeed * (Engine.WINDOW_HEIGHT /2 - mouseY));
+			Mouse.setCursorPosition(Engine.WINDOW_WIDTH / 2, Engine.WINDOW_HEIGHT / 2);
+			
 			xoffset *= sensitivity;
 			yoffset *= sensitivity;
 			
@@ -119,42 +57,93 @@ public class FPSCamera extends Camera {
 			Vec4 vec3 = mat2.multiply(new Vec4(front.x, front.y, front.z, 1.0f));
 			front = new Vec3(vec3.x, vec3.y, vec3.z);
 		}
+		else {
+			Mouse.setGrabbed(false);
+		}
 		
 		
-		
-		lastX = (float)Input.mousePos.x;
-		lastY = (float)Input.mousePos.y;
-		
-		if (Input.isKeyDown(GLFW_KEY_E)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
 			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, 0.3f));
 			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 			up = new Vec3(vec.x, vec.y, vec.z);
 		}
-		if (Input.isKeyDown(GLFW_KEY_Q)) {
+		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
 			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -0.3f));
 			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 			up = new Vec3(vec.x, vec.y, vec.z);
 		}
 		
-		if (Input.scrollingAmount <= 1) Input.scrollingAmount = 1;
+		float cameraSpeed = 0.1f;
 		
-		float cameraSpeed = 50.0f * Engine.instance.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
-	    if(Input.isKeyDown(GLFW_KEY_W)) {
+		if (Controllers.getControllerCount() > 0) {
+			Controller controller = Controllers.getController(0);
+			
+			float moveX = controller.getAxisValue(1);
+			float moveY = controller.getAxisValue(2);
+			
+			float lookX = controller.getAxisValue(4);
+			float lookY = controller.getAxisValue(5);
+			
+			float trigger1 = (2 + (controller.getAxisValue(3) - 1f)) / 2;
+			float trigger2 = (2 + (controller.getAxisValue(6) - 1f)) / 2;
+			
+			if (moveX > 0.3f || moveX < -0.3f) {
+				position = position.add(right.multiply(moveX * 0.1f));
+			}
+			if (moveY > 0.3f || moveY < -0.3f) {
+				position = position.add(front.multiply(-moveY * 0.1f));
+			}
+			if (lookY > 0.3f || lookY < -0.3f) {
+				//vertical
+				Mat4 mat = new Mat4().rotate(new Vec4(right.x, right.y, right.z, -lookY * 0.3f));
+				Vec4 vec = mat.multiply(new Vec4(front.x, front.y, front.z, 1.0f));
+				front = new Vec3(vec.x, vec.y, vec.z);
+				
+				Vec4 vec2 = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
+				up = new Vec3(vec2.x, vec2.y, vec2.z);
+			}
+			if (lookX > 0.3f || lookX < -0.3f) {
+				Mat4 mat2 = new Mat4().rotate(new Vec4(up.x, up.y, up.z, -lookX * 0.3f));
+				Vec4 vec3 = mat2.multiply(new Vec4(front.x, front.y, front.z, 1.0f));
+				front = new Vec3(vec3.x, vec3.y, vec3.z);
+			}
+			
+			if (controller.isButtonPressed(5)) {
+				position = position.add(up.multiply(cameraSpeed));
+			}
+			
+			if (controller.isButtonPressed(4)) {
+				position = position.subtract(up.multiply(cameraSpeed));
+			}
+			
+			if (trigger1 > 0f) {
+				Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -trigger1 * 0.5f));
+				Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
+				up = new Vec3(vec.x, vec.y, vec.z);
+			}
+			if (trigger2 > 0f) {
+				Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, trigger2 * 0.5f));
+				Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
+				up = new Vec3(vec.x, vec.y, vec.z);
+			}
+		}
+		
+	    if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
 	        position = position.add((front.multiply(cameraSpeed)));
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_S)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
 	    	position = position.subtract((front.multiply(cameraSpeed)));
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_A)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
 	    	position = position.subtract(right.multiply(cameraSpeed));
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_D)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_D)) {
 	    	position = position.add(right.multiply(cameraSpeed));
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_R)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_R)) {
 	    	position = position.add(up.multiply(cameraSpeed));
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_F)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_F)) {
 	    	position = position.subtract(up.multiply(cameraSpeed));
 	    }
 	}

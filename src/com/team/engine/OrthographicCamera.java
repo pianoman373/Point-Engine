@@ -1,9 +1,6 @@
 package com.team.engine;
 
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_S;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_W;
+import org.lwjgl.input.Keyboard;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
@@ -22,20 +19,18 @@ public class OrthographicCamera extends Camera {
 	public void update() {
 		float cameraSpeed = 10.0f * Engine.instance.deltaTime;
 		
-		if(Input.isKeyDown(GLFW_KEY_W)) {
+		if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
 	        position.y += cameraSpeed;
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_S)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
 	    	position.y -= cameraSpeed;
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_A)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
 	    	position.x -= cameraSpeed;
 	    }
-	    if(Input.isKeyDown(GLFW_KEY_D)) {
+	    if(Keyboard.isKeyDown(Keyboard.KEY_D)) {
 	    	position.x += cameraSpeed;
 	    }
-	    
-	    zoom = (float)(-Input.scrollingAmount > 0.1 ? -Input.scrollingAmount : 0.1) + 2;
 	}
 
 	@Override
