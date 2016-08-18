@@ -30,11 +30,6 @@ public class HdrDemo extends Engine {
 		new PointLight(new Vec3(6, -2, 3), new Vec3(1f, 0.2f, 0.2f), 0.09f, 0.032f),
 	};
 	
-	private Shader standardShader;
-	private Shader hdrShader;
-	private Texture containerTexture;
-	private Texture containerSpecTexture;
-	private Texture brickTexture;
 	private Mesh cubeMesh;
 	private Mesh planeMesh;
 	private float exposure = 1.0f;

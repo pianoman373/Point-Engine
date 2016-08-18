@@ -14,8 +14,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/libtiled.jar"/>
-	<classpathentry kind="lib" path="lib/jassimp.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jinput.jar"/>
+	<classpathentry kind="lib" path="lib/dyn4j-3.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

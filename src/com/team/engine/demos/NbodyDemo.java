@@ -35,7 +35,7 @@ public class NbodyDemo extends Engine {
 	private static final float POINT_VELOCITY = 0f;
 	private static final float SUN_STRENGTH = 0f;
 	private static final int POINT_COUNT = 1000;
-	private static final float VERTICAL_SIZE = 2f;
+	//private static final float VERTICAL_SIZE = 2f;
 	
 	private static int VAO;
 	private static int VBO;

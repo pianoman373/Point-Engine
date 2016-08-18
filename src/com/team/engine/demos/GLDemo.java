@@ -1,5 +1,7 @@
 package com.team.engine.demos;
 
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
@@ -10,6 +12,7 @@ import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
+import com.bulletphysics.dynamics.constraintsolver.Generic6DofConstraint;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
@@ -20,7 +23,6 @@ import com.team.engine.ObjLoader;
 import com.team.engine.PointLight;
 import com.team.engine.Primitives;
 import com.team.engine.Shader;
-import com.team.engine.Texture;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
@@ -48,7 +50,7 @@ public class GLDemo extends Engine {
 		new PointLight(new Vec3(1, 0, 3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f)
 	};
 	
-	private static RigidBody rigidBody;
+	private static RigidBody fallRigidBody;
 	public static DiscreteDynamicsWorld dynamicsWorld;
 	
 	private Mesh cubeMesh;
@@ -72,7 +74,6 @@ public class GLDemo extends Engine {
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		objMesh = ObjLoader.loadFile("resources/monkey.obj");
 		
-		
 		this.skybox = new Cubemap(new String[] {
 				"right.jpg",
 				"left.jpg",
@@ -88,11 +89,12 @@ public class GLDemo extends Engine {
 	@Override
 	public void tick() {
 		//tell bullet to tick
-		dynamicsWorld.stepSimulation(1 / 100.f, 10);
+		dynamicsWorld.stepSimulation(Engine.instance.deltaTime, 10);
 	}
 
 	@Override
 	public void render() {
+		
 		//Bind two textures in different indexes so the shader has both.
 		getTexture("container2.png").bind(0);
 		getTexture("container2_specular.png").bind(1);
@@ -100,7 +102,9 @@ public class GLDemo extends Engine {
 		
 		//The transform of the falling cube.
 		Transform trans = new Transform();
-		rigidBody.getMotionState().getWorldTransform(trans);
+		Quat4f q = new Quat4f();
+		fallRigidBody.getMotionState().getWorldTransform(trans);
+		trans.getRotation(q);
 		
 		//Bind our shader.
 		Shader s = getShader("standard");
@@ -136,7 +140,13 @@ public class GLDemo extends Engine {
 		  cubeMesh.draw();
 		}
 		//Draw the falling one.
-		s.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, trans.origin.z)));
+		Matrix4f mat = new Matrix4f();
+		trans.getMatrix(mat);
+		s.uniformMat4("model", new Mat4(mat));
+		cubeMesh.draw();
+		
+		//draw the ground
+		s.uniformMat4("model", new Mat4().translate(new Vec3(0, -60f, 0)).scale(100f));
 		cubeMesh.draw();
 		
 		s.uniformMat4("model", new Mat4());
@@ -163,37 +173,54 @@ public class GLDemo extends Engine {
 	}
 	
 	private static void setupPhysics() {
-		//Not really sure what any of this does yet... I was mainly copying and pasting. What I do
-		//know is that is sets up a good bullet simulation.
-		
 		BroadphaseInterface broadphase = new DbvtBroadphase();
-
 		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
 		CollisionDispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
 
 		SequentialImpulseConstraintSolver solver = new SequentialImpulseConstraintSolver();
 
-		 
-		dynamicsWorld = new DiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-		dynamicsWorld.setGravity(new Vector3f(0,-9.81f,0));
+		dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
+
+		// set the gravity of our world
+		dynamicsWorld.setGravity(new Vector3f(0, -10, 0));
 		
-		CollisionShape boxCollisionShape = new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f));
-		CollisionShape boxCollisionShape2 = new BoxShape(new Vector3f(100.0f, 0.5f, 100.0f));
+		CollisionShape groundShape = new BoxShape(new Vector3f(50f, 50f, 50f));
+		CollisionShape fallShape = new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f));
+
+		// setup the motion state
+		DefaultMotionState groundMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f(0, -60, 0), 1.0f))); 
+
+		RigidBody groundRigidBody = new RigidBody(0, groundMotionState, groundShape, new Vector3f(0,0,0)); 
+
+		dynamicsWorld.addRigidBody(groundRigidBody); // add our ground to the dynamic world.. 
+
+		// setup the motion state for the ball
+		DefaultMotionState fallMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0f, 1, (float)Math.toRadians(30)), new Vector3f(0, 5, 0), 1.0f)));
+
 		
-		//the little box
-		Transform trans = new Transform();
-		//trans.origin.x = 0.48f;
-		DefaultMotionState motionstate = new DefaultMotionState(trans);
-		rigidBody = new RigidBody(1, motionstate, boxCollisionShape, new Vector3f(1,100,0));
-		dynamicsWorld.addRigidBody(rigidBody);
+		RigidBody zeroBody = new RigidBody(0, new DefaultMotionState(new Transform()), null, new Vector3f());
 		
 		
-		//the big box
-		Transform trans2 = new Transform();
-		trans2.origin.y = -5f;
-		DefaultMotionState motionstate2 = new DefaultMotionState(trans2);
-		RigidBody rigidBody2 = new RigidBody(0, motionstate2, boxCollisionShape2, new Vector3f(0, 0 ,0));
-		dynamicsWorld.addRigidBody(rigidBody2);
+		//This we're going to give mass so it responds to gravity 
+		int mass = 1;
+
+		Vector3f fallInertia = new Vector3f(0,0,0); 
+		fallShape.calculateLocalInertia(mass,fallInertia); 
+
+		fallRigidBody = new RigidBody(mass,fallMotionState,fallShape,fallInertia); 
+		fallRigidBody.applyCentralForce(new Vector3f(10, 0, 0));
+		
+		Generic6DofConstraint constrict = new Generic6DofConstraint(zeroBody, fallRigidBody, new Transform(), new Transform(), false);
+		constrict.setLimit(0, 0, 0);
+		constrict.setLimit(1, 0, 0);
+		constrict.setLimit(2, 0, 0);
+		constrict.setLimit(3, 1, 0);
+		constrict.setLimit(4, 1, 0);
+		constrict.setLimit(5, 1, 0);
+		dynamicsWorld.addRigidBody(fallRigidBody);
+		dynamicsWorld.addConstraint(constrict);
+
+		//now we add it to our physics simulation 
 	}
 
 	@Override

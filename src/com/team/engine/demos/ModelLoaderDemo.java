@@ -6,7 +6,6 @@ import com.team.engine.ObjLoader;
 import com.team.engine.PointLight;
 import com.team.engine.Primitives;
 import com.team.engine.Shader;
-import com.team.engine.Texture;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 

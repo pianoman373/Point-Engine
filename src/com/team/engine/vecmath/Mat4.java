@@ -2,6 +2,8 @@ package com.team.engine.vecmath;
 
 import java.nio.FloatBuffer;
 
+import javax.vecmath.Matrix4f;
+
 import org.lwjgl.BufferUtils;
 
 /**
@@ -21,6 +23,28 @@ public class Mat4 {
      */
     public Mat4() {
         setIdentity();
+    }
+
+    public Mat4(Matrix4f mat) {
+      this.m00 = mat.m00;
+      this.m10 = mat.m10;
+      this.m20 = mat.m20;
+      this.m30 = mat.m30;
+      
+      this.m01 = mat.m01;
+      this.m11 = mat.m11;
+      this.m21 = mat.m21;
+      this.m31 = mat.m31;
+      
+      this.m02 = mat.m02;
+      this.m12 = mat.m12;
+      this.m22 = mat.m22;
+      this.m32 = mat.m32;
+      
+      this.m03 = mat.m03;
+      this.m13 = mat.m13;
+      this.m23 = mat.m23;
+      this.m33 = mat.m33;
     }
 
     /**
@@ -211,7 +235,7 @@ public class Mat4 {
 
         return result;
     }
-    
+
     public static Mat4 LookAt(Vec3 eye, Vec3 center, Vec3 up) {
     		Vec3 forward = new Vec3(0, 0, -1);
     		Vec3 upVec = new Vec3(0, 1, 0);
@@ -238,11 +262,11 @@ public class Mat4 {
     		mat.m00 = side.x;
     		mat.m01 = side.y;
     		mat.m02 = side.z;
-    		
+
     		mat.m10 = upVec.x;
     		mat.m11 = upVec.y;
     		mat.m12 = upVec.z;
-    		
+
     		mat.m20 = -forward.x;
     		mat.m21 = -forward.y;
     		mat.m22 = -forward.z;
@@ -385,7 +409,7 @@ public class Mat4 {
 
         return this.multiply(scaling);
     }
-    
+
     public Mat4 scale(float scale) {
         Mat4 scaling = new Mat4();
 
@@ -395,11 +419,11 @@ public class Mat4 {
 
         return this.multiply(scaling);
     }
-    
+
     private static float determinant3x3(float t00, float t01, float t02, float t10, float t11, float t12, float t20, float t21, float t22) {
     	return   t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22) + t02 * (t10 * t21 - t11 * t20);
 	}
-    
+
     public float determinant() {
 		float f =
 			m00
@@ -424,11 +448,11 @@ public class Mat4 {
 				- m11 * m20 * m32);
 		return f;
 	}
-    
+
     public Mat4 inverse() {
     	Mat4 src = this;
     	Mat4 dest = new Mat4();
-    	
+
 		float determinant = src.determinant();
 
 		if (determinant != 0) {

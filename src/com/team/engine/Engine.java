@@ -1,15 +1,11 @@
 package com.team.engine;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import javax.swing.JOptionPane;
-
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -226,7 +222,7 @@ public abstract class Engine {
 	 */
 	private void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("lib/native").toAbsolutePath().toString());
-		System.setProperty("java.library.path", Paths.get("lib").toAbsolutePath().toString());
+		System.setProperty("java.library.path", System.getProperty("java.library.path") + ":" + "/home/joseph/Desktop");
 
 		System.out.println(System.getProperty("java.library.path"));
 
