@@ -29,6 +29,7 @@ public class FPSCamera extends Camera {
 	 */
 	public void update() {
 		Vec3 right = front.cross(up);
+		float delta = Engine.instance.deltaTime;
 		
 		if (Mouse.isButtonDown(0)) {
 			float sensitivity = 0.3f;
@@ -108,11 +109,11 @@ public class FPSCamera extends Camera {
 				front = new Vec3(vec3.x, vec3.y, vec3.z);
 			}
 			
-			if (controller.isButtonPressed(0)) {
+			if (controller.getPovY() < 0) {
 				position = position.add(up.multiply(cameraSpeed));
 			}
 			
-			if (controller.isButtonPressed(1)) {
+			if (controller.getPovY() > 0) {
 				position = position.subtract(up.multiply(cameraSpeed));
 			}
 			
