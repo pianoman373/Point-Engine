@@ -115,12 +115,12 @@ public class FPSCamera extends Camera {
 				position = position.subtract(up.multiply(cameraSpeed));
 			}
 			
-			if (trigger1 > 0f) {
+			if (trigger1 > 0.1f) {
 				Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -trigger1 * sensitivity * 1.5f));
 				Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 				up = new Vec3(vec.x, vec.y, vec.z);
 			}
-			if (trigger2 > 0f) {
+			if (trigger2 > 0.1f) {
 				Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, trigger2 * sensitivity * 1.5f));
 				Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 				up = new Vec3(vec.x, vec.y, vec.z);
