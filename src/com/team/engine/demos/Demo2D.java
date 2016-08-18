@@ -2,6 +2,15 @@ package com.team.engine.demos;
 
 import javax.vecmath.Vector3f;
 
+import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.dynamics.World;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.geometry.Vector2;
+import org.lwjgl.input.Keyboard;
+
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
@@ -18,22 +27,24 @@ import com.team.engine.Grid2D;
 import com.team.engine.Mesh;
 import com.team.engine.Primitives;
 import com.team.engine.Shader;
+import com.team.engine.demos.Dyn4jDemo.GameObject;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Vec4;
 
 /**
  * A demo showing off 3D rendering with openGL and lighting shaders.
  */
 public class Demo2D extends Engine {
 	private Grid2D grid;
-	
+
 	private Mesh sprite;
-	
-	private static RigidBody rigidBody;
-	private static RigidBody rigidBody2;
-	public static DiscreteDynamicsWorld dynamicsWorld;
-	
+	private static Body cube;
+	private static Body cube2;
+	private static World world;
+
+
 	public static void main(String[] args) {
 		new Demo2D().initialize(true);
 	}
@@ -41,10 +52,10 @@ public class Demo2D extends Engine {
 	@Override
 	public void setupGame() {
 		this.background = new Vec3(0.0f, 0.5f, 1.0f);
-		
+
 		loadShader("sprite");
-		loadTexture("container.jpg");
-		
+		loadTexture("crate.png");
+
 		byte[][] map = new byte[][] {
 				{-1,  6,  3,  3,  0},
 				{-1,  7,  4,  4,  1},
@@ -52,7 +63,7 @@ public class Demo2D extends Engine {
 				{-1,  7,  4,  4,  1},
 				{-1,  8,  5,  5,  2}
 		};
-		
+
 		Vec2[] uvmap = new Vec2[] {
 			new Vec2(0, 0),
 			new Vec2(1, 0),
@@ -64,84 +75,97 @@ public class Demo2D extends Engine {
 			new Vec2(1, 2),
 			new Vec2(2, 2)
 		};
-		
+
 		sprite = new Mesh(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)));
-		
+
 		grid = new Grid2D(map, uvmap, 16, 16, 5, 5);
-		
+
 		setupPhysics();
 	}
-
+	
 	@Override
 	public void tick() {
-		dynamicsWorld.stepSimulation(1 / 600.f, 10);
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			cube.applyForce(new Vector2(-1000 * Engine.instance.deltaTime, 0));
+		}
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			cube.setLinearVelocity(new Vector2(cube.getLinearVelocity().x, 5));
+		}
+		//cube.setLinearVelocity(new Vector2(1, cube.getLinearVelocity().y));
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			cube.applyForce(new Vector2(1000 * Engine.instance.deltaTime, 0));
+			
+		}
+		
+		world.update(Engine.instance.deltaTime);
 	}
 
 	@Override
 	public void render() {
-		Transform trans = new Transform();
-		rigidBody.getMotionState().getWorldTransform(trans);
-		
+
 		Shader s = getShader("sprite");
 		s.bind();
-		s.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, 1)));
-		getTexture("container.jpg").bind();
+		s.uniformMat4("model", new Mat4().translate(new Vec3(cube.getTransform().getTranslationX(), cube.getTransform().getTranslationY(), 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(cube.getTransform().getRotation()))));
+		getTexture("crate.png").bind();
 		sprite.draw();
 		
-		rigidBody2.getMotionState().getWorldTransform(trans);
-		s.uniformMat4("model", new Mat4().translate(new Vec3(trans.origin.x, trans.origin.y, 1)));
+		s.uniformMat4("model", new Mat4().translate(new Vec3(cube.getTransform().getTranslationX(), cube.getTransform().getTranslationY(), 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(cube.getTransform().getRotation()))).translate(new Vec3(1, 1, 0)));
 		sprite.draw();
 		
-		s.uniformMat4("model", new Mat4());
+		s.uniformMat4("model", new Mat4().translate(new Vec3(cube.getTransform().getTranslationX(), cube.getTransform().getTranslationY(), 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(cube.getTransform().getRotation()))).translate(new Vec3(1, 0, 0)));
 		sprite.draw();
 		
+		s.uniformMat4("model", new Mat4().translate(new Vec3(cube2.getTransform().getTranslationX(), cube2.getTransform().getTranslationY(), 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(cube2.getTransform().getRotation()))));
+		sprite.draw();
+
 		grid.render();
 	}
-	
+
 	private static void setupPhysics() {
-		//Not really sure what any of this does yet... I was mainly copying and pasting. What I do
-		//know is that is sets up a good bullet simulation.
-		
-		BroadphaseInterface broadphase = new DbvtBroadphase();
+		world = new World();
+		world.setGravity(new Vector2(0.0, -9.81));
 
-		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
-		CollisionDispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
+		// create the floor
+		Body floor = new Body();
+		floor.addFixture(Geometry.createRectangle(5, 4));
+		floor.setMass(MassType.INFINITE);
+		// move the floor down a bit
+		floor.translate(2.5, 3.0);
+		world.addBody(floor);
 
-		SequentialImpulseConstraintSolver solver = new SequentialImpulseConstraintSolver();
 
-		 
-		dynamicsWorld = new DiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
-		dynamicsWorld.setGravity(new Vector3f(0,-9.81f,0));
+		// try a rectangle
+		cube = new Body();
+		cube.addFixture(Geometry.createSquare(1));
+		BodyFixture bf = cube.addFixture(Geometry.createSquare(1));
+		bf.getShape().translate(1, 1);
+		BodyFixture bf2 = cube.addFixture(Geometry.createSquare(1));
+		bf2.getShape().translate(1, 0);
+		cube.setMass(MassType.NORMAL);
+		cube.translate(2.5, 10.0);
+		cube.getLinearVelocity().set(0.0, 0.0);
+		world.addBody(cube);
 		
-		CollisionShape boxCollisionShape = new BoxShape(new Vector3f(0.5f, 0.5f, 100f));
-		CollisionShape boxCollisionShape2 = new BoxShape(new Vector3f(0.5f, 0.5f, 100f));
-		
-		//the little box
-		Transform trans = new Transform();
-		trans.origin.x = 0f;
-		trans.origin.y = 4f;
-		DefaultMotionState motionstate = new DefaultMotionState(trans);
-		rigidBody = new RigidBody(1, motionstate, boxCollisionShape, new Vector3f(0,0,0));
-		dynamicsWorld.addRigidBody(rigidBody);
-		
-		
-		//the big box
-		Transform trans2 = new Transform();
-		trans2.origin.x = 0f;
-		trans2.origin.y = 0f;
-		DefaultMotionState motionstate2 = new DefaultMotionState(trans2);
-		rigidBody2 = new RigidBody(0, motionstate2, boxCollisionShape2, new Vector3f(0, 0 ,0));
-		dynamicsWorld.addRigidBody(rigidBody2);
+		// try a rectangle
+		cube2 = new Body();
+		cube2.addFixture(Geometry.createSquare(1));
+		cube2.setMass(MassType.NORMAL);
+		cube2.translate(3, 12.0);
+		cube2.getLinearVelocity().set(0.0, 0.0);
+		//cube2.rotate(Math.toRadians(45));
+		world.addBody(cube2);
 	}
 
 	@Override
 	public void postRenderUniforms(Shader shader) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void kill() {
-		
+
 	}
 }
