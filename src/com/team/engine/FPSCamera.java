@@ -78,8 +78,6 @@ public class FPSCamera extends Camera {
 		if (Controllers.getControllerCount() > 0) {
 			Controller controller = Controllers.getController(0);
 			
-			System.out.println(controller.getAxisValue(0));
-			
 			float moveX = controller.getAxisValue(1);
 			float moveY = controller.getAxisValue(2);
 			
