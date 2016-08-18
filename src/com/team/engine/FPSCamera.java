@@ -108,11 +108,11 @@ public class FPSCamera extends Camera {
 				front = new Vec3(vec3.x, vec3.y, vec3.z);
 			}
 			
-			if (controller.isButtonPressed(5)) {
+			if (controller.isButtonPressed(0)) {
 				position = position.add(up.multiply(cameraSpeed));
 			}
 			
-			if (controller.isButtonPressed(4)) {
+			if (controller.isButtonPressed(1)) {
 				position = position.subtract(up.multiply(cameraSpeed));
 			}
 			
@@ -155,7 +155,7 @@ public class FPSCamera extends Camera {
 
 	@Override
 	public Mat4 getProjection() {
-		return Mat4.perspective(45.0f, 1000/800, 0.1f, 10000000.0f);
+		return Mat4.perspective(90.0f, 1000/800, 0.1f, 10000000.0f);
 	}
 
 	@Override
