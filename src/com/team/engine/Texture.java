@@ -31,15 +31,16 @@ public class Texture {
 	
 	/**
 	 * Creates a new texture object that can be bound later, from the specified path.
-	 * This actually uses the entire path including the resources folder, whereas shader
-	 * already appends the resources/shaders folder. Maybe we should do the same here?
+	 * 
+	 * It is advised to use the texture management system in Engine rather than handle texture objects yourself.
 	 */
 	public Texture(String path, boolean pixelated) {
 		id = glGenTextures();
 		//System.out.println(handle);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, id);
 	
-		RawImage img = getRawImage(path);
+		RawImage img = getRawImage(Constants.RESOURCE_PATH + path);
 		
 		dimensions = new Vec2i(img.width, img.height);
 	
@@ -63,6 +64,7 @@ public class Texture {
 	 * Binds the texture for rendering in the first texture location.
 	 */
 	public void bind() {
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, id);
 	}
 	
@@ -73,13 +75,11 @@ public class Texture {
 	public void bind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_2D, id);
-		glActiveTexture(GL_TEXTURE0);
 	}
 	
 	public static void unBind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glActiveTexture(GL_TEXTURE0);
 	}
 	
 	/**

@@ -17,7 +17,7 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 
 /**
- * A demo showing off 3D rendering with openGL and lighting shaders.
+ * A demo that can simulate orbits, clustering, and gravitational interactions.
  */
 public class NbodyDemo extends Engine {
 	private static PointLight lights[] = {
@@ -30,11 +30,11 @@ public class NbodyDemo extends Engine {
 		new NbodyDemo().initialize(false);
 	}
 	
-	private static final boolean POINT_TO_POINT_GRAVITY = true;
+	private static final boolean POINT_TO_POINT_GRAVITY = false;
 	private static final float POINT_TO_POINT_STRENGTH = 0.01f;
-	private static final float POINT_VELOCITY = 0f;
-	private static final float SUN_STRENGTH = 0f;
-	private static final int POINT_COUNT = 1000;
+	private static final float POINT_VELOCITY = 0.5f;
+	private static final float SUN_STRENGTH = 10f;
+	private static final int POINT_COUNT = 100000;
 	//private static final float VERTICAL_SIZE = 2f;
 	
 	private static int VAO;
@@ -156,7 +156,6 @@ public class NbodyDemo extends Engine {
 
 	@Override
 	public void render() {
-		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.
 		Shader s = getShader("light");
 		s.bind();
 		
@@ -173,9 +172,6 @@ public class NbodyDemo extends Engine {
 		glDrawArrays(GL_POINTS, 0, points.length * 3);
 		
 		glBindVertexArray(0);
-		
-		//Now we can unbind everything since we're done with the cube and the light shader.
-		s.unBind();
 	}
 
 	@Override

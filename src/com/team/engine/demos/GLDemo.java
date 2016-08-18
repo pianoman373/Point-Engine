@@ -28,7 +28,7 @@ import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
 /**
- * A demo showing off 3D rendering with openGL and lighting shaders.
+ * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
  */
 public class GLDemo extends Engine {
 	private static Vec3 cubePositions[] = {
@@ -68,19 +68,20 @@ public class GLDemo extends Engine {
 		loadShader("standard");
 		loadShader("light");
 		
-		this.setFramebuffer(new Shader("hdr"));
+		this.setFramebuffer(new Shader("shaders/hdr"));
 		
 		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
+		//load our monkey from disk
 		objMesh = ObjLoader.loadFile("resources/monkey.obj");
 		
 		this.skybox = new Cubemap(new String[] {
-				"right.jpg",
-				"left.jpg",
-				"top.jpg",
-				"bottom.jpg",
-				"back.jpg",
-				"front.jpg"
+				"textures/skybox/right.jpg",
+				"textures/skybox/left.jpg",
+				"textures/skybox/top.jpg",
+				"textures/skybox/bottom.jpg",
+				"textures/skybox/back.jpg",
+				"textures/skybox/front.jpg"
 		});
 		
 		setupPhysics();
@@ -94,7 +95,6 @@ public class GLDemo extends Engine {
 
 	@Override
 	public void render() {
-		
 		//Bind two textures in different indexes so the shader has both.
 		getTexture("container2.png").bind(0);
 		getTexture("container2_specular.png").bind(1);
@@ -110,7 +110,7 @@ public class GLDemo extends Engine {
 		Shader s = getShader("standard");
 		s.bind();
 		
-		//Send material parameters and the global ambient as well.
+		//Send material parameters and ambient as well.
 		s.uniformFloat("ambient", 0.2f);
 		
 		s.uniformInt("material.diffuse", 0);
@@ -149,19 +149,17 @@ public class GLDemo extends Engine {
 		s.uniformMat4("model", new Mat4().translate(new Vec3(0, -60f, 0)).scale(100f));
 		cubeMesh.draw();
 		
+		//setup new material parameters for the monkey
 		s.uniformMat4("model", new Mat4());
-		
 		s.uniformVec3("material.diffuseColor", new Vec3(0.5, 0.5, 0.5));
 		s.uniformBool("material.diffuseTextured", false);
-		
 		s.uniformVec3("material.specularColor", new Vec3(1, 1, 1));
 		s.uniformBool("material.specularTextured", false);
-		
 		s.uniformFloat("material.shininess", 64.0f);
-		
+		//draw the monkey
 		objMesh.draw();
 		
-		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.
+		//Now we switch over to our light shader so we can draw each light.
 		Shader s2 = getShader("light");
 		s2.bind();
 		
@@ -219,8 +217,6 @@ public class GLDemo extends Engine {
 		constrict.setLimit(5, 1, 0);
 		dynamicsWorld.addRigidBody(fallRigidBody);
 		dynamicsWorld.addConstraint(constrict);
-
-		//now we add it to our physics simulation 
 	}
 
 	@Override

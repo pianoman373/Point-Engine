@@ -13,7 +13,7 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 
 /**
- * A demo showing off 3D rendering with openGL and lighting shaders.
+ * A demo showing off HDR and bloom effects.
  */
 public class HdrDemo extends Engine {
 	private static Vec3 cubePositions[] = {
@@ -85,10 +85,10 @@ public class HdrDemo extends Engine {
 		
 		Shader s = getShader("standard");
 		
-		//Bind our shader.
+		//bind our shader
 		s.bind();
 		
-		//Send material parameters and the global ambient as well.
+		//Send material parameters and ambient.
 		s.uniformFloat("exposure", exposure);
 		s.uniformFloat("ambient", 0.05f);
 		s.uniformInt("material.diffuse", 0);
@@ -97,7 +97,7 @@ public class HdrDemo extends Engine {
 		s.uniformBool("material.specularTextured", true);
 		s.uniformFloat("material.shininess", 64.0f);
 		
-		//Our shader currently only has 2 spaces for point lights hardcoded in.
+		//send all the lights in the scene in
 		s.uniformInt("pointLightCount", lights.length);
 		for (int i = 0; i < lights.length; i++) {
 			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
@@ -112,6 +112,7 @@ public class HdrDemo extends Engine {
 		  cubeMesh.draw();
 		}
 		
+		//setup materials and then draw the floor
 		getTexture("brickwall.jpg").bind(0);
 		Texture.unBind(1);
 		

@@ -8,6 +8,13 @@ import static org.lwjgl.opengl.GL30.*;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+/**
+ * A Mesh object is used for keeping track of the vertex arrays used on GPU side.
+ * When the mesh is constructed, the mesh data sent through is passed onto the GPU memory, and the mesh data
+ * sent as the parameter is discarded. The Mesh object, as long as it is not discarded, will keep track of the pointers to the
+ * mesh data on the GPU. Once it is time to draw the mesh, it simply tells the GPU to draw the mesh stored in memory. Mesh objects
+ * work similar to Shader objects in terms of design. Currently mesh objects cannot be changed after constructed.
+ */
 public class Mesh {
 	private int VAO;
 	private int EBO;
@@ -17,12 +24,9 @@ public class Mesh {
 	private boolean indexed = false;
 	
 	/**
-	 * Makes a mesh object from specified mesh data. Just like Texture and Shader, bind before rendering.
+	 * Creates an indexed mesh out of the specified vertex data array and indices.
 	 * 
-	 * TODO: Currently positions, normals, and uv's are all in the verices array since OpenGL likes them in one big buffer.
-	 * someday we should have them as seperate arrays and combine them in here.
-	 * 
-	 * The mesh is currently set up to ignore indices though, so don't use this yet.
+	 * The mesh vertex data is in the form: x, y, z, nx, ny, nz, u, v
 	 */
 	public Mesh(float[] vertices, int[] indices) {
 		indexed = true;
@@ -55,6 +59,9 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	/**
+	 * Creates an indexed mesh out of the specified vertex data arrays and indices.
+	 */
 	public Mesh(float[] positions, float[] normals, float[] uvs, int[] indices) {
 		int size = positions.length + normals.length + uvs.length;
 		
@@ -110,6 +117,9 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	/**
+	 * Creates a non-indexed mesh out of the specified vertex data arrays.
+	 */
 	public Mesh(float[] positions, float[] normals, float[] uvs) {
 		int size = positions.length + normals.length + uvs.length;
 		
@@ -161,7 +171,9 @@ public class Mesh {
 	}
 	
 	/**
-	 * Same as first constructor except without indices.
+	 * Creates a non-indexed mesh out of the specified vertex data array.
+	 * 
+	 * The mesh vertex data is in the form: x, y, z, nx, ny, nz, u, v
 	 */
 	public Mesh(float[] vertices) {
 		VAO = glGenVertexArrays();
@@ -189,6 +201,10 @@ public class Mesh {
 		glBindVertexArray(0);
 	}
 	
+	/**
+	 * Draws the mesh. The mesh will render either indexed or direct depending on 
+	 * which constructor was used.
+	 */
 	public void draw() {
 		glBindVertexArray(VAO);
 		if (indexed) {

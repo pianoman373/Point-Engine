@@ -23,8 +23,6 @@ public class FPSCamera extends Camera {
 	/**
 	 * Called by the game loop every frame. When we make GameObjects they'll all have this functionality for multiple objects. For now it's called directly
 	 * from the loop.
-	 * 
-	 * TODO: this update it's own object instead of updating Engine.camera
 	 */
 	public void update() {
 		Vec3 right = front.cross(up);

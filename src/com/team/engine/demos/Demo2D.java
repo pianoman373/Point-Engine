@@ -34,7 +34,7 @@ import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
 /**
- * A demo showing off 3D rendering with openGL and lighting shaders.
+ * A demo utilizing sprite rendering, Grid2D's and dyn4j physics.
  */
 public class Demo2D extends Engine {
 	private Grid2D grid;
@@ -91,6 +91,7 @@ public class Demo2D extends Engine {
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
 			cube.setLinearVelocity(new Vector2(cube.getLinearVelocity().x, 5));
+			cube.setAsleep(false);
 		}
 		//cube.setLinearVelocity(new Vector2(1, cube.getLinearVelocity().y));
 		

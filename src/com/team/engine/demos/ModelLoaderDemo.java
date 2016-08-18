@@ -10,7 +10,7 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 
 /**
- * A demo showing off 3D rendering with openGL and lighting shaders.
+ * A demo showing off 3D model loading and texture mapping
  */
 public class ModelLoaderDemo extends Engine {
 	private static PointLight lights[] = {
@@ -43,9 +43,8 @@ public class ModelLoaderDemo extends Engine {
 		loadShader("standard");
 		loadShader("light");
 		
-		this.setFramebuffer(new Shader("hdr"));
+		this.setFramebuffer(new Shader("shaders/hdr"));
 		
-		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		
 		objMesh = ObjLoader.loadFile("resources/hallway_floor.obj");
@@ -66,7 +65,7 @@ public class ModelLoaderDemo extends Engine {
 		Shader s = getShader("standard");
 		s.bind();
 		
-		//Send material parameters and the global ambient as well.
+		//Send material parametersand ambient.
 		s.uniformFloat("ambient", 0.2f);
 		s.uniformInt("material.diffuse", 0);
 		s.uniformBool("material.diffuseTextured", true);
@@ -83,7 +82,7 @@ public class ModelLoaderDemo extends Engine {
 			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
 		}
 		
-		//Draw the falling one.
+		//draw the hallway 10 times
 		for (int i = 0; i < 10; i++) {
 			s.uniformMat4("model", new Mat4().translate(new Vec3(0, 0, i * 8)));
 			
@@ -100,7 +99,7 @@ public class ModelLoaderDemo extends Engine {
 			objMesh3.draw();
 		}
 		
-		//Now we switch over to our light shader so we can draw each light. Notice we still don't need to unbind the cubemesh.
+		//Now we switch over to our light shader so we can draw each light.
 		Shader s2 = getShader("light");
 		s2.bind();
 		
