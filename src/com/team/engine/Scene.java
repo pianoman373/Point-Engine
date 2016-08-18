@@ -23,8 +23,5 @@ public class Scene {
 			Engine.instance.lightShader.uniformVec3("lightColor", light.color);
 			Engine.instance.cubeMesh.draw();
 		}
-		
-		//Now we can unbind everything since we're done with the cube and the light shader.
-		Engine.instance.lightShader.unBind();
 	}
 }

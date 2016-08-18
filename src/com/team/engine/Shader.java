@@ -14,28 +14,27 @@ import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
-/**
- * Main class for handling shaders and using them as objects.
- */
 public class Shader {
 	public int id;
 	
 	/**
 	 * creates a new shader object (we're using objects not static methods here) for you to bind later when rendering.
-	 * The filename corresponds to Constants.RESOURCE_PATH + "/shaders/" + filename + shader extension.
+	 * The filename corresponds to Constants.RESOURCE_PATH + filename + shader extension.
+	 * 
+	 * It is advised to use the shader management system in Engine rather than handle shader objects yourself.
 	 */
 	public Shader(String filename) {
 		int vertexShader;
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		
-		glShaderSource(vertexShader, read(Constants.RESOURCE_PATH + "/shaders/" + filename + ".vsh"));
+		glShaderSource(vertexShader, read(Constants.RESOURCE_PATH + filename + ".vsh"));
 		glCompileShader(vertexShader);
 		check(vertexShader);
 		
 		int fragmentShader;
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 		
-		glShaderSource(fragmentShader, read(Constants.RESOURCE_PATH + "/shaders/" + filename + ".fsh"));
+		glShaderSource(fragmentShader, read(Constants.RESOURCE_PATH + filename + ".fsh"));
 		glCompileShader(fragmentShader);
 		check(fragmentShader);
 		
@@ -59,9 +58,9 @@ public class Shader {
 	}
 	
 	/**
-	 * This one could technically be static, but it just makes code prettier.
+	 * You should never need to use this, but just in case.
 	 */
-	public void unBind() {
+	public static void unBind() {
 		glUseProgram(0);
 	}
 	

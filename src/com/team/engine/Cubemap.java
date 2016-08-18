@@ -26,7 +26,7 @@ public class Cubemap extends Texture {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, this.id);
 		
 		for (int i = 0; i < 6; i++) {
-			RawImage image = Texture.getRawImage("resources/textures/skybox/" + images[i]);
+			RawImage image = Texture.getRawImage(Constants.RESOURCE_PATH + images[i]);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
 		}
 		
@@ -44,19 +44,22 @@ public class Cubemap extends Texture {
 	public void bind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-		glActiveTexture(GL_TEXTURE0);
 	}
 	
 	public static void unBind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
-		glActiveTexture(GL_TEXTURE0);
 	}
 	
 	/**
-	 * Binds the texture for rendering in the first texture location.
+	 * Binds the texture for rendering in texture location 0.
 	 */
 	public void bind() {
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+	}
+	
+	public static void unBind() {
+		unBind(0);
 	}
 }

@@ -91,10 +91,10 @@ public abstract class Engine {
 		setupContext();
 
 
-		framebufferShader = new Shader("framebuffer");
-		blurShader = new Shader("blur");
-		skyboxShader = new Shader("skybox");
-		lightShader = new Shader("light");
+		framebufferShader = new Shader("shaders/framebuffer");
+		blurShader = new Shader("shaders/blur");
+		skyboxShader = new Shader("shaders/skybox");
+		lightShader = new Shader("shaders/light");
 
 		framebufferMesh = new Mesh(Primitives.framebuffer());
 		skyboxMesh = new Mesh(Primitives.skybox());
@@ -138,7 +138,6 @@ public abstract class Engine {
 
 				skyboxMesh.draw();
 
-				skyboxShader.unBind();
 				glDepthMask(true);
 			}
 
@@ -169,7 +168,10 @@ public abstract class Engine {
 		}
 		this.end();
 	}
-
+	
+	/**
+	 * basically just blurs the second framebuffer
+	 */
 	private void doBloom() {
 		boolean horizontal = true;
 		boolean first = true;
@@ -248,10 +250,6 @@ public abstract class Engine {
 		}
 	}
 
-	/**
-	 * Clears the screen with the current clear color just before rendering.
-	 * Think it's not that important? Comment it out and see for yourself ;)
-	 */
 	public void clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
@@ -261,20 +259,36 @@ public abstract class Engine {
 		Display.destroy();
 	}
 
+	/**
+	 * This will load a shader from the specified path on disk into memory.
+	 * This does NOT bind the shader or even return the shader. Use getShader for that.
+	 */
 	public static void loadShader(String path) {
-		Shader s = new Shader(path);
+		Shader s = new Shader("shaders/" + path);
 		shaders.put(path, s);
 	}
-
+	
+	/**
+	 * This will return a shader object from memory ONLY if it has been loaded with loadShader.
+	 * The object will only be returned, you will have to bind it yourself.
+	 */
 	public static Shader getShader(String path) {
 		return shaders.get(path);
 	}
 
+	/**
+	 * This will load a texture from the specified path on disk into memory.
+	 * This does NOT bind the texture or even return the texture. Use getTexture for that.
+	 */
 	public static void loadTexture(String path) {
-		Texture s = new Texture("resources/textures/" + path);
+		Texture s = new Texture("textures/" + path);
 		textures.put(path, s);
 	}
-
+	
+	/**
+	 * This will return a texture object from memory ONLY if it has been loaded with loadTexture.
+	 * The object will only be returned, you will have to bind it yourself.
+	 */
 	public static Texture getTexture(String path) {
 		return textures.get(path);
 	}
