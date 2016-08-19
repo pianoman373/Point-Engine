@@ -1,14 +1,23 @@
 package com.team.engine;
 
-import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.BodyFixture;
-import org.dyn4j.geometry.Geometry;
-import org.dyn4j.geometry.MassType;
+import java.util.Iterator;
+
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Rot;
+import org.jbox2d.common.Transform;
+import org.jbox2d.common.Vector2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.Fixture;
+import org.jbox2d.dynamics.World;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 
 import tiled.core.Map;
+import tiled.core.MapObject;
+import tiled.core.ObjectGroup;
 import tiled.core.Tile;
 import tiled.core.TileLayer;
 import tiled.io.TMXMapReader;
@@ -32,7 +41,7 @@ public class Grid2D {
 		buildMesh();
 	}
 	
-	public Grid2D(String tmxfile) {
+	public Grid2D(String tmxfile, World world) {
 		Engine.loadTexture("retro-terrain.png", true);
 		TMXMapReader reader = new TMXMapReader();
 		
@@ -43,12 +52,38 @@ public class Grid2D {
 			Map map = reader.readMap(Constants.RESOURCE_PATH + tmxfile);
 			
 			TileLayer layer = (TileLayer) map.getLayer(0);
+			
 			mapWidth = layer.getWidth();
 			mapHeight = layer.getHeight();
 			
-			body = new Body();
-			body.setMass(MassType.INFINITE);
-			body.translate(0.5, 0.5);
+			ObjectGroup colliderLayer = (ObjectGroup) map.getLayer(2);
+			
+			Iterator<MapObject> iter = colliderLayer.getObjects();
+			while (iter.hasNext()) {
+				MapObject ob = iter.next();
+				
+				float rwidth = (float)ob.getWidth() / 16f;
+				float rheight = (float)ob.getHeight() / 16f;
+				
+				//BodyFixture bf = body.addFixture(Geometry.createRectangle(rwidth, rheight));
+				
+				float xpos = ((float)ob.getX() / 16f) + (rwidth / 2f);
+				float ypos = ((float)ob.getY() / 16f) + (rheight / 2f);
+				
+				System.out.println(rwidth / 2 + ", " + rheight / 2);
+				
+				//bf.getShape().translate(xpos - 0.5f, (mapHeight - 1) - ypos + 0.5f);
+				
+				BodyDef def = new BodyDef();
+				def.type = BodyType.STATIC;
+				Body box = world.createBody(def);
+				
+				PolygonShape poly = new PolygonShape();
+				poly.setAsBox(rwidth / 2, rheight / 2);
+				box.createFixture(poly, 1);
+				box.setTransform(new Vector2(xpos, (mapHeight - 1) - ypos + 1), 0);
+			}
+			
 			
 			byte[][] layerTiles = new byte[mapWidth][mapHeight];
 			
@@ -58,11 +93,6 @@ public class Grid2D {
 					
 					if (tile != null) {
 						layerTiles[x][(mapHeight - 1) - y] = (byte)(tile.getId() + 1);
-						
-						System.out.println(tile.getId());
-						
-						BodyFixture bf = body.addFixture(Geometry.createSquare(1));
-						bf.getShape().translate(x, (mapHeight - 1) - y);
 					}
 					else {
 						layerTiles[x][y] = 0;
@@ -74,7 +104,6 @@ public class Grid2D {
 			
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		buildMesh();
@@ -91,7 +120,6 @@ public class Grid2D {
 					Vec2 uv = computeUV(value);
 					
 					mb.square(x, y, x + 1f, y + 1f, uv.x / width, uv.y / height, (uv.x + 1f) / width, (uv.y + 1f) / height);
-					//mb.square(x, y, x + 1f, y + 1f, 1f / width, 0f / height, 2f / width, 1f / height);
 				}
 			}
 		}
@@ -103,22 +131,6 @@ public class Grid2D {
 	}
 	
 	public void render() {
-		/*spriteShader.bind();
-		tileset.image.bind();
-		
-		for (int x = 0; x < dimensions.x; x++) {
-			for (int y = 0; y < dimensions.y; y++) {
-				if (tiles[x][y] == -1)
-					continue;
-				
-				Vec2 offset = idToOffset(tiles[x][y]);
-				
-				spriteShader.uniformMat4("model", new Mat4().translate(new Vec3(x, -y, 0.0f)));
-				spriteShader.uniformVec2("uvOffset", new Vec2((1 / tileset.image.dimensions.x) * 16 * offset.x, (1 / tileset.image.dimensions.y) * 16 * offset.y));
-				tileset.mesh.draw();
-			}
-		}*/
-		
 		Shader s = Engine.getShader("sprite");
 		s.bind();
 		s.uniformMat4("model", new Mat4());

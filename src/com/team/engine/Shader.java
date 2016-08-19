@@ -73,7 +73,7 @@ public class Shader {
 	}
 	
 	/**
-	 * Translates a Vec3 object into the glsl uniform.
+	 * Translates a Vector3 object into the glsl uniform.
 	 */
 	public void uniformVec3(String name, Vec3 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
@@ -81,7 +81,7 @@ public class Shader {
 	}
 	
 	/**
-	 * Translates a Vec2 object into the glsl uniform.
+	 * Translates a Vector2 object into the glsl uniform.
 	 */
 	public void uniformVec2(String name, Vec2 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
