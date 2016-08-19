@@ -1,5 +1,10 @@
 package com.team.engine;
 
+import org.dyn4j.dynamics.Body;
+import org.dyn4j.dynamics.BodyFixture;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.MassType;
+
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 
@@ -10,60 +15,69 @@ import tiled.io.TMXMapReader;
 
 public class Grid2D {
 	private byte[][] tiles;
-	private Shader spriteShader;
 	private int width;
 	private int height;
 	private int mapWidth;
 	private int mapHeight;
-	private Vec2[] uvs;
-	private Texture tex;
 	private Mesh mesh;
+	public Body body;
 	
-	public Grid2D(byte[][] tiles, Vec2[] uvs, int width, int height, int mapWidth, int mapHeight) {
+	public Grid2D(byte[][] tiles, int width, int height, int mapWidth, int mapHeight) {
 		this.tiles = tiles;
-		this.spriteShader = new Shader("sprite");
 		this.width = width;
 		this.height = height;
 		this.mapWidth = mapWidth;
 		this.mapHeight = mapHeight;
-		this.uvs = uvs;
-		this.tex = new Texture("resources/retro-terrain.png", true);
+		Engine.loadTexture("retro-terrain.png", true);
 		buildMesh();
 	}
 	
 	public Grid2D(String tmxfile) {
+		Engine.loadTexture("retro-terrain.png", true);
 		TMXMapReader reader = new TMXMapReader();
 		
+		width = 16;
+		height = 16;
+		
 		try {
-			Map map = reader.readMap(tmxfile);
+			Map map = reader.readMap(Constants.RESOURCE_PATH + tmxfile);
 			
 			TileLayer layer = (TileLayer) map.getLayer(0);
-			width = layer.getWidth();
-			height = layer.getHeight();
+			mapWidth = layer.getWidth();
+			mapHeight = layer.getHeight();
 			
-			byte[][] layerTiles = new byte[width][height];
+			body = new Body();
+			body.setMass(MassType.INFINITE);
+			body.translate(0.5, 0.5);
 			
-			for (int x = 0; x < width; x++) {
-				for (int y = 0; y < height; y++) {
+			byte[][] layerTiles = new byte[mapWidth][mapHeight];
+			
+			for (int x = 0; x < mapWidth; x++) {
+				for (int y = 0; y < mapHeight; y++) {
 					Tile tile = layer.getTileAt(x, y);
 					
 					if (tile != null) {
-						layerTiles[x][y] = (byte)tile.getId();
+						layerTiles[x][(mapHeight - 1) - y] = (byte)(tile.getId() + 1);
+						
+						System.out.println(tile.getId());
+						
+						BodyFixture bf = body.addFixture(Geometry.createSquare(1));
+						bf.getShape().translate(x, (mapHeight - 1) - y);
 					}
 					else {
-						layerTiles[x][y] = -1;
+						layerTiles[x][y] = 0;
 					}
 				}
 			}
 			
 			this.tiles = layerTiles;
-			this.spriteShader = new Shader("sprite");
 			
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		buildMesh();
 	}
 	
 	private void buildMesh() {
@@ -71,10 +85,10 @@ public class Grid2D {
 	    
 		for (int x = 0; x < mapWidth; x++) {
 			for (int y = 0; y < mapHeight; y++) {
-				if (tiles[x][y] != -1) {
+				if (tiles[x][y] != 0) {
 					byte value = tiles[x][y];
 					
-					Vec2 uv = uvs[value];
+					Vec2 uv = computeUV(value);
 					
 					mb.square(x, y, x + 1f, y + 1f, uv.x / width, uv.y / height, (uv.x + 1f) / width, (uv.y + 1f) / height);
 					//mb.square(x, y, x + 1f, y + 1f, 1f / width, 0f / height, 2f / width, 1f / height);
@@ -82,6 +96,10 @@ public class Grid2D {
 			}
 		}
 		this.mesh = mb.toMesh();
+	}
+	
+	private Vec2 computeUV(int index) {
+		return new Vec2((index - 1) % width, (index - 1) / height);
 	}
 	
 	public void render() {
@@ -101,10 +119,10 @@ public class Grid2D {
 			}
 		}*/
 		
-		
-		spriteShader.bind();
-		spriteShader.uniformMat4("model", new Mat4());
-		this.tex.bind(0);
+		Shader s = Engine.getShader("sprite");
+		s.bind();
+		s.uniformMat4("model", new Mat4());
+		Engine.getTexture("retro-terrain.png").bind();
 		this.mesh.draw();
 		
 	}

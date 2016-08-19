@@ -18,6 +18,7 @@ import com.team.engine.vecmath.Vec3;
  *
  * note: You cannot call any opengl functions before first calling initialize() since it starts up OpenGL.
  */
+@SuppressWarnings("FieldCanBeLocal")
 public abstract class Engine {
 	public static final int WINDOW_WIDTH = 1000;
 	public static final int WINDOW_HEIGHT = 800;
@@ -280,9 +281,13 @@ public abstract class Engine {
 	 * This will load a texture from the specified path on disk into memory.
 	 * This does NOT bind the texture or even return the texture. Use getTexture for that.
 	 */
-	public static void loadTexture(String path) {
-		Texture s = new Texture("textures/" + path);
+	public static void loadTexture(String path, boolean pixelated) {
+		Texture s = new Texture("textures/" + path, pixelated);
 		textures.put(path, s);
+	}
+	
+	public static void loadTexture(String path) {
+		loadTexture(path, false);
 	}
 	
 	/**

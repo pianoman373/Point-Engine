@@ -9,7 +9,7 @@ import com.team.engine.vecmath.Vec3;
 public class OrthographicCamera extends Camera {
 	
 	private Vec2 position = new Vec2(0, 0);
-	private float zoom = 5f;
+	private float zoom = 10f;
 
 	@Override
 	public Mat4 getView() {

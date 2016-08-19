@@ -37,7 +37,7 @@ import com.team.engine.vecmath.Vec4;
  * A demo utilizing sprite rendering, Grid2D's and dyn4j physics.
  */
 public class Demo2D extends Engine {
-	private Grid2D grid;
+	private static Grid2D grid;
 
 	private Mesh sprite;
 	private static Body cube;
@@ -57,28 +57,20 @@ public class Demo2D extends Engine {
 		loadTexture("crate.png");
 
 		byte[][] map = new byte[][] {
-				{-1,  6,  3,  3,  0},
-				{-1,  7,  4,  4,  1},
-				{-1,  7,  4,  4,  1},
-				{-1,  7,  4,  4,  1},
-				{-1,  8,  5,  5,  2}
+				{0,  33,  17,  17,  1},
+				{0,  34,  18,  18,  2},
+				{0,  34,  18,  18,  2},
+				{0,  34,  18,  18,  2},
+				{0,  35,  19,  19,  3}
 		};
 
-		Vec2[] uvmap = new Vec2[] {
-			new Vec2(0, 0),
-			new Vec2(1, 0),
-			new Vec2(2, 0),
-			new Vec2(0, 1),
-			new Vec2(1, 1),
-			new Vec2(2, 1),
-			new Vec2(0, 2),
-			new Vec2(1, 2),
-			new Vec2(2, 2)
-		};
+		System.out.println(32 % 16);
+		System.out.println(32 / 16);
 
 		sprite = new Mesh(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)));
 
-		grid = new Grid2D(map, uvmap, 16, 16, 5, 5);
+		//grid = new Grid2D(map, 16, 16, 5, 5);
+		grid = new Grid2D("retro.tmx");
 
 		setupPhysics();
 	}
@@ -145,7 +137,7 @@ public class Demo2D extends Engine {
 		BodyFixture bf2 = cube.addFixture(Geometry.createSquare(1));
 		bf2.getShape().translate(1, 0);
 		cube.setMass(MassType.NORMAL);
-		cube.translate(2.5, 10.0);
+		cube.translate(12.5, 20.0);
 		cube.getLinearVelocity().set(0.0, 0.0);
 		world.addBody(cube);
 		
@@ -157,6 +149,8 @@ public class Demo2D extends Engine {
 		cube2.getLinearVelocity().set(0.0, 0.0);
 		//cube2.rotate(Math.toRadians(45));
 		world.addBody(cube2);
+		
+		world.addBody(grid.body);
 	}
 
 	@Override
