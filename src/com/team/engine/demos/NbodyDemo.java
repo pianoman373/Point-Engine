@@ -31,11 +31,14 @@ public class NbodyDemo extends Engine {
 	}
 	
 	private static final boolean POINT_TO_POINT_GRAVITY = false;
-	private static final float POINT_TO_POINT_STRENGTH = 0.01f;
-	private static final float POINT_VELOCITY = 0.5f;
+	private static final float POINT_TO_POINT_STRENGTH = 0.11f;
+	private static final float POINT_VELOCITY = 1f;
 	private static final float SUN_STRENGTH = 10f;
 	private static final int POINT_COUNT = 100000;
-	//private static final float VERTICAL_SIZE = 2f;
+	private static final int SPREAD = 10;
+	private static final int MIN_SPREAD = 5;
+	private static final float VERTICAL_SIZE = 10f;
+	private static final float VERTICAL_SHAPE = 5f;
 	
 	private static int VAO;
 	private static int VBO;
@@ -53,10 +56,10 @@ public class NbodyDemo extends Engine {
 			
 			float angle = rand.nextFloat() * 360;
 			
-			float x = (float)Math.sin(Math.toRadians(angle)) * ((rand.nextFloat() * 10) + 5);
-			float z = (float)Math.cos(Math.toRadians(angle)) * ((rand.nextFloat() * 10) + 5);
+			float x = (float)Math.sin(Math.toRadians(angle)) * ((rand.nextFloat() * SPREAD) + MIN_SPREAD);
+			float z = (float)Math.cos(Math.toRadians(angle)) * ((rand.nextFloat() * SPREAD) + MIN_SPREAD);
 			
-			float y = (rand.nextFloat() * 0.1f) - 0.05f;
+			float y = ((rand.nextFloat() * VERTICAL_SIZE) - VERTICAL_SIZE/2) / (float)Math.sqrt(x*x + z*z) * VERTICAL_SHAPE;
 			
 			points[i] = new Vec3(x, y, z);
 		}

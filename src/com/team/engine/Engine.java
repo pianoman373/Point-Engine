@@ -77,7 +77,7 @@ public abstract class Engine {
 	}
 
 	private float getTime() {
-		return (System.nanoTime() - startingTime) / 1000000000.0f;
+		return System.nanoTime() / 1000000000.0f;
 	}
 
 	/**
@@ -123,18 +123,24 @@ public abstract class Engine {
 			this.camera = new FPSCamera();
 		}
 		
-		float dAccum = 0;
+		float time = 0;
+		
+		lastFrame = getTime();
+		int fps = 0;
 
 		while (!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-			float currentFrame = (float) getTime();
+			float currentFrame = getTime();
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
 			
-			dAccum += deltaTime;
+			time += deltaTime;
+			++fps;
 			
-			if (dAccum > 3) {
-				System.out.println("Delta time: " + deltaTime + " , FPS: " + 1/deltaTime);
-				dAccum = 0;
+			if (time >= 1.0f) {
+				time = 1.0f - time;
+				//System.out.println("FPS: " + fps);
+				Display.setTitle("Game Engine FPS: " + fps);
+				fps = 0;
 			}
 
 			this.update();

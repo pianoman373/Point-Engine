@@ -17,7 +17,7 @@ public class FPSCamera extends Camera {
 	public float roll = 0;
 	public Vec3 up = new Vec3(0.0f, 1.0f, 0.0f);
 	
-	private static final float MOUSE_SENSITIVITY = 50f;
+	private static final float MOUSE_SENSITIVITY = 5f;
 	private static final float WASD_SENSITIVITY = 5f;
 	
 	/**
@@ -33,11 +33,10 @@ public class FPSCamera extends Camera {
 		if (Mouse.isButtonDown(0)) {
 			
 			Mouse.setGrabbed(true);
-			float mouseSpeed = 0.1f;
 			double mouseX = Mouse.getEventX();
 			double mouseY = Mouse.getEventY();
-			float xoffset = -(float) (mouseSpeed * (Engine.WINDOW_WIDTH /2 - mouseX));
-			float yoffset = -(float) (mouseSpeed * (Engine.WINDOW_HEIGHT /2 - mouseY));
+			float xoffset = -(float) ((Engine.WINDOW_WIDTH /2 - mouseX));
+			float yoffset = -(float) ((Engine.WINDOW_HEIGHT /2 - mouseY));
 			Mouse.setCursorPosition(Engine.WINDOW_WIDTH / 2, Engine.WINDOW_HEIGHT / 2);
 			
 			xoffset *= sensitivity;
@@ -62,12 +61,12 @@ public class FPSCamera extends Camera {
 		
 		
 		if (Keyboard.isKeyDown(Keyboard.KEY_E)) {
-			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, sensitivity * 1.5f));
+			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, sensitivity * 10f));
 			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 			up = new Vec3(vec.x, vec.y, vec.z);
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_Q)) {
-			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -sensitivity * 1.5f));
+			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -sensitivity *10f));
 			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 			up = new Vec3(vec.x, vec.y, vec.z);
 		}
