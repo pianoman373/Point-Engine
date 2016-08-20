@@ -20,8 +20,8 @@ import com.team.engine.vecmath.Vec3;
  */
 @SuppressWarnings("FieldCanBeLocal")
 public abstract class Engine {
-	public static final int WINDOW_WIDTH = 1000;
-	public static final int WINDOW_HEIGHT = 800;
+	public static final int WINDOW_WIDTH = 1280;
+	public static final int WINDOW_HEIGHT = 720;
 
 
 
@@ -122,11 +122,20 @@ public abstract class Engine {
 		else {
 			this.camera = new FPSCamera();
 		}
+		
+		float dAccum = 0;
 
 		while (!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
 			float currentFrame = (float) getTime();
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
+			
+			dAccum += deltaTime;
+			
+			if (dAccum > 3) {
+				System.out.println("Delta time: " + deltaTime + " , FPS: " + 1/deltaTime);
+				dAccum = 0;
+			}
 
 			this.update();
 			fbuffer.bind();

@@ -11,8 +11,8 @@ import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
+import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
-import com.bulletphysics.dynamics.constraintsolver.Generic6DofConstraint;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
@@ -25,7 +25,6 @@ import com.team.engine.Primitives;
 import com.team.engine.Shader;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
-import com.team.engine.vecmath.Vec4;
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
@@ -50,10 +49,11 @@ public class GLDemo extends Engine {
 		new PointLight(new Vec3(1, 0, 3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f)
 	};
 	
-	private static RigidBody fallRigidBody;
 	public static DiscreteDynamicsWorld dynamicsWorld;
 	
-	private Mesh cubeMesh;
+	private static Crate[] crates = new Crate[cubePositions.length];
+	
+	public static Mesh cubeMesh;
 	private Mesh objMesh;
 	
 	public static void main(String[] args) {
@@ -99,12 +99,7 @@ public class GLDemo extends Engine {
 		getTexture("container2.png").bind(0);
 		getTexture("container2_specular.png").bind(1);
 		this.skybox.bind(2);
-		
-		//The transform of the falling cube.
-		Transform trans = new Transform();
-		Quat4f q = new Quat4f();
-		fallRigidBody.getMotionState().getWorldTransform(trans);
-		trans.getRotation(q);
+
 		
 		//Bind our shader.
 		Shader s = getShader("standard");
@@ -129,22 +124,6 @@ public class GLDemo extends Engine {
 			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
 		}
 		
-		//draw the same mesh with different model matrices each time
-		for(int i = 0; i < cubePositions.length; i++)
-		{
-		  Mat4 model = new Mat4().translate(cubePositions[i]);
-		  float angle = 20.0f * i;
-		  model = model.rotate(new Vec4(1.0f, 0.3f, 0.5f, angle));
-		  s.uniformMat4("model", model);
-
-		  cubeMesh.draw();
-		}
-		//Draw the falling one.
-		Matrix4f mat = new Matrix4f();
-		trans.getMatrix(mat);
-		s.uniformMat4("model", new Mat4(mat));
-		cubeMesh.draw();
-		
 		//draw the ground
 		s.uniformMat4("model", new Mat4().translate(new Vec3(0, -60f, 0)).scale(100f));
 		cubeMesh.draw();
@@ -168,6 +147,11 @@ public class GLDemo extends Engine {
 			s2.uniformVec3("lightColor", light.color);
 			cubeMesh.draw();
 		}
+		
+		//draw all the crates, they handle everything from here
+		for (Crate c : crates) {
+			c.render(lights);
+		}
 	}
 	
 	private static void setupPhysics() {
@@ -183,7 +167,6 @@ public class GLDemo extends Engine {
 		dynamicsWorld.setGravity(new Vector3f(0, -10, 0));
 		
 		CollisionShape groundShape = new BoxShape(new Vector3f(50f, 50f, 50f));
-		CollisionShape fallShape = new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f));
 
 		// setup the motion state
 		DefaultMotionState groundMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f(0, -60, 0), 1.0f))); 
@@ -191,32 +174,12 @@ public class GLDemo extends Engine {
 		RigidBody groundRigidBody = new RigidBody(0, groundMotionState, groundShape, new Vector3f(0,0,0)); 
 
 		dynamicsWorld.addRigidBody(groundRigidBody); // add our ground to the dynamic world.. 
-
-		// setup the motion state for the ball
-		DefaultMotionState fallMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0f, 1, (float)Math.toRadians(30)), new Vector3f(0, 5, 0), 1.0f)));
-
 		
-		RigidBody zeroBody = new RigidBody(0, new DefaultMotionState(new Transform()), null, new Vector3f());
-		
-		
-		//This we're going to give mass so it responds to gravity 
-		int mass = 1;
-
-		Vector3f fallInertia = new Vector3f(0,0,0); 
-		fallShape.calculateLocalInertia(mass,fallInertia); 
-
-		fallRigidBody = new RigidBody(mass,fallMotionState,fallShape,fallInertia); 
-		fallRigidBody.applyCentralForce(new Vector3f(10, 0, 0));
-		
-		Generic6DofConstraint constrict = new Generic6DofConstraint(zeroBody, fallRigidBody, new Transform(), new Transform(), false);
-		constrict.setLimit(0, 0, 0);
-		constrict.setLimit(1, 0, 0);
-		constrict.setLimit(2, 0, 0);
-		constrict.setLimit(3, 1, 0);
-		constrict.setLimit(4, 1, 0);
-		constrict.setLimit(5, 1, 0);
-		dynamicsWorld.addRigidBody(fallRigidBody);
-		dynamicsWorld.addConstraint(constrict);
+		for (int i = 0; i < cubePositions.length; i++) {
+			float angle = 20.0f * i;
+			crates[i] = new Crate(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), dynamicsWorld);
+			crates[i].rb.applyCentralForce(new Vector3f((float)Math.random() * 50 - 25, (float)Math.random() * 50, (float)Math.random() * 50 - 25));
+		}
 	}
 
 	@Override
@@ -228,5 +191,68 @@ public class GLDemo extends Engine {
 	@Override
 	public void kill() {
 		
+	}
+}
+
+class Crate {
+	private CollisionShape bounds = new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f));
+	public RigidBody rb;
+	
+	public Crate(Vec3 pos, Quat4f rotation, DynamicsWorld dynamicsWorld) {
+		// setup the motion state for the crate
+		DefaultMotionState fallMotionState = new DefaultMotionState(new Transform(new Matrix4f(rotation, new Vector3f(pos.x, pos.y, pos.z), 1.0f)));
+
+		//This we're going to give mass so it responds to gravity 
+		int mass = 1;
+
+		Vector3f fallInertia = new Vector3f(0,0,0); 
+		bounds.calculateLocalInertia(mass,fallInertia); 
+
+		rb = new RigidBody(mass,fallMotionState,bounds,fallInertia); 
+		
+
+		dynamicsWorld.addRigidBody(rb);
+	}
+	
+	public void update() {
+		
+	}
+	
+	public void render(PointLight[] lights) {
+		Engine.getTexture("container2.png").bind(0);
+		Engine.getTexture("container2_specular.png").bind(1);
+		Engine.instance.skybox.bind(2);
+		
+		Shader s = Engine.getShader("standard");
+		s.bind();
+		
+		//Send material parameters and ambient as well.
+		s.uniformFloat("ambient", 0.2f);
+		
+		s.uniformInt("material.diffuse", 0);
+		s.uniformVec3("material.diffuseColor", new Vec3(0.5, 0.5, 0.5));
+		s.uniformBool("material.diffuseTextured", true);
+		
+		s.uniformInt("material.specular", 1);
+		s.uniformVec3("material.specularColor", new Vec3(0.5, 0.5, 0.5));
+		s.uniformBool("material.specularTextured", true);
+		
+		s.uniformFloat("material.shininess", 64.0f);
+		s.uniformInt("skybox", 2);
+		
+		s.uniformInt("pointLightCount", lights.length);
+		for (int i = 0; i < lights.length; i++) {
+			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
+		}
+		
+		Transform trans = new Transform();
+		Quat4f q = new Quat4f();
+		rb.getMotionState().getWorldTransform(trans);
+		trans.getRotation(q);
+		
+		Matrix4f mat = new Matrix4f();
+		trans.getMatrix(mat);
+		s.uniformMat4("model", new Mat4(mat));
+		GLDemo.cubeMesh.draw();
 	}
 }

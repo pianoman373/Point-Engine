@@ -16,6 +16,7 @@ import com.team.engine.vecmath.Vec4;
 
 public class Shader {
 	public int id;
+	private int test;
 	
 	/**
 	 * creates a new shader object (we're using objects not static methods here) for you to bind later when rendering.
@@ -25,6 +26,7 @@ public class Shader {
 	 */
 	public Shader(String filename) {
 		int vertexShader;
+		int yo;
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		
 		glShaderSource(vertexShader, read(Constants.RESOURCE_PATH + filename + ".vsh"));
