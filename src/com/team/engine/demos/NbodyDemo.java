@@ -24,8 +24,6 @@ public class NbodyDemo extends Engine {
 		new PointLight(new Vec3(0, 0, 0), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f)
 	};
 	
-	
-	
 	public static void main(String[] args) {
 		new NbodyDemo().initialize(false);
 	}
