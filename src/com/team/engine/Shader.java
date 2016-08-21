@@ -16,7 +16,6 @@ import com.team.engine.vecmath.Vec4;
 
 public class Shader {
 	public int id;
-	private int test;
 	
 	/**
 	 * creates a new shader object (we're using objects not static methods here) for you to bind later when rendering.
@@ -139,6 +138,26 @@ public class Shader {
 	public void uniformDirectionalLight(String name, DirectionalLight value) {
 		this.uniformVec3(name + ".direction", value.direction);
 		this.uniformVec3(name + ".color", value.color);
+	}
+
+	public void uniformScene(Scene scene) {
+
+		this.uniformInt("pointLightCount", scene.lights.size());
+		for (int i = 0; i < scene.lights.size(); i++) {
+			this.uniformPointLight("pointLights[" + i + "]", scene.lights.get(i));
+		}
+	}
+
+	public void uniformMaterial(Material mat) {
+		this.uniformInt("material.diffuseTex",  mat.diffuseTex);
+		this.uniformVec3("material.diffuseColor", mat.diffuseColor);
+		this.uniformBool("material.diffuseTextured", mat.diffuseTextured);
+
+		this.uniformInt("material.specularTex", mat.specularTex);
+		this.uniformVec3("material.specularColor", mat.specularColor);
+		this.uniformBool("material.specularTextured", mat.specularTextured);
+
+		this.uniformFloat("material.shininess", mat.shininess);
 	}
 	
 	private static void check(int shader) {

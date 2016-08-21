@@ -4,27 +4,16 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
-import com.bulletphysics.collision.broadphase.BroadphaseInterface;
-import com.bulletphysics.collision.broadphase.DbvtBroadphase;
-import com.bulletphysics.collision.dispatch.CollisionDispatcher;
-import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
-import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
-import com.team.engine.Cubemap;
-import com.team.engine.Engine;
-import com.team.engine.Mesh;
-import com.team.engine.ObjLoader;
-import com.team.engine.PointLight;
-import com.team.engine.Primitives;
-import com.team.engine.Shader;
+import com.team.engine.*;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
+import org.lwjgl.input.Mouse;
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
@@ -41,20 +30,13 @@ public class GLDemo extends Engine {
 		new Vec3( 1.5f,  0.2f, -1.5f), 
 		new Vec3(-1.3f,  1.0f, -1.2f)  
 	};
-	
-	private static PointLight lights[] = {
-		new PointLight(new Vec3(-1, 0, -3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f),
-		new PointLight(new Vec3(1, 0, -3), new Vec3(1f, 0.8f, 0.9f), 0.09f, 0.032f),
-		new PointLight(new Vec3(-1, 0, 3), new Vec3(1f, 0.8f, 0.9f), 0.09f, 0.032f),
-		new PointLight(new Vec3(1, 0, 3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f)
-	};
-	
-	public static DiscreteDynamicsWorld dynamicsWorld;
-	
-	private static Crate[] crates = new Crate[cubePositions.length];
-	
+
 	public static Mesh cubeMesh;
 	private Mesh objMesh;
+	private static Scene scene;
+
+	public static Material crateMaterial = new Material(0, 1, 64.0f);
+	public static Material monkeyMaterial = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.5f, 0.5f, 0.5f), 64.0f);
 	
 	public static void main(String[] args) {
 		new GLDemo().initialize(false);
@@ -83,14 +65,32 @@ public class GLDemo extends Engine {
 				"textures/skybox/back.jpg",
 				"textures/skybox/front.jpg"
 		});
-		
+
+		scene = new Scene();
+		scene.setupPhysics();
+		scene.lights.add(new PointLight(new Vec3(-1, 0, -3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f));
+		scene.lights.add(new PointLight(new Vec3(1, 0, -3), new Vec3(1f, 0.8f, 0.9f), 0.09f, 0.032f));
+		scene.lights.add(new PointLight(new Vec3(-1, 0, 3), new Vec3(1f, 0.8f, 0.9f), 0.09f, 0.032f));
+		scene.lights.add(new PointLight(new Vec3(1, 0, 3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f));
+
 		setupPhysics();
 	}
+
+	private static float accum;
 
 	@Override
 	public void tick() {
 		//tell bullet to tick
-		dynamicsWorld.stepSimulation(Engine.instance.deltaTime, 10);
+		scene.dynamicsWorld.stepSimulation(Engine.instance.deltaTime, 10);
+
+		accum += Engine.instance.deltaTime;
+
+		if (Mouse.isButtonDown(1) && accum > 0.1f) {
+			FPSCamera cam = (FPSCamera)Engine.instance.camera;
+			Crate c = new Crate(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), scene.dynamicsWorld);
+			scene.add(c);
+			accum = 0;
+		}
 	}
 
 	@Override
@@ -104,25 +104,12 @@ public class GLDemo extends Engine {
 		//Bind our shader.
 		Shader s = getShader("standard");
 		s.bind();
-		
-		//Send material parameters and ambient as well.
+
 		s.uniformFloat("ambient", 0.2f);
-		
-		s.uniformInt("material.diffuse", 0);
-		s.uniformVec3("material.diffuseColor", new Vec3(0.5, 0.5, 0.5));
-		s.uniformBool("material.diffuseTextured", true);
-		
-		s.uniformInt("material.specular", 1);
-		s.uniformVec3("material.specularColor", new Vec3(0.5, 0.5, 0.5));
-		s.uniformBool("material.specularTextured", true);
-		
-		s.uniformFloat("material.shininess", 64.0f);
+		s.uniformMaterial(crateMaterial);
 		s.uniformInt("skybox", 2);
-		
-		s.uniformInt("pointLightCount", lights.length);
-		for (int i = 0; i < lights.length; i++) {
-			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
-		}
+
+		s.uniformScene(scene);
 		
 		//draw the ground
 		s.uniformMat4("model", new Mat4().translate(new Vec3(0, -60f, 0)).scale(100f));
@@ -130,55 +117,27 @@ public class GLDemo extends Engine {
 		
 		//setup new material parameters for the monkey
 		s.uniformMat4("model", new Mat4());
-		s.uniformVec3("material.diffuseColor", new Vec3(0.5, 0.5, 0.5));
-		s.uniformBool("material.diffuseTextured", false);
-		s.uniformVec3("material.specularColor", new Vec3(1, 1, 1));
-		s.uniformBool("material.specularTextured", false);
-		s.uniformFloat("material.shininess", 64.0f);
+		s.uniformMaterial(monkeyMaterial);
 		//draw the monkey
 		objMesh.draw();
-		
-		//Now we switch over to our light shader so we can draw each light.
-		Shader s2 = getShader("light");
-		s2.bind();
-		
-		for (PointLight light : lights) {
-			s2.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
-			s2.uniformVec3("lightColor", light.color);
-			cubeMesh.draw();
-		}
-		
-		//draw all the crates, they handle everything from here
-		for (Crate c : crates) {
-			c.render(lights);
-		}
+
+		scene.render(Engine.instance.camera);
 	}
 	
 	private static void setupPhysics() {
-		BroadphaseInterface broadphase = new DbvtBroadphase();
-		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();
-		CollisionDispatcher dispatcher = new CollisionDispatcher(collisionConfiguration);
-
-		SequentialImpulseConstraintSolver solver = new SequentialImpulseConstraintSolver();
-
-		dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
-
-		// set the gravity of our world
-		dynamicsWorld.setGravity(new Vector3f(0, -10, 0));
 		
 		CollisionShape groundShape = new BoxShape(new Vector3f(50f, 50f, 50f));
 
 		// setup the motion state
 		DefaultMotionState groundMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f(0, -60, 0), 1.0f))); 
 
-		RigidBody groundRigidBody = new RigidBody(0, groundMotionState, groundShape, new Vector3f(0,0,0)); 
+		RigidBody groundRigidBody = new RigidBody(0, groundMotionState, groundShape, new Vector3f(0,0,0));
 
-		dynamicsWorld.addRigidBody(groundRigidBody); // add our ground to the dynamic world.. 
+		scene.dynamicsWorld.addRigidBody(groundRigidBody); // add our ground to the dynamic world..
 		
 		for (int i = 0; i < cubePositions.length; i++) {
 			float angle = 20.0f * i;
-			crates[i] = new Crate(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), dynamicsWorld);
-			crates[i].rb.applyCentralForce(new Vector3f((float)Math.random() * 50 - 25, (float)Math.random() * 50, (float)Math.random() * 50 - 25));
+			scene.add(new Crate(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), scene.dynamicsWorld));
 		}
 	}
 
@@ -194,7 +153,7 @@ public class GLDemo extends Engine {
 	}
 }
 
-class Crate {
+class Crate extends GameObject {
 	private CollisionShape bounds = new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f));
 	public RigidBody rb;
 	
@@ -218,7 +177,7 @@ class Crate {
 		
 	}
 	
-	public void render(PointLight[] lights) {
+	public void render(Scene scene, Camera cam) {
 		Engine.getTexture("container2.png").bind(0);
 		Engine.getTexture("container2_specular.png").bind(1);
 		Engine.instance.skybox.bind(2);
@@ -229,21 +188,10 @@ class Crate {
 		//Send material parameters and ambient as well.
 		s.uniformFloat("ambient", 0.2f);
 		
-		s.uniformInt("material.diffuse", 0);
-		s.uniformVec3("material.diffuseColor", new Vec3(0.5, 0.5, 0.5));
-		s.uniformBool("material.diffuseTextured", true);
-		
-		s.uniformInt("material.specular", 1);
-		s.uniformVec3("material.specularColor", new Vec3(0.5, 0.5, 0.5));
-		s.uniformBool("material.specularTextured", true);
-		
-		s.uniformFloat("material.shininess", 64.0f);
+		s.uniformMaterial(GLDemo.crateMaterial);
 		s.uniformInt("skybox", 2);
-		
-		s.uniformInt("pointLightCount", lights.length);
-		for (int i = 0; i < lights.length; i++) {
-			s.uniformPointLight("pointLights[" + i + "]", lights[i]);
-		}
+
+		s.uniformScene(scene);
 		
 		Transform trans = new Transform();
 		Quat4f q = new Quat4f();

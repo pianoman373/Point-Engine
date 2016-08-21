@@ -28,11 +28,11 @@ public class NbodyDemo extends Engine {
 		new NbodyDemo().initialize(false);
 	}
 	
-	private static final boolean POINT_TO_POINT_GRAVITY = false;
+	private static final boolean POINT_TO_POINT_GRAVITY = true;
 	private static final float POINT_TO_POINT_STRENGTH = 0.11f;
 	private static final float POINT_VELOCITY = 1f;
 	private static final float SUN_STRENGTH = 10f;
-	private static final int POINT_COUNT = 100000;
+	private static final int POINT_COUNT = 4000;
 	private static final int SPREAD = 10;
 	private static final int MIN_SPREAD = 5;
 	private static final float VERTICAL_SIZE = 10f;

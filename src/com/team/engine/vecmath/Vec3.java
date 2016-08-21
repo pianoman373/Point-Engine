@@ -4,6 +4,8 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 
+import javax.vecmath.Vector3f;
+
 public class Vec3 {
 
     public float x;
@@ -36,6 +38,10 @@ public class Vec3 {
     
     public Vec3(double x, double y, double z) {
     	this((float)x, (float)y, (float)z);
+    }
+
+    public Vector3f asv3f() {
+        return new Vector3f(x, y, z);
     }
     
     /**
