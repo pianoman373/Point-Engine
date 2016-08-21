@@ -57,14 +57,8 @@ public class GLDemo extends Engine {
 		//load our monkey from disk
 		objMesh = ObjLoader.loadFile("resources/monkey.obj");
 		
-		this.skybox = new Cubemap(new String[] {
-				"textures/skybox/right.jpg",
-				"textures/skybox/left.jpg",
-				"textures/skybox/top.jpg",
-				"textures/skybox/bottom.jpg",
-				"textures/skybox/back.jpg",
-				"textures/skybox/front.jpg"
-		});
+		this.skybox = new Cubemap("skybox/");
+		this.background = new Vec3(0.0, 0.0, 0.0);
 
 		scene = new Scene();
 		scene.setupPhysics();
@@ -91,6 +85,12 @@ public class GLDemo extends Engine {
 			scene.add(c);
 			accum = 0;
 		}
+		if (Mouse.isButtonDown(2) && accum > 0f) {
+			PointLight p = new PointLight(Engine.instance.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 100f, 0.032f);
+			scene.add(p);
+
+			accum = 0;
+		}
 	}
 
 	@Override
@@ -98,14 +98,15 @@ public class GLDemo extends Engine {
 		//Bind two textures in different indexes so the shader has both.
 		getTexture("container2.png").bind(0);
 		getTexture("container2_specular.png").bind(1);
-		this.skybox.bind(2);
+		//this.skybox.bind(2);
 
 		
 		//Bind our shader.
 		Shader s = getShader("standard");
+
 		s.bind();
 
-		s.uniformFloat("ambient", 0.2f);
+		s.uniformFloat("ambient", 0.3f);
 		s.uniformMaterial(crateMaterial);
 		s.uniformInt("skybox", 2);
 
@@ -180,13 +181,13 @@ class Crate extends GameObject {
 	public void render(Scene scene, Camera cam) {
 		Engine.getTexture("container2.png").bind(0);
 		Engine.getTexture("container2_specular.png").bind(1);
-		Engine.instance.skybox.bind(2);
+		//Engine.instance.skybox.bind(2);
 		
 		Shader s = Engine.getShader("standard");
 		s.bind();
 		
 		//Send material parameters and ambient as well.
-		s.uniformFloat("ambient", 0.2f);
+		s.uniformFloat("ambient", 0.3f);
 		
 		s.uniformMaterial(GLDemo.crateMaterial);
 		s.uniformInt("skybox", 2);

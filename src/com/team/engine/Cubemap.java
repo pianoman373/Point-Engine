@@ -26,7 +26,7 @@ public class Cubemap extends Texture {
 		glBindTexture(GL_TEXTURE_CUBE_MAP, this.id);
 		
 		for (int i = 0; i < 6; i++) {
-			RawImage image = Texture.getRawImage(Constants.RESOURCE_PATH + images[i]);
+			RawImage image = Texture.getRawImage(Constants.RESOURCE_PATH + "textures/" + images[i]);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
 		}
 		
@@ -35,6 +35,17 @@ public class Cubemap extends Texture {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+	}
+
+	public Cubemap(String folder) {
+		this(new String[] {
+				folder + "/right.jpg",
+				folder + "/left.jpg",
+				folder + "/top.jpg",
+				folder + "/bottom.jpg",
+				folder + "/back.jpg",
+				folder + "/front.jpg"
+		});
 	}
 	
 	/**

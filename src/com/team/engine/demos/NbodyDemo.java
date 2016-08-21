@@ -12,6 +12,7 @@ import org.lwjgl.BufferUtils;
 
 import com.team.engine.Engine;
 import com.team.engine.PointLight;
+import com.team.engine.Scene;
 import com.team.engine.Shader;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
@@ -20,19 +21,15 @@ import com.team.engine.vecmath.Vec3;
  * A demo that can simulate orbits, clustering, and gravitational interactions.
  */
 public class NbodyDemo extends Engine {
-	private static PointLight lights[] = {
-		new PointLight(new Vec3(0, 0, 0), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f)
-	};
-	
 	public static void main(String[] args) {
 		new NbodyDemo().initialize(false);
 	}
 	
-	private static final boolean POINT_TO_POINT_GRAVITY = true;
+	private static final boolean POINT_TO_POINT_GRAVITY = false;
 	private static final float POINT_TO_POINT_STRENGTH = 0.11f;
 	private static final float POINT_VELOCITY = 1f;
 	private static final float SUN_STRENGTH = 10f;
-	private static final int POINT_COUNT = 4000;
+	private static final int POINT_COUNT = 10000;
 	private static final int SPREAD = 10;
 	private static final int MIN_SPREAD = 5;
 	private static final float VERTICAL_SIZE = 10f;
@@ -41,12 +38,15 @@ public class NbodyDemo extends Engine {
 	private static int VAO;
 	private static int VBO;
 	
+	private static Scene scene;
+	
 	private static Vec3 points[] = new Vec3[POINT_COUNT];
 	private static Vec3 velocities[] = new Vec3[POINT_COUNT];
 
 	@Override
 	public void setupGame() {
 		loadShader("light");
+		this.setFramebuffer(new Shader("shaders/hdr"));
 		
 		Random rand = new Random();
 		
@@ -91,6 +91,9 @@ public class NbodyDemo extends Engine {
 		glPointSize(2);
 		
 		glBindVertexArray(0);
+		
+		scene = new Scene();
+		scene.add(new PointLight(new Vec3(0, 0, 0), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 	}
 	
 	private void updateVBO() {
@@ -157,15 +160,10 @@ public class NbodyDemo extends Engine {
 
 	@Override
 	public void render() {
+		scene.render(Engine.instance.camera);
+		
 		Shader s = getShader("light");
 		s.bind();
-		
-		for (PointLight light : lights) {
-			s.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
-			s.uniformVec3("lightColor", light.color);
-			cubeMesh.draw();
-		}
-		
 		s.uniformMat4("model", new Mat4());
 		s.uniformVec3("lightColor", new Vec3(1.0f, 1.0f, 1.0f));
 		
@@ -176,7 +174,10 @@ public class NbodyDemo extends Engine {
 	}
 
 	@Override
-	public void postRenderUniforms(Shader shader) {}
+	public void postRenderUniforms(Shader shader) {
+		//Send our exposure uniform to the post processing shader.
+				shader.uniformFloat("exposure", 2.0f);
+	}
 
 	@Override
 	public void kill() {

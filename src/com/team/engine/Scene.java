@@ -51,7 +51,7 @@ public class Scene {
 		objects.add(o);
 	}
 
-	public void add(PointLight l) {
-
+	public void add(PointLight light) {
+		lights.add(light);
 	}
 }

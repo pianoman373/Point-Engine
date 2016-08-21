@@ -18,7 +18,6 @@ import com.team.engine.vecmath.Vec3;
  *
  * note: You cannot call any opengl functions before first calling initialize() since it starts up OpenGL.
  */
-@SuppressWarnings("FieldCanBeLocal")
 public abstract class Engine {
 	public static final int WINDOW_WIDTH = 1280;
 	public static final int WINDOW_HEIGHT = 720;
@@ -43,8 +42,6 @@ public abstract class Engine {
 	private Mesh framebufferMesh;
 	private Mesh skyboxMesh;
 	public Mesh cubeMesh;
-
-	private static long startingTime;
 
 	public float deltaTime = 0.0f;
 	private float lastFrame = 0.0f;
@@ -84,7 +81,7 @@ public abstract class Engine {
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
 	 */
 	public void initialize(boolean is2d) {
-		startingTime = System.nanoTime();
+		System.nanoTime();
 
 
 		instance = this;
