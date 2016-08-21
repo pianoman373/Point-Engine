@@ -18,7 +18,7 @@ public class FPSCamera extends Camera {
 	public Vec3 up = new Vec3(0.0f, 1.0f, 0.0f);
 	
 	private static final float MOUSE_SENSITIVITY = 5f;
-	private static final float WASD_SENSITIVITY = 5f;
+	public static float WASD_SENSITIVITY = 10f;
 	
 	/**
 	 * Called by the game loop every frame. When we make GameObjects they'll all have this functionality for multiple objects. For now it's called directly
