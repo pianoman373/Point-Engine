@@ -134,4 +134,10 @@ public class HdrDemo extends Engine {
 		//Send our exposure uniform to the post processing shader.
 		shader.uniformFloat("exposure", exposure);
 	}
+
+	@Override
+	public void renderShadow(Shader s) {
+		// TODO Auto-generated method stub
+		
+	}
 }

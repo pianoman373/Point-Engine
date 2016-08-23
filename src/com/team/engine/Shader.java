@@ -146,6 +146,9 @@ public class Shader {
 		for (int i = 0; i < scene.lights.size(); i++) {
 			this.uniformPointLight("pointLights[" + i + "]", scene.lights.get(i));
 		}
+		
+		this.uniformVec3("dirLight.direction", scene.sun.direction);
+		this.uniformVec3("dirLight.color", scene.sun.color);
 	}
 
 	public void uniformMaterial(Material mat) {

@@ -11,8 +11,10 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2i;
 import com.team.engine.vecmath.Vec3;
+import com.team.engine.vecmath.Vec4;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
  *
@@ -21,6 +23,7 @@ import com.team.engine.vecmath.Vec3;
 public abstract class Engine {
 	public static final int WINDOW_WIDTH = 1280;
 	public static final int WINDOW_HEIGHT = 720;
+	public static final int SHADOW_RESOLUTION = 4096;
 
 
 
@@ -39,6 +42,7 @@ public abstract class Engine {
 	private Framebuffer fbuffer;
 	private Framebuffer pingPong1;
 	private Framebuffer pingPong2;
+	public static Framebuffer shadowBuffer;
 	private Mesh framebufferMesh;
 	private Mesh skyboxMesh;
 	public Mesh cubeMesh;
@@ -60,6 +64,8 @@ public abstract class Engine {
 	public abstract void tick();
 
 	public abstract void render();
+	
+	public abstract void renderShadow(Shader s);
 
 	public abstract void kill();
 
@@ -93,11 +99,13 @@ public abstract class Engine {
 		blurShader = new Shader("shaders/blur");
 		skyboxShader = new Shader("shaders/skybox");
 		lightShader = new Shader("shaders/light");
+		loadShader("shadow");
 
 		framebufferMesh = new Mesh(Primitives.framebuffer());
 		skyboxMesh = new Mesh(Primitives.skybox());
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 
+		shadowBuffer = new Framebuffer(new Vec2i(SHADOW_RESOLUTION, SHADOW_RESOLUTION));
 		fbuffer = new Framebuffer(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 2, true);
 		pingPong1 = new Framebuffer(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
 		pingPong2 = new Framebuffer(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
@@ -141,7 +149,25 @@ public abstract class Engine {
 			}
 
 			this.update();
+			
+			shadowBuffer.bind();
+			glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+			this.clear();
+			
+			Shader s = getShader("shadow");
+			s.bind();
+			s.uniformMat4("view", new Mat4());
+			s.uniformMat4("projection", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).translate(this.camera.getPosition().negate()).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)));
+			
+			//s.uniformMat4("view", this.camera.getView());
+			//s.uniformMat4("projection", this.camera.getProjection());
+			
+			glCullFace(GL_FRONT);
+			this.renderShadow(s);
+			glCullFace(GL_BACK);
+			
 			fbuffer.bind();
+			glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 			this.clear();
 
 			if (this.skybox != null) {
@@ -172,6 +198,7 @@ public abstract class Engine {
 			this.postRenderUniforms(framebufferShader);
 			pingPong2.tex[0].bind(1);
 			fbuffer.tex[0].bind(0);
+			//shadowBuffer.tex[0].bind(0);
 			framebufferShader.uniformInt("screenTexture", 0);
 			framebufferShader.uniformInt("bloomTexture", 1);
 
@@ -270,6 +297,7 @@ public abstract class Engine {
 	private void end() {
 		kill();
 		Display.destroy();
+		System.exit(0);
 	}
 
 	/**

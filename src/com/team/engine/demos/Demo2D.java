@@ -117,4 +117,10 @@ public class Demo2D extends Engine {
 	public void kill() {
 
 	}
+
+	@Override
+	public void renderShadow(Shader s) {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -5,9 +5,12 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.nio.FloatBuffer;
 import java.util.Random;
 
+import javax.swing.Timer;
 import javax.vecmath.Quat4f;
 
 import org.lwjgl.BufferUtils;
@@ -24,22 +27,23 @@ import com.team.engine.vecmath.Vec3;
 /**
  * A demo that can simulate orbits, clustering, and gravitational interactions.
  */
-public class NbodyDemo extends Engine {
+public class NbodyDemo extends Engine implements ActionListener{
 	public static void main(String[] args) {
 		new NbodyDemo().initialize(false);
 	}
 	
 	private static final boolean POINT_TO_POINT_GRAVITY = false;
-	private static final float POINT_TO_POINT_STRENGTH = 0.0001f;
-	private static final float POINT_VELOCITY = 1f;
+	private static final float POINT_TO_POINT_STRENGTH = 0.001f;
+	private static final float POINT_VELOCITY = 0.08f;
 	private static final float SUN_STRENGTH = 10f;
-	private static final int POINT_COUNT = 200000;
-	private static final int SPREAD = 4;
+	private static final int POINT_COUNT = 100000;
+	private static final int SPREAD = 8;
 	private static final int MIN_SPREAD = 5;
-	private static final float VERTICAL_SIZE = 0f;
+	private static final float VERTICAL_SIZE = 10f;
 	private static final float VERTICAL_SHAPE = 5f;
-	private static final float DRAG = 0.001f;
-	private static final float REDSHIFT_RANGE = 3.0f;
+	private static final float DRAG = 0.0001f;
+	private static final float REDSHIFT_RANGE = 0.4f;
+	private static final float TIMESTEP = 1.0f / 1f;
 	
 	private static int VAO;
 	private static int VBO;
@@ -51,6 +55,8 @@ public class NbodyDemo extends Engine {
 	private static Vec3 velocities[] = new Vec3[POINT_COUNT];
 	
 	private static float accum;
+	private static Timer t;
+	private static boolean readyToRender = false;
 
 	@Override
 	public void setupGame() {
@@ -104,7 +110,7 @@ public class NbodyDemo extends Engine {
 		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * 4, 3 * 4);
 		glEnableVertexAttribArray(1);
 		
-		glPointSize(2);
+		//glPointSize(2);
 		
 		glBindVertexArray(0);
 		
@@ -113,6 +119,9 @@ public class NbodyDemo extends Engine {
 		scene.add(new PointLight(new Vec3(5, 5, 20), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 		//scene.add(new PointLight(new Vec3(30, 3, 3), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 		//scene.add(new PointLight(new Vec3(20, 5, 30), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
+		
+		t = new Timer(0, this);
+		t.start();
 	}
 	
 	private void updateVBO() {
@@ -146,35 +155,10 @@ public class NbodyDemo extends Engine {
 
 	@Override
 	public void tick() {
-		for (int t = 0; t < 1; t++) {
-		for (int i = 0; i < points.length; i++) {
-			Vec3 pos = points[i];
-			Vec3 vel = velocities[i];
-			
-			velocities[i] = velocities[i].add(getInfluenceAt(pos)).multiply(1.0f - DRAG);
-			
-			points[i] = pos.add(vel.multiply(Engine.instance.deltaTime));
-			
-			float speed = vel.length();
-			
-			if (speed > REDSHIFT_RANGE) {
-				speed = REDSHIFT_RANGE;
-			}
-			
-			colors[i] = new Vec3(1.0f, 1.0f, 2.0f).lerp(new Vec3(4.0f, 1.0f, 1.0f), speed / REDSHIFT_RANGE);
+		if (readyToRender) {
+			readyToRender = false;
+			updateVBO();
 		}
-		}
-		
-		accum += Engine.instance.deltaTime;
-
-		if (Mouse.isButtonDown(1) && accum > 0f) {
-			PointLight p = new PointLight(Engine.instance.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 100f, 0.032f);
-			scene.add(p);
-
-			accum = 0;
-		}
-		
-		updateVBO();
 	}
 	
 	public Vec3 getInfluenceAt(Vec3 pos) {
@@ -233,6 +217,47 @@ public class NbodyDemo extends Engine {
 
 	@Override
 	public void kill() {
+		t.stop();
+	}
+
+	@Override
+	public void renderShadow(Shader s) {
+		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		if (true) {
+			for (int t = 0; t < 1; t++) {
+				for (int i = 0; i < points.length; i++) {
+					Vec3 pos = points[i];
+					Vec3 vel = velocities[i];
+					
+					velocities[i] = velocities[i].add(getInfluenceAt(pos)).multiply(1.0f - DRAG);
+					
+					points[i] = pos.add(vel);
+					
+					float speed = vel.length();
+					
+					if (speed > REDSHIFT_RANGE) {
+						speed = REDSHIFT_RANGE;
+					}
+					
+					colors[i] = new Vec3(0.1f, 0.6f, 1.0f).normalize().lerp(new Vec3(1.0f, 0.1f, 0.1f).normalize(), speed / REDSHIFT_RANGE);
+				}
+			}
+//			
+//			if (Mouse.isButtonDown(1) && accum > 0f) {
+//				PointLight p = new PointLight(Engine.instance.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 100f, 0.032f);
+//				scene.add(p);
+//	
+//				accum = 0;
+//			}
+			
+			//updateVBO();
+			readyToRender = true;
+		}
 	}
 }

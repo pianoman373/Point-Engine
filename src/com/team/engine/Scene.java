@@ -10,14 +10,16 @@ import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec3;
 
 import javax.vecmath.Vector3f;
 
 public class Scene {
 	public ArrayList<PointLight> lights = new ArrayList<>();
 	public ArrayList<GameObject> objects = new ArrayList<>();
+	public DirectionalLight sun = new DirectionalLight(new Vec3(0.0f, -1.0f, -1.0f), new Vec3(2.0f, 2.0f, 2.0f));
 
-	public static DiscreteDynamicsWorld dynamicsWorld;
+	public DiscreteDynamicsWorld dynamicsWorld;
 
 	public void setupPhysics() {
 		BroadphaseInterface broadphase = new DbvtBroadphase();
@@ -44,6 +46,12 @@ public class Scene {
 			s.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
 			s.uniformVec3("lightColor", light.color);
 			Engine.instance.cubeMesh.draw();
+		}
+	}
+	
+	public void renderShadow(Shader s) {
+		for (GameObject obj: objects) {
+			obj.renderShadow(s);
 		}
 	}
 

@@ -120,4 +120,10 @@ public class ModelLoaderDemo extends Engine {
 	public void kill() {
 		
 	}
+
+	@Override
+	public void renderShadow(Shader s) {
+		// TODO Auto-generated method stub
+		
+	}
 }
