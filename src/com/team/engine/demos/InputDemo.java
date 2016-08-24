@@ -1,11 +1,9 @@
 package com.team.engine.demos;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -68,17 +66,17 @@ public class InputDemo extends Engine {
 			float lookY = controller.getAxisValue(5);
 			
 			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f) {
-				System.out.println("sending packet");
+				System.out.println("Sending packet.");
 				
 				try {
 					out.writeFloat(lookX);
 					out.writeFloat(lookY);
 					out.flush();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
+					System.err.println("Connection to the client lost.");
 					e.printStackTrace();
 				}
-				System.out.println("done");
+				System.out.println("Done.");
 			}
 	}
 
