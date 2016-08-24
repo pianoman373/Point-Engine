@@ -1,11 +1,13 @@
 package com.team.engine.demos;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
@@ -16,12 +18,22 @@ import com.team.engine.Shader;
 public class InputDemo extends Engine {
 	
 	static Socket socket;
-	static ObjectOutputStream out;
+	static DataOutputStream out;
 	static BufferedReader in;
 	static int port;
 	
+	public static String hex(int n) {
+	    // call toUpperCase() if that's required
+	    return String.format("0x%8s", Integer.toHexString(n)).replace(' ', '0');
+	}
+
+	public static String hex(float f) {
+	    // change the float to raw integer bits(according to the OP's requirement)
+	    return hex(Float.floatToRawIntBits(f));
+	}
+	
 	public static void main(String[] args) {
-		System.out.println();
+		System.out.println(hex(10.208f));
 		
 		if (args.length != 1) {
 			port = 5660;
@@ -51,7 +63,7 @@ public class InputDemo extends Engine {
 		System.out.println("Finished initializing socket.");
 		
 		try {
-			out = new ObjectOutputStream(socket.getOutputStream());
+			out = new DataOutputStream(socket.getOutputStream());
 	        out.flush();
 			in = new BufferedReader(
 					new InputStreamReader(
@@ -69,8 +81,8 @@ public class InputDemo extends Engine {
 				System.out.println("Sending packet.");
 				
 				try {
-					out.writeFloat(lookX);
-					out.writeFloat(lookY);
+					byte[] b = ByteBuffer.allocate(8).putFloat(lookX).putFloat(lookY).array();
+					out.write(b);
 					out.flush();
 				} catch (IOException e) {
 					System.err.println("Connection to the client lost.");
