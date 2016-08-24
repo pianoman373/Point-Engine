@@ -1,8 +1,10 @@
 package com.team.engine.demos;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,11 +18,12 @@ import com.team.engine.Shader;
 public class InputDemo extends Engine {
 	
 	static Socket socket;
-	static PrintWriter out;
+	static ObjectOutputStream out;
 	static BufferedReader in;
 	static int port;
 	
 	public static void main(String[] args) {
+		System.out.println();
 		
 		if (args.length != 1) {
 			port = 5660;
@@ -50,7 +53,8 @@ public class InputDemo extends Engine {
 		System.out.println("Finished initializing socket.");
 		
 		try {
-			out = new PrintWriter(socket.getOutputStream(), true);
+			out = new ObjectOutputStream(socket.getOutputStream());
+	        out.flush();
 			in = new BufferedReader(
 					new InputStreamReader(
 							socket.getInputStream()));
@@ -65,9 +69,15 @@ public class InputDemo extends Engine {
 			
 			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f) {
 				System.out.println("sending packet");
-				out.print(lookX);
-				out.print(lookY);
-				out.flush();
+				
+				try {
+					out.writeFloat(lookX);
+					out.writeFloat(lookY);
+					out.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.out.println("done");
 			}
 	}
