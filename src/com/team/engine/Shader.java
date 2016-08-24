@@ -152,11 +152,11 @@ public class Shader {
 	}
 
 	public void uniformMaterial(Material mat) {
-		this.uniformInt("material.diffuseTex",  mat.diffuseTex);
+		this.uniformInt("material.diffuse",  mat.diffuseTex);
 		this.uniformVec3("material.diffuseColor", mat.diffuseColor);
 		this.uniformBool("material.diffuseTextured", mat.diffuseTextured);
 
-		this.uniformInt("material.specularTex", mat.specularTex);
+		this.uniformInt("material.specular", mat.specularTex);
 		this.uniformVec3("material.specularColor", mat.specularColor);
 		this.uniformBool("material.specularTextured", mat.specularTextured);
 

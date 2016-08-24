@@ -24,18 +24,14 @@ public abstract class Engine {
 	public static final int WINDOW_WIDTH = 1280;
 	public static final int WINDOW_HEIGHT = 720;
 	public static final int SHADOW_RESOLUTION = 4096;
-
-
-
+	public static final int MAX_FPS = 60;
+	
 	public static Engine instance;
 
 	public Camera camera;
 
 	public Shader framebufferShader;
-	public Shader blurShader;
-	public Shader skyboxShader;
-	public Shader lightShader;
-
+	
 	public Cubemap skybox = null;
 	public Vec3 background = new Vec3(0.0f, 0.0f, 0.0f);
 
@@ -95,11 +91,13 @@ public abstract class Engine {
 		setupContext();
 
 
-		framebufferShader = new Shader("shaders/framebuffer");
-		blurShader = new Shader("shaders/blur");
-		skyboxShader = new Shader("shaders/skybox");
-		lightShader = new Shader("shaders/light");
+		loadShader("framebuffer");
+		loadShader("blur");
+		loadShader("skybox");
+		loadShader("light");
 		loadShader("shadow");
+		
+		framebufferShader = getShader("framebuffer");
 
 		framebufferMesh = new Mesh(Primitives.framebuffer());
 		skyboxMesh = new Mesh(Primitives.skybox());
@@ -156,8 +154,10 @@ public abstract class Engine {
 			
 			Shader s = getShader("shadow");
 			s.bind();
+			s.uniformMat4("camView", camera.getView());
+			s.uniformMat4("camProjection", camera.getProjection());
 			s.uniformMat4("view", new Mat4());
-			s.uniformMat4("projection", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).translate(this.camera.getPosition().negate()).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)));
+			s.uniformMat4("projection", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(this.camera.getPosition().negate()));
 			
 			//s.uniformMat4("view", this.camera.getView());
 			//s.uniformMat4("projection", this.camera.getProjection());
@@ -172,7 +172,7 @@ public abstract class Engine {
 
 			if (this.skybox != null) {
 				glDepthMask(false);
-				skyboxShader.bind();
+				getShader("skybox").bind();
 				skybox.bind();
 
 				skyboxMesh.draw();
@@ -205,6 +205,7 @@ public abstract class Engine {
 			framebufferMesh.draw();
 
 			Display.update();
+			Display.sync(MAX_FPS);
 		}
 		this.end();
 	}
@@ -226,8 +227,9 @@ public abstract class Engine {
 				pingPong2.bind();
 				//this.clear();
 			}
-			blurShader.bind();
-			blurShader.uniformBool("horizontal", horizontal);
+			Shader s = getShader("blur");
+			s.bind();
+			s.uniformBool("horizontal", horizontal);
 
 			if (first) {
 				fbuffer.tex[1].bind();

@@ -39,7 +39,7 @@ public class GLDemo extends Engine {
 	private static Scene scene;
 
 	public static Material crateMaterial = new Material(0, 1, 256.0f);
-	public static Material monkeyMaterial = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.5f, 0.5f, 0.5f), 64.0f);
+	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 64.0f);
 	
 	public static void main(String[] args) {
 		new GLDemo().initialize(false);
@@ -116,7 +116,7 @@ public class GLDemo extends Engine {
 		s.uniformMaterial(crateMaterial);
 		s.uniformInt("skybox", 2);
 		s.uniformInt("shadowMap", 3);
-		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).translate(Engine.instance.camera.getPosition().negate()).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)));
+		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.instance.camera.getPosition().negate()));
 
 		s.uniformScene(scene);
 		
@@ -217,7 +217,7 @@ class Crate extends GameObject {
 		s.uniformMaterial(GLDemo.crateMaterial);
 		s.uniformInt("skybox", 2);
 		s.uniformInt("shadowMap", 3);
-		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).translate(Engine.instance.camera.getPosition().negate()).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)));
+		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.instance.camera.getPosition().negate()));
 
 		s.uniformScene(scene);
 		

@@ -32,18 +32,18 @@ public class NbodyDemo extends Engine implements ActionListener{
 		new NbodyDemo().initialize(false);
 	}
 	
-	private static final boolean POINT_TO_POINT_GRAVITY = false;
-	private static final float POINT_TO_POINT_STRENGTH = 0.001f;
-	private static final float POINT_VELOCITY = 0.08f;
+	private static final boolean POINT_TO_POINT_GRAVITY = true;
+	private static final float POINT_TO_POINT_STRENGTH = 0.00001f;
+	private static final float POINT_VELOCITY = 0.1f;
 	private static final float SUN_STRENGTH = 10f;
-	private static final int POINT_COUNT = 100000;
+	private static final int POINT_COUNT = 5000;
 	private static final int SPREAD = 8;
 	private static final int MIN_SPREAD = 5;
-	private static final float VERTICAL_SIZE = 10f;
+	private static final float VERTICAL_SIZE = 0f;
 	private static final float VERTICAL_SHAPE = 5f;
 	private static final float DRAG = 0.0001f;
 	private static final float REDSHIFT_RANGE = 0.4f;
-	private static final float TIMESTEP = 1.0f / 1f;
+	private static final int TIMESTEP = 0;
 	
 	private static int VAO;
 	private static int VBO;
@@ -120,7 +120,7 @@ public class NbodyDemo extends Engine implements ActionListener{
 		//scene.add(new PointLight(new Vec3(30, 3, 3), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 		//scene.add(new PointLight(new Vec3(20, 5, 30), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 		
-		t = new Timer(0, this);
+		t = new Timer(TIMESTEP, this);
 		t.start();
 	}
 	

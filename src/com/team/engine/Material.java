@@ -27,7 +27,7 @@ public class Material {
     }
 
     public Material(Vec3 diffuseColor, Vec3 specularColor, float shininess) {
-        this(0, diffuseColor, false, 0, specularColor, false, shininess);
+        this(0, diffuseColor, false, 1, specularColor, false, shininess);
     }
 
     public Material(int diffuseTex, int specularTex, float shininess) {
