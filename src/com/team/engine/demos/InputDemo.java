@@ -22,6 +22,9 @@ public class InputDemo extends Engine {
 	static BufferedReader in;
 	static int port;
 	
+	private float accumulator = 0;
+	private static final float REFRESH_RATE = 1f;
+	
 	public static String hex(int n) {
 	    // call toUpperCase() if that's required
 	    return String.format("0x%8s", Integer.toHexString(n)).replace(' ', '0');
@@ -73,7 +76,11 @@ public class InputDemo extends Engine {
 	
 	@Override
 	public void tick() {
+		accumulator += Engine.instance.deltaTime;
 		
+		if (accumulator > REFRESH_RATE) {
+			accumulator -= REFRESH_RATE;
+			
 			float lookX = controller.getAxisValue(4);
 			float lookY = controller.getAxisValue(5);
 			
@@ -90,6 +97,7 @@ public class InputDemo extends Engine {
 				}
 				System.out.println("Done.");
 			}
+		}
 	}
 
 	@Override
