@@ -24,19 +24,7 @@ public class InputDemo extends Engine {
 	private float accumulator = 0;
 	private static final float REFRESH_RATE = 0.1f;
 	
-	public static String hex(int n) {
-	    // call toUpperCase() if that's required
-	    return String.format("0x%8s", Integer.toHexString(n)).replace(' ', '0');
-	}
-
-	public static String hex(float f) {
-	    // change the float to raw integer bits(according to the OP's requirement)
-	    return hex(Float.floatToRawIntBits(f));
-	}
-	
 	public static void main(String[] args) {
-		System.out.println(hex(10.208f));
-		
 		if (args.length != 1) {
 			port = 5660;
 		} else if (args[0].toString() == "help") {
