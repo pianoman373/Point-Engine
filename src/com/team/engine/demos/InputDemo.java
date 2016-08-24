@@ -80,8 +80,8 @@ public class InputDemo extends Engine {
 		if (accumulator > REFRESH_RATE) {
 			accumulator -= REFRESH_RATE;
 			
-			float lookX = controller.getAxisValue(4);
-			float lookY = controller.getAxisValue(5);
+			float lookX = controller.getAxisValue(1);
+			float lookY = controller.getAxisValue(2);
 			
 			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f) {
 				System.out.print("Sending packet...");
