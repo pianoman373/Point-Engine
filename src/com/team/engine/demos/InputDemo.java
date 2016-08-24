@@ -40,26 +40,26 @@ public class InputDemo extends Engine {
 			controller = Controllers.getController(0);
 		}
 		
-		System.out.println("initializing socket");
+		System.out.println("Initializing socket.");
 		try (ServerSocket serverSocket = new ServerSocket(port)) { 
 			socket = serverSocket.accept();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port " + port + ". Is it open?");
 			System.exit(-1);
 		}
-		System.out.println("finished initializing socket");
-	}
-	
-	@Override
-	public void tick() {
+		System.out.println("Finished initializing socket.");
+		
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
 			in = new BufferedReader(
 					new InputStreamReader(
 							socket.getInputStream()));
 		} catch (Exception e) {}
+	}
 	
-		while (true) {
+	@Override
+	public void tick() {
+		
 			float lookX = controller.getAxisValue(4);
 			float lookY = controller.getAxisValue(5);
 			
@@ -70,7 +70,6 @@ public class InputDemo extends Engine {
 				out.flush();
 				System.out.println("done");
 			}
-		}
 	}
 
 	@Override
