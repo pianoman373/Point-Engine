@@ -39,17 +39,19 @@ public class InputDemo extends Engine {
 		if (Controllers.getControllerCount() > 0) {
 			controller = Controllers.getController(0);
 		}
-	}
-	
-	@Override
-	public void tick() {
+		
+		System.out.println("initializing socket");
 		try (ServerSocket serverSocket = new ServerSocket(port)) { 
-				socket = serverSocket.accept();
+			socket = serverSocket.accept();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port " + port + ". Is it open?");
 			System.exit(-1);
 		}
-		
+		System.out.println("finished initializing socket");
+	}
+	
+	@Override
+	public void tick() {
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
 			in = new BufferedReader(
@@ -62,7 +64,11 @@ public class InputDemo extends Engine {
 			float lookY = controller.getAxisValue(5);
 			
 			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f) {
-				out.print("+lookX+" + "+lookY+");
+				System.out.println("sending packet");
+				out.print(lookX);
+				out.print(lookY);
+				out.flush();
+				System.out.println("done");
 			}
 		}
 	}
