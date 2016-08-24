@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
@@ -85,14 +84,14 @@ public class InputDemo extends Engine {
 			float lookY = controller.getAxisValue(5);
 			
 			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f) {
-				System.out.println("Sending packet.");
+				System.out.print("Sending packet... ");
 				
 				try {
 					byte[] b = ByteBuffer.allocate(8).putFloat(lookX).putFloat(lookY).array();
 					out.write(b);
 					out.flush();
 				} catch (IOException e) {
-					System.err.println("Connection to the client lost.");
+					System.err.println("\nConnection to the client lost.");
 					e.printStackTrace();
 				}
 				System.out.println("Done.");
