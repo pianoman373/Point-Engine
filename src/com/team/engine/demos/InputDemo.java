@@ -22,7 +22,7 @@ public class InputDemo extends Engine {
 	static int port;
 	
 	private float accumulator = 0;
-	private static final float REFRESH_RATE = 1f;
+	private static final float REFRESH_RATE = 0.1f;
 	
 	public static String hex(int n) {
 	    // call toUpperCase() if that's required
