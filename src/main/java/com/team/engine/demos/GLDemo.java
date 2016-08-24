@@ -62,8 +62,11 @@ public class GLDemo extends Engine {
 		//load our monkey from disk
 		objMesh = ObjLoader.loadFile("monkey.obj");
 		
-		this.skybox = new Cubemap("skybox/");
+		this.skybox = new Cubemap("skybox");
 		this.background = new Vec3(0.0, 0.0, 0.0);
+		
+		loadShader("hdr");
+		this.setFramebuffer(getShader("hdr"));
 
 		scene = new Scene();
 		scene.setupPhysics();
@@ -156,7 +159,7 @@ public class GLDemo extends Engine {
 	@Override
 	public void postRenderUniforms(Shader shader) {
 		//Send our exposure uniform to the post processing shader.
-		shader.uniformFloat("exposure", 2.0f);
+		shader.uniformFloat("exposure", 3.0f);
 	}
 
 	@Override

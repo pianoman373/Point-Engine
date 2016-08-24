@@ -265,8 +265,7 @@ public abstract class Engine {
 	 * does all that opengl context stuff at the very beginning.
 	 */
 	private void setupContext() {
-		System.setProperty("org.lwjgl.librarypath", Paths.get("lib/native").toAbsolutePath().toString());
-		System.setProperty("java.library.path", System.getProperty("java.library.path") + ":" + "/home/joseph/Desktop");
+		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 
 		System.out.println(System.getProperty("java.library.path"));
 

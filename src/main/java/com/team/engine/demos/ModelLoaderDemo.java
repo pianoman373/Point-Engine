@@ -1,5 +1,6 @@
 package com.team.engine.demos;
 
+import com.team.engine.Cubemap;
 import com.team.engine.Engine;
 import com.team.engine.Mesh;
 import com.team.engine.ObjLoader;
@@ -47,9 +48,11 @@ public class ModelLoaderDemo extends Engine {
 		
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		
-		objMesh = ObjLoader.loadFile("resources/hallway_floor.obj");
-		objMesh2 = ObjLoader.loadFile("resources/hallway_walls.obj");
-		objMesh3 = ObjLoader.loadFile("resources/hallway_roof.obj");
+		objMesh = ObjLoader.loadFile("hallway_floor.obj");
+		objMesh2 = ObjLoader.loadFile("hallway_walls.obj");
+		objMesh3 = ObjLoader.loadFile("hallway_roof.obj");
+		
+		this.skybox = new Cubemap("skybox/");
 		
 		this.background = new Vec3(0, 0, 0);
 	}
@@ -64,6 +67,7 @@ public class ModelLoaderDemo extends Engine {
 		//Bind our shader.
 		Shader s = getShader("standard");
 		s.bind();
+		this.skybox.bind(2);
 		
 		//Send material parametersand ambient.
 		s.uniformFloat("ambient", 0.2f);

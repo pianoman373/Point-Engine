@@ -89,6 +89,7 @@ public class Texture {
 		InputStream in;
 		BufferedImage image;
 		try {
+			System.out.println("loading: " + path);
 			in = ObjLoader.class.getClassLoader().getResourceAsStream(path);
 			image = ImageIO.read(in);
 		} catch (IOException e) {
