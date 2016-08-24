@@ -55,14 +55,14 @@ public class InputDemo extends Engine {
 			controller = Controllers.getController(0);
 		}
 		
-		System.out.println("Initializing socket.");
+		System.out.println("Initializing socket...");
 		try (ServerSocket serverSocket = new ServerSocket(port)) { 
 			socket = serverSocket.accept();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port " + port + ". Is it open?");
 			System.exit(-1);
 		}
-		System.out.println("Finished initializing socket.");
+		System.out.println("Socket initialized.");
 		
 		try {
 			out = new DataOutputStream(socket.getOutputStream());
@@ -84,17 +84,17 @@ public class InputDemo extends Engine {
 			float lookY = controller.getAxisValue(5);
 			
 			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f) {
-				System.out.print("Sending packet... ");
+				System.out.print("Sending packet...");
 				
 				try {
 					byte[] b = ByteBuffer.allocate(8).putFloat(lookX).putFloat(lookY).array();
 					out.write(b);
 					out.flush();
 				} catch (IOException e) {
-					System.err.println("\nConnection to the client lost.");
+					System.err.println("\nConnection to the client lost.\n");
 					e.printStackTrace();
 				}
-				System.out.println("Done.");
+				System.out.println(" Done.");
 			}
 		}
 	}
