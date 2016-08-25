@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 
 import org.lwjgl.input.Controller;
 import org.lwjgl.input.Controllers;
+import org.lwjgl.input.Keyboard;
 
 import com.team.engine.Engine;
 import com.team.engine.Shader;
@@ -71,11 +72,40 @@ public class InputDemo extends Engine {
 			float lookX = controller.getAxisValue(1);
 			float lookY = controller.getAxisValue(2);
 			
-			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f) {
+			float keyX = 0;
+			float keyY = 0;
+			boolean useKey = false;
+			
+			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+				keyX = 1.0f;
+				useKey = true;
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+				keyX = -1.0f;
+				useKey = true;
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+				keyY = -1.0f;
+				useKey = true;
+			}
+			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+				keyY = 1.0f;
+				useKey = true;
+			}
+			
+			
+			
+			if (lookX > 0.3f || lookX < -0.3f || lookY > 0.3f || lookY < -0.3f || useKey) {
 				System.out.print("Sending packet...");
 				
 				try {
-					byte[] b = ByteBuffer.allocate(8).putFloat(lookX).putFloat(lookY).array();
+					byte[] b;
+					if (useKey) {
+						b = ByteBuffer.allocate(8).putFloat(keyX).putFloat(keyY).array();
+					}
+					else {
+						b = ByteBuffer.allocate(8).putFloat(lookX).putFloat(lookY).array();
+					}
 					out.write(b);
 					out.flush();
 				} catch (IOException e) {
