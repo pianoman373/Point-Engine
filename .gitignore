@@ -5,3 +5,4 @@ $ cat .gitignore
 !/lib
 !/resources
 !.classpath
+!/native
