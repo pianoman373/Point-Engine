@@ -40,7 +40,7 @@ public class InputDemo extends Engine {
 		if (args.length != 1) {
 			port = 5660;
 		} else if (args[0].toString() == "help") {
-			System.out.println("Usage: java RoboKalServer <port number>");
+			System.out.println("Usage: java InputDemo <port number>");
 			System.exit(1);
 		} else port = Integer.parseInt(args[0]);
 		
