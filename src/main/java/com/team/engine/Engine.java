@@ -5,16 +5,19 @@ import static org.lwjgl.opengl.GL11.*;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Controllers;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import javax.swing.JOptionPane;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import org.lwjgl.opengl.GL;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2i;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
+
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
  *
@@ -25,71 +28,52 @@ public abstract class Engine {
 	public static final int WINDOW_HEIGHT = 720;
 	public static final int SHADOW_RESOLUTION = 4096;
 	public static final int MAX_FPS = 60;
+
+	public static Camera camera;
+
+	public static Shader framebufferShader;
 	
-	public static Engine instance;
-
-	public Camera camera;
-
-	public Shader framebufferShader;
+	public static Cubemap skybox = null;
+	public static Vec3 background = new Vec3(0.0f, 0.0f, 0.0f);
 	
-	public Cubemap skybox = null;
-	public Vec3 background = new Vec3(0.0f, 0.0f, 0.0f);
+	public static Controller[] controllers;
 
-	private Framebuffer fbuffer;
-	private Framebuffer pingPong1;
-	private Framebuffer pingPong2;
+	private static Framebuffer fbuffer;
+	private static Framebuffer pingPong1;
+	private static Framebuffer pingPong2;
 	public static Framebuffer shadowBuffer;
-	private Mesh framebufferMesh;
-	private Mesh skyboxMesh;
-	public Mesh cubeMesh;
+	private static Mesh framebufferMesh;
+	private static Mesh skyboxMesh;
+	public static Mesh cubeMesh;
+	
+	private static KeyCallback keyCallback;
+	private static CursorCallback cursorCallback;
+	private static MouseCallback mouseCallback;
+	private static ScrollCallback scrollCallback;
+	
+	private static long window;
 
-	public float deltaTime = 0.0f;
-	private float lastFrame = 0.0f;
+	public static float deltaTime = 0.0f;
+	private static float lastFrame = 0.0f;
 
-	private boolean is2d = false;
-
-	public boolean wireframe = false;
+	public static boolean wireframe = false;
 
 	private static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
 	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
-
-
-	//these are all classes that the main game must inherit
-	public abstract void setupGame();
-
-	public abstract void tick();
-
-	public abstract void render();
 	
-	public abstract void renderShadow(Shader s);
-
-	public abstract void kill();
-
-	/**
-	 * Add any uniforms you want to the currently bound framebuffer shader before rendering.
-	 */
-	public abstract void postRenderUniforms(Shader shader);
+	private static AbstractGame game;
 
 
-	public void setFramebuffer(Shader shader) {
-		this.framebufferShader = shader;
-	}
-
-	private float getTime() {
-		return System.nanoTime() / 1000000000.0f;
+	public static void setFramebuffer(Shader shader) {
+		framebufferShader = shader;
 	}
 
 	/**
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
 	 */
-	public void initialize(boolean is2d) {
-		System.nanoTime();
-
-
-		instance = this;
-		this.is2d = is2d;
+	public static void start(boolean is2d, AbstractGame g) {
+		game = g;
 		setupContext();
-
 
 		loadShader("framebuffer");
 		loadShader("blur");
@@ -108,7 +92,7 @@ public abstract class Engine {
 		pingPong1 = new Framebuffer(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
 		pingPong2 = new Framebuffer(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
 
-		setupGame();
+		game.setupGame();
 
 		glClearColor(background.x, background.y, background.z, 1.0f);
 		glEnable(GL_DEPTH_TEST);
@@ -119,20 +103,27 @@ public abstract class Engine {
 
 		//setupPhysics();
 
-		if (this.is2d) {
-			this.camera = new OrthographicCamera();
+		if (is2d) {
+			camera = new OrthographicCamera();
 		}
 		else {
-			this.camera = new FPSCamera();
+			camera = new FPSCamera();
 		}
 		
 		float time = 0;
 		
-		lastFrame = getTime();
+		lastFrame = (float)glfwGetTime();
 		int fps = 0;
 
-		while (!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-			float currentFrame = getTime();
+		while (!glfwWindowShouldClose(window)) {
+			
+			glfwPollEvents();
+			
+			for (Controller c : controllers) {
+				c.poll();
+			}
+			
+			float currentFrame = (float)glfwGetTime();
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
 			
@@ -141,36 +132,35 @@ public abstract class Engine {
 			
 			if (time >= 1.0f) {
 				time = 1.0f - time;
-				//System.out.println("FPS: " + fps);
-				Display.setTitle("Game Engine FPS: " + fps);
+				glfwSetWindowTitle(window, ("Game Engine FPS: " + fps));
 				fps = 0;
 			}
 
-			this.update();
+			update();
 			
 			shadowBuffer.bind();
 			glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
-			this.clear();
+			clear();
 			
 			Shader s = getShader("shadow");
 			s.bind();
 			s.uniformMat4("camView", camera.getView());
 			s.uniformMat4("camProjection", camera.getProjection());
 			s.uniformMat4("view", new Mat4());
-			s.uniformMat4("projection", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(this.camera.getPosition().negate()));
+			s.uniformMat4("projection", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(camera.getPosition().negate()));
 			
 			//s.uniformMat4("view", this.camera.getView());
 			//s.uniformMat4("projection", this.camera.getProjection());
 			
 			glCullFace(GL_FRONT);
-			this.renderShadow(s);
+			game.renderShadow(s);
 			glCullFace(GL_BACK);
 			
 			fbuffer.bind();
 			glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-			this.clear();
+			clear();
 
-			if (this.skybox != null) {
+			if (skybox != null) {
 				glDepthMask(false);
 				getShader("skybox").bind();
 				skybox.bind();
@@ -184,7 +174,7 @@ public abstract class Engine {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			}
 
-			this.render();
+			game.render();
 
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -193,9 +183,9 @@ public abstract class Engine {
 			doBloom();
 
 			Framebuffer.unbind();
-			this.clear();
+			clear();
 			framebufferShader.bind();
-			this.postRenderUniforms(framebufferShader);
+			game.postRenderUniforms(framebufferShader);
 			pingPong2.tex[0].bind(1);
 			fbuffer.tex[0].bind(0);
 			//shadowBuffer.tex[0].bind(0);
@@ -204,16 +194,15 @@ public abstract class Engine {
 
 			framebufferMesh.draw();
 
-			Display.update();
-			Display.sync(MAX_FPS);
+			glfwSwapBuffers(window);
 		}
-		this.end();
+		end();
 	}
 	
 	/**
 	 * basically just blurs the second framebuffer
 	 */
-	private void doBloom() {
+	private static void doBloom() {
 		boolean horizontal = true;
 		boolean first = true;
 		int amount = 10;
@@ -255,49 +244,56 @@ public abstract class Engine {
 		Framebuffer.unbind();
 	}
 
-	private void update() {
-		this.tick();
+	private static void update() {
+		game.tick();
 
-		this.camera.update();
+		camera.update();
 	}
 
 	/**
 	 * does all that opengl context stuff at the very beginning.
 	 */
-	private void setupContext() {
+	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 
 		System.out.println(System.getProperty("java.library.path"));
 
-		try {
-			Display.setTitle("Game Engine");
-			Display.setDisplayMode(new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT));
-			Display.setFullscreen(false);
-
-			Display.setVSyncEnabled(true);
-
-			Display.create();
-
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-			System.err.println("Failed: "+e.getMessage());
+		glfwInit();
+		glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		
+		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game", NULL, NULL);
+		if (window == NULL) {
+			JOptionPane.showMessageDialog(null, "Sorry, your graphics card is incompatible with openGL 3");
+		    glfwTerminate();
 		}
-
-		try {
-			Controllers.create();
-		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		glfwMakeContextCurrent(window);
+				
+		keyCallback = new KeyCallback();
+		cursorCallback = new CursorCallback();
+		mouseCallback = new MouseCallback();
+		scrollCallback = new ScrollCallback();
+		
+		glfwSetKeyCallback(window, keyCallback);
+		glfwSetCursorPosCallback(window, cursorCallback);
+		glfwSetMouseButtonCallback(window, mouseCallback);
+		glfwSetScrollCallback(window, scrollCallback);
+		
+		controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		
+		GL.createCapabilities();
 	}
 
-	public void clear() {
+	public static void clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	private void end() {
-		kill();
-		Display.destroy();
+	private static void end() {
+		game.kill();
+		glfwTerminate();
 		System.exit(0);
 	}
 

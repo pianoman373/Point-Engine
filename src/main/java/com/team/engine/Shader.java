@@ -7,10 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
@@ -28,7 +24,6 @@ public class Shader {
 	 */
 	public Shader(String filename) {
 		int vertexShader;
-		int yo;
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		
 		glShaderSource(vertexShader, read(Constants.RESOURCE_PATH + filename + ".vsh"));
@@ -56,9 +51,9 @@ public class Shader {
 	 */
 	public void bind() {
 		glUseProgram(this.id);
-		this.uniformMat4("view", Engine.instance.camera.getView());
-		this.uniformVec3("eyePos", Engine.instance.camera.getPosition());
-		this.uniformMat4("projection", Engine.instance.camera.getProjection());
+		this.uniformMat4("view", Engine.camera.getView());
+		this.uniformVec3("eyePos", Engine.camera.getPosition());
+		this.uniformMat4("projection", Engine.camera.getProjection());
 	}
 	
 	/**
@@ -127,7 +122,7 @@ public class Shader {
 	 */
 	public void uniformMat4(String name, Mat4 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
-		glUniformMatrix4(vertexColorLocation, false, value.getBuffer());
+		glUniformMatrix4fv(vertexColorLocation, false, value.getBuffer());
 	}
 	
 	//TODO: Maybe we could do something like ISerializable, but for uniforms instead of hardcoding the objects in here.

@@ -15,12 +15,11 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
-import org.lwjgl.input.Mouse;
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
  */
-public class GLDemo extends Engine {
+public class GLDemo extends AbstractGame {
 	private static Vec3 cubePositions[] = {
 		new Vec3( 2.0f,  5.0f, -15.0f), 
 		new Vec3(-1.5f, -2.2f, -2.5f),  
@@ -42,17 +41,17 @@ public class GLDemo extends Engine {
 	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 64.0f);
 	
 	public static void main(String[] args) {
-		new GLDemo().initialize(false);
+		Engine.start(false, new GLDemo());
 	}
 
 	@Override
 	public void setupGame() {
-		loadTexture("container2.png");
-		loadTexture("container2_specular.png");
-		loadTexture("brickwall.jpg");
+		Engine.loadTexture("container2.png");
+		Engine.loadTexture("container2_specular.png");
+		Engine.loadTexture("brickwall.jpg");
 		
-		loadShader("standard");
-		loadShader("light");
+		Engine.loadShader("standard");
+		Engine.loadShader("light");
 		
 		//this.setFramebuffer(new Shader("shaders/hdr"));
 		
@@ -62,11 +61,11 @@ public class GLDemo extends Engine {
 		//load our monkey from disk
 		objMesh = ObjLoader.loadFile("monkey.obj");
 		
-		this.skybox = new Cubemap("skybox");
-		this.background = new Vec3(0.0, 0.0, 0.0);
+		Engine.skybox = new Cubemap("skybox");
+		Engine.background = new Vec3(0.0, 0.0, 0.0);
 		
-		loadShader("hdr");
-		this.setFramebuffer(getShader("hdr"));
+		Engine.loadShader("hdr");
+		Engine.setFramebuffer(Engine.getShader("hdr"));
 
 		scene = new Scene();
 		scene.setupPhysics();
@@ -83,18 +82,18 @@ public class GLDemo extends Engine {
 	@Override
 	public void tick() {
 		//tell bullet to tick
-		scene.dynamicsWorld.stepSimulation(Engine.instance.deltaTime, 10);
+		scene.dynamicsWorld.stepSimulation(Engine.deltaTime, 10);
 
-		accum += Engine.instance.deltaTime;
-
-		if (Mouse.isButtonDown(1) && accum > 0.1f) {
-			FPSCamera cam = (FPSCamera)Engine.instance.camera;
+		accum += Engine.deltaTime;
+		
+		if (Input.isButtonDown(1) && accum > 0.1f) {
+			FPSCamera cam = (FPSCamera)Engine.camera;
 			Crate c = new Crate(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), scene.dynamicsWorld);
 			scene.add(c);
 			accum = 0;
 		}
-		if (Mouse.isButtonDown(2) && accum > 0f) {
-			PointLight p = new PointLight(Engine.instance.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 100f, 0.032f);
+		if (Input.isButtonDown(2) && accum > 0f) {
+			PointLight p = new PointLight(Engine.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 100f, 0.032f);
 			scene.add(p);
 
 			accum = 0;
@@ -104,14 +103,14 @@ public class GLDemo extends Engine {
 	@Override
 	public void render() {
 		//Bind two textures in different indexes so the shader has both.
-		getTexture("brickwall.jpg").bind(0);
+		Engine.getTexture("brickwall.jpg").bind(0);
 		//getTexture("container2_specular.png").bind(1);
-		this.skybox.bind(2);
+		Engine.skybox.bind(2);
 		Engine.shadowBuffer.tex[0].bind(3);
 
 		
 		//Bind our shader.
-		Shader s = getShader("standard");
+		Shader s = Engine.getShader("standard");
 
 		s.bind();
 
@@ -119,7 +118,7 @@ public class GLDemo extends Engine {
 		s.uniformMaterial(crateMaterial);
 		s.uniformInt("skybox", 2);
 		s.uniformInt("shadowMap", 3);
-		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.instance.camera.getPosition().negate()));
+		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.camera.getPosition().negate()));
 
 		s.uniformScene(scene);
 		
@@ -136,7 +135,7 @@ public class GLDemo extends Engine {
 		//draw the monkey
 		objMesh.draw();
 
-		scene.render(Engine.instance.camera);
+		scene.render(Engine.camera);
 	}
 	
 	private static void setupPhysics() {
@@ -209,7 +208,7 @@ class Crate extends GameObject {
 		Engine.getTexture("container2.png").bind(0);
 		Engine.getTexture("container2_specular.png").bind(1);
 		Engine.shadowBuffer.tex[0].bind(3);
-		Engine.instance.skybox.bind(2);
+		Engine.skybox.bind(2);
 		
 		Shader s = Engine.getShader("standard");
 		s.bind();
@@ -220,7 +219,7 @@ class Crate extends GameObject {
 		s.uniformMaterial(GLDemo.crateMaterial);
 		s.uniformInt("skybox", 2);
 		s.uniformInt("shadowMap", 3);
-		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.instance.camera.getPosition().negate()));
+		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.camera.getPosition().negate()));
 
 		s.uniformScene(scene);
 		

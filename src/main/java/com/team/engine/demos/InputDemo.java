@@ -8,14 +8,16 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-import org.lwjgl.input.Controller;
-import org.lwjgl.input.Controllers;
-import org.lwjgl.input.Keyboard;
-
+import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
+import com.team.engine.Input;
 import com.team.engine.Shader;
 
-public class InputDemo extends Engine {
+import net.java.games.input.Component.Identifier;
+
+import static org.lwjgl.glfw.GLFW.*;
+
+public class InputDemo extends AbstractGame {
 	
 	static Socket socket;
 	static DataOutputStream out;
@@ -33,16 +35,16 @@ public class InputDemo extends Engine {
 			System.exit(1);
 		} else port = Integer.parseInt(args[0]);
 		
-		new InputDemo().initialize(false);
+		Engine.start(false, new InputDemo());
 	}
 	
-	private static Controller controller;
+	//private static Controller controller;
 
 	@Override
 	public void setupGame() {
-		if (Controllers.getControllerCount() > 0) {
+		/*if (Controllers.getControllerCount() > 0) {
 			controller = Controllers.getController(0);
-		}
+		}*/
 		
 		System.out.println("Initializing socket...");
 		try (ServerSocket serverSocket = new ServerSocket(port)) { 
@@ -64,31 +66,31 @@ public class InputDemo extends Engine {
 	
 	@Override
 	public void tick() {
-		accumulator += Engine.instance.deltaTime;
+		accumulator += Engine.deltaTime;
 		
 		if (accumulator > REFRESH_RATE) {
 			accumulator -= REFRESH_RATE;
 			
-			float lookX = controller.getAxisValue(1);
-			float lookY = controller.getAxisValue(2);
+			float lookX = Input.controllerValue(Identifier.Axis.X);
+			float lookY = Input.controllerValue(Identifier.Axis.Y);
 			
 			float keyX = 0;
 			float keyY = 0;
 			boolean useKey = false;
 			
-			if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+			if (Input.isKeyDown(GLFW_KEY_RIGHT)) {
 				keyX = 1.0f;
 				useKey = true;
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+			if (Input.isKeyDown(GLFW_KEY_LEFT)) {
 				keyX = -1.0f;
 				useKey = true;
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+			if (Input.isKeyDown(GLFW_KEY_UP)) {
 				keyY = -1.0f;
 				useKey = true;
 			}
-			if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+			if (Input.isKeyDown(GLFW_KEY_DOWN)) {
 				keyY = 1.0f;
 				useKey = true;
 			}
