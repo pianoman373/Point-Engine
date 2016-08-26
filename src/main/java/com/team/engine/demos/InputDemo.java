@@ -8,10 +8,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.ByteBuffer;
 
-import org.lwjgl.input.Controller;
-import org.lwjgl.input.Controllers;
-import org.lwjgl.input.Keyboard;
-
 import com.team.engine.Engine;
 import com.team.engine.Shader;
 
@@ -36,13 +32,13 @@ public class InputDemo extends Engine {
 		new InputDemo().initialize(false);
 	}
 	
-	private static Controller controller;
+	//private static Controller controller;
 
 	@Override
 	public void setupGame() {
-		if (Controllers.getControllerCount() > 0) {
+		/*if (Controllers.getControllerCount() > 0) {
 			controller = Controllers.getController(0);
-		}
+		}*/
 		
 		System.out.println("Initializing socket...");
 		try (ServerSocket serverSocket = new ServerSocket(port)) { 
@@ -64,7 +60,7 @@ public class InputDemo extends Engine {
 	
 	@Override
 	public void tick() {
-		accumulator += Engine.instance.deltaTime;
+		/*accumulator += Engine.instance.deltaTime;
 		
 		if (accumulator > REFRESH_RATE) {
 			accumulator -= REFRESH_RATE;
@@ -114,7 +110,7 @@ public class InputDemo extends Engine {
 				}
 				System.out.println(" Done.");
 			}
-		}
+		}*/
 	}
 
 	@Override

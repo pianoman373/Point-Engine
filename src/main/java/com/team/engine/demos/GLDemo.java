@@ -15,7 +15,11 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
-import org.lwjgl.input.Mouse;
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+
+import static org.lwjgl.glfw.GLFW.*;
+
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
@@ -44,6 +48,8 @@ public class GLDemo extends Engine {
 	public static void main(String[] args) {
 		new GLDemo().initialize(false);
 	}
+	
+	Controller controller;
 
 	@Override
 	public void setupGame() {
@@ -76,6 +82,10 @@ public class GLDemo extends Engine {
 //		scene.lights.add(new PointLight(new Vec3(1, 0, 3), new Vec3(0.7f, 0.7f, 0.2f), 0.09f, 0.032f));
 
 		setupPhysics();
+		
+		Controller[] ca = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		System.out.println(ca.length);
+		controller = ca[0];
 	}
 
 	private static float accum;
@@ -86,8 +96,12 @@ public class GLDemo extends Engine {
 		scene.dynamicsWorld.stepSimulation(Engine.instance.deltaTime, 10);
 
 		accum += Engine.instance.deltaTime;
-
-		if (Mouse.isButtonDown(1) && accum > 0.1f) {
+		
+		controller.poll();
+		
+		System.out.println(controller.getName());
+		
+		/*if (Mouse.isButtonDown(1) && accum > 0.1f) {
 			FPSCamera cam = (FPSCamera)Engine.instance.camera;
 			Crate c = new Crate(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), scene.dynamicsWorld);
 			scene.add(c);
@@ -98,7 +112,7 @@ public class GLDemo extends Engine {
 			scene.add(p);
 
 			accum = 0;
-		}
+		}*/
 	}
 
 	@Override

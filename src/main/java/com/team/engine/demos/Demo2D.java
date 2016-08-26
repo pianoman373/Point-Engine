@@ -6,10 +6,11 @@ import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
-import org.lwjgl.input.Keyboard;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.Engine;
 import com.team.engine.Grid2D;
+import com.team.engine.Input;
 import com.team.engine.Mesh;
 import com.team.engine.Primitives;
 import com.team.engine.Shader;
@@ -62,18 +63,18 @@ public class Demo2D extends Engine {
 			cube.setLinearVelocity(new Vector2(vel.x, vel.y));
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT) && vel.x > -4) {
+		if (Input.isKeyDown(GLFW_KEY_LEFT) && vel.x > -4) {
 			cube.applyLinearImpulse(new Vector2(-600 * Engine.instance.deltaTime, 0), new Vector2(pos.x, pos.y));
 			cube.setAwake(true);
 		}
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+		if (Input.isKeyDown(GLFW_KEY_UP)) {
 			cube.setLinearVelocity(new Vector2(cube.getLinearVelocity().x, 5));
 			cube.setAwake(true);
 		}
 		//cube.setLinearVelocity(new Vector2(1, cube.getLinearVelocity().y));
 		
-		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT) && vel.x < 4) {
+		if (Input.isKeyDown(GLFW_KEY_RIGHT) && vel.x < 4) {
 			cube.applyLinearImpulse(new Vector2(600 * Engine.instance.deltaTime, 0), new Vector2(pos.x, pos.y));
 			cube.setAwake(true);
 			

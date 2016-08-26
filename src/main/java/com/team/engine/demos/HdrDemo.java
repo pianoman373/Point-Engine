@@ -1,8 +1,9 @@
 package com.team.engine.demos;
 
-import org.lwjgl.input.Keyboard;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.Engine;
+import com.team.engine.Input;
 import com.team.engine.Mesh;
 import com.team.engine.PointLight;
 import com.team.engine.Primitives;
@@ -67,10 +68,10 @@ public class HdrDemo extends Engine {
 
 	@Override
 	public void tick() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_COMMA)) {
+		if (Input.isKeyDown(GLFW_KEY_COMMA)) {
 			exposure -= 0.01;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_PERIOD)) {
+		if (Input.isKeyDown(GLFW_KEY_PERIOD)) {
 			exposure += 0.01;
 		}
 		

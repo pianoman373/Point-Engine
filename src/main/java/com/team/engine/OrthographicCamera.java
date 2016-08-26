@@ -1,6 +1,6 @@
 package com.team.engine;
 
-import org.lwjgl.input.Keyboard;
+import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
@@ -19,16 +19,16 @@ public class OrthographicCamera extends Camera {
 	public void update() {
 		float cameraSpeed = 10.0f * Engine.instance.deltaTime;
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
+		if(Input.isKeyDown(GLFW_KEY_W)) {
 	        position.y += cameraSpeed;
 	    }
-	    if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
+	    if(Input.isKeyDown(GLFW_KEY_S)) {
 	    	position.y -= cameraSpeed;
 	    }
-	    if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
+	    if(Input.isKeyDown(GLFW_KEY_A)) {
 	    	position.x -= cameraSpeed;
 	    }
-	    if(Keyboard.isKeyDown(Keyboard.KEY_D)) {
+	    if(Input.isKeyDown(GLFW_KEY_D)) {
 	    	position.x += cameraSpeed;
 	    }
 	}

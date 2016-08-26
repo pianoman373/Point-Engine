@@ -127,7 +127,7 @@ public class Shader {
 	 */
 	public void uniformMat4(String name, Mat4 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
-		glUniformMatrix4(vertexColorLocation, false, value.getBuffer());
+		glUniformMatrix4fv(vertexColorLocation, false, value.getBuffer());
 	}
 	
 	//TODO: Maybe we could do something like ISerializable, but for uniforms instead of hardcoding the objects in here.

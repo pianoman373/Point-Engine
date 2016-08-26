@@ -5,11 +5,11 @@ import static org.lwjgl.opengl.GL11.*;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Controllers;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
+import javax.swing.JOptionPane;
+
+import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
+import org.lwjgl.opengl.GL;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2i;
@@ -42,6 +42,13 @@ public abstract class Engine {
 	private Mesh framebufferMesh;
 	private Mesh skyboxMesh;
 	public Mesh cubeMesh;
+	
+	private KeyCallback keyCallback;
+	private CursorCallback cursorCallback;
+	private MouseCallback mouseCallback;
+	private ScrollCallback scrollCallback;
+	
+	private long window;
 
 	public float deltaTime = 0.0f;
 	private float lastFrame = 0.0f;
@@ -131,7 +138,9 @@ public abstract class Engine {
 		lastFrame = getTime();
 		int fps = 0;
 
-		while (!Display.isCloseRequested() && !Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		while (!glfwWindowShouldClose(window)) {
+			glfwPollEvents();
+			
 			float currentFrame = getTime();
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
@@ -142,7 +151,7 @@ public abstract class Engine {
 			if (time >= 1.0f) {
 				time = 1.0f - time;
 				//System.out.println("FPS: " + fps);
-				Display.setTitle("Game Engine FPS: " + fps);
+				//Display.setTitle("Game Engine FPS: " + fps);
 				fps = 0;
 			}
 
@@ -204,8 +213,7 @@ public abstract class Engine {
 
 			framebufferMesh.draw();
 
-			Display.update();
-			Display.sync(MAX_FPS);
+			glfwSwapBuffers(window);
 		}
 		this.end();
 	}
@@ -269,26 +277,31 @@ public abstract class Engine {
 
 		System.out.println(System.getProperty("java.library.path"));
 
-		try {
-			Display.setTitle("Game Engine");
-			Display.setDisplayMode(new DisplayMode(WINDOW_WIDTH, WINDOW_HEIGHT));
-			Display.setFullscreen(false);
-
-			Display.setVSyncEnabled(true);
-
-			Display.create();
-
-		} catch (LWJGLException e) {
-			e.printStackTrace();
-			System.err.println("Failed: "+e.getMessage());
+		glfwInit();
+		glfwWindowHint(GLFW_SAMPLES, 4);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		
+		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game", NULL, NULL);
+		if (window == NULL) {
+			JOptionPane.showMessageDialog(null, "Sorry, your graphics card is incompatible with openGL 3");
+		    glfwTerminate();
 		}
-
-		try {
-			Controllers.create();
-		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		glfwMakeContextCurrent(window);
+				
+		keyCallback = new KeyCallback();
+		cursorCallback = new CursorCallback();
+		mouseCallback = new MouseCallback();
+		scrollCallback = new ScrollCallback();
+		
+		glfwSetKeyCallback(window, keyCallback);
+		glfwSetCursorPosCallback(window, cursorCallback);
+		glfwSetMouseButtonCallback(window, mouseCallback);
+		glfwSetScrollCallback(window, scrollCallback);
+		
+		GL.createCapabilities();
 	}
 
 	public void clear() {
@@ -297,7 +310,7 @@ public abstract class Engine {
 
 	private void end() {
 		kill();
-		Display.destroy();
+		glfwTerminate();
 		System.exit(0);
 	}
 

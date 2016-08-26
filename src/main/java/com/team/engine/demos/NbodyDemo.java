@@ -14,7 +14,6 @@ import javax.swing.Timer;
 import javax.vecmath.Quat4f;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Mouse;
 
 import com.team.engine.Engine;
 import com.team.engine.FPSCamera;
