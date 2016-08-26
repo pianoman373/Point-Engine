@@ -11,10 +11,10 @@ import java.nio.FloatBuffer;
 import java.util.Random;
 
 import javax.swing.Timer;
-import javax.vecmath.Quat4f;
 
 import org.lwjgl.BufferUtils;
 
+import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
 import com.team.engine.FPSCamera;
 import com.team.engine.PointLight;
@@ -26,13 +26,13 @@ import com.team.engine.vecmath.Vec3;
 /**
  * A demo that can simulate orbits, clustering, and gravitational interactions.
  */
-public class NbodyDemo extends Engine implements ActionListener{
+public class NbodyDemo extends AbstractGame implements ActionListener{
 	public static void main(String[] args) {
-		new NbodyDemo().initialize(false);
+		Engine.start(false, new NbodyDemo());
 	}
 	
 	private static final boolean POINT_TO_POINT_GRAVITY = true;
-	private static final float POINT_TO_POINT_STRENGTH = 0.00001f;
+	private static final float POINT_TO_POINT_STRENGTH = 0.001f;
 	private static final float POINT_VELOCITY = 0.1f;
 	private static final float SUN_STRENGTH = 10f;
 	private static final int POINT_COUNT = 5000;
@@ -53,7 +53,6 @@ public class NbodyDemo extends Engine implements ActionListener{
 	private static Vec3 colors[] = new Vec3[POINT_COUNT];
 	private static Vec3 velocities[] = new Vec3[POINT_COUNT];
 	
-	private static float accum;
 	private static Timer t;
 	private static boolean readyToRender = false;
 
@@ -61,9 +60,9 @@ public class NbodyDemo extends Engine implements ActionListener{
 	public void setupGame() {
 		FPSCamera.WASD_SENSITIVITY = 25.0f;
 		
-		loadShader("point");
-		loadShader("light");
-		this.setFramebuffer(new Shader("shaders/hdr"));
+		Engine.loadShader("point");
+		Engine.loadShader("light");
+		Engine.setFramebuffer(new Shader("shaders/hdr"));
 		
 		Random rand = new Random();
 		
@@ -109,7 +108,7 @@ public class NbodyDemo extends Engine implements ActionListener{
 		glVertexAttribPointer(1, 3, GL_FLOAT, false, 6 * 4, 3 * 4);
 		glEnableVertexAttribArray(1);
 		
-		//glPointSize(2);
+		glPointSize(2);
 		
 		glBindVertexArray(0);
 		
@@ -170,7 +169,7 @@ public class NbodyDemo extends Engine implements ActionListener{
 					float distanceToPoint = pos.subtract(i).length();
 					
 					if (distanceToPoint > 0.1f) {
-						total = total.add(toPoint.multiply(POINT_TO_POINT_STRENGTH / (distanceToPoint * distanceToPoint) * Engine.instance.deltaTime));
+						total = total.add(toPoint.multiply(POINT_TO_POINT_STRENGTH / (distanceToPoint * distanceToPoint) * Engine.deltaTime));
 					}
 				}
 			}
@@ -181,7 +180,7 @@ public class NbodyDemo extends Engine implements ActionListener{
 			float distanceToPoint = pos.subtract(i.position).length();
 			
 			if (distanceToPoint > 0.5f) {
-				total = total.add(toPoint.multiply(SUN_STRENGTH / (distanceToPoint * distanceToPoint) * Engine.instance.deltaTime));
+				total = total.add(toPoint.multiply(SUN_STRENGTH / (distanceToPoint * distanceToPoint) * Engine.deltaTime));
 			}
 		}
 		
@@ -195,9 +194,9 @@ public class NbodyDemo extends Engine implements ActionListener{
 
 	@Override
 	public void render() {
-		scene.render(Engine.instance.camera);
+		scene.render(Engine.camera);
 		
-		Shader s = getShader("point");
+		Shader s = Engine.getShader("point");
 		s.bind();
 		s.uniformMat4("model", new Mat4());
 		s.uniformVec3("lightColor", new Vec3(1.0f, 1.0f, 1.0f));

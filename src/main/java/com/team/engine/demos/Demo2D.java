@@ -8,6 +8,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 import static org.lwjgl.glfw.GLFW.*;
 
+import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
 import com.team.engine.Grid2D;
 import com.team.engine.Input;
@@ -22,7 +23,7 @@ import com.team.engine.vecmath.Vec4;
 /**
  * A demo utilizing sprite rendering, Grid2D's and dyn4j physics.
  */
-public class Demo2D extends Engine {
+public class Demo2D extends AbstractGame {
 	private static Grid2D grid;
 
 	private Mesh sprite;
@@ -31,15 +32,15 @@ public class Demo2D extends Engine {
 
 
 	public static void main(String[] args) {
-		new Demo2D().initialize(true);
+		Engine.start(true, new Demo2D());
 	}
 
 	@Override
 	public void setupGame() {
-		this.background = new Vec3(0.0f, 0.5f, 1.0f);
+		Engine.background = new Vec3(0.0f, 0.5f, 1.0f);
 
-		loadShader("sprite");
-		loadTexture("crate.png");
+		Engine.loadShader("sprite");
+		Engine.loadTexture("crate.png");
 
 		sprite = new Mesh(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)));
 		
@@ -64,7 +65,7 @@ public class Demo2D extends Engine {
 		}
 		
 		if (Input.isKeyDown(GLFW_KEY_LEFT) && vel.x > -4) {
-			cube.applyLinearImpulse(new Vector2(-600 * Engine.instance.deltaTime, 0), new Vector2(pos.x, pos.y));
+			cube.applyLinearImpulse(new Vector2(-600 * Engine.deltaTime, 0), new Vector2(pos.x, pos.y));
 			cube.setAwake(true);
 		}
 		
@@ -75,20 +76,20 @@ public class Demo2D extends Engine {
 		//cube.setLinearVelocity(new Vector2(1, cube.getLinearVelocity().y));
 		
 		if (Input.isKeyDown(GLFW_KEY_RIGHT) && vel.x < 4) {
-			cube.applyLinearImpulse(new Vector2(600 * Engine.instance.deltaTime, 0), new Vector2(pos.x, pos.y));
+			cube.applyLinearImpulse(new Vector2(600 * Engine.deltaTime, 0), new Vector2(pos.x, pos.y));
 			cube.setAwake(true);
 			
 		}
-		world.step(Engine.instance.deltaTime, 4, 4);
+		world.step(Engine.deltaTime, 4, 4);
 	}
 
 	@Override
 	public void render() {
 
-		Shader s = getShader("sprite");
+		Shader s = Engine.getShader("sprite");
 		s.bind();
 		s.uniformMat4("model", new Mat4().translate(new Vec3(cube.getPosition().x, cube.getPosition().y, 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(cube.getAngle()))));
-		getTexture("crate.png").bind();
+		Engine.getTexture("crate.png").bind();
 		sprite.draw();
 
 		grid.render();

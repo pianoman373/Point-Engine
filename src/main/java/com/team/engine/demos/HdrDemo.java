@@ -2,6 +2,7 @@ package com.team.engine.demos;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
 import com.team.engine.Input;
 import com.team.engine.Mesh;
@@ -16,7 +17,7 @@ import com.team.engine.vecmath.Vec3;
 /**
  * A demo showing off HDR and bloom effects.
  */
-public class HdrDemo extends Engine {
+public class HdrDemo extends AbstractGame {
 	private static Vec3 cubePositions[] = {
 		new Vec3( 2.0f, -4.5f, -15.0f), 
 		new Vec3(-1.5f, -4.5f, -2.5f),  
@@ -39,26 +40,26 @@ public class HdrDemo extends Engine {
 	
 	
 	public static void main(String[] args) {
-		new HdrDemo().initialize(false);
+		Engine.start(false, new HdrDemo());
 	}
 
 	@Override
 	public void setupGame() {
 		//Load all our shaders and textures from disk.
-		loadTexture("container2.png");
-		loadTexture("container2_specular.png");
-		loadTexture("brickwall.jpg");
-		loadShader("standard");
-		loadShader("hdr");
+		Engine.loadTexture("container2.png");
+		Engine.loadTexture("container2_specular.png");
+		Engine.loadTexture("brickwall.jpg");
+		Engine.loadShader("standard");
+		Engine.loadShader("hdr");
 		
-		this.background = new Vec3(0.0f, 0.0f, 0.0f);
+		Engine.background = new Vec3(0.0f, 0.0f, 0.0f);
 		
 		//Create the cube and plane mesh objects from primitives.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		planeMesh = Primitives.planeMesh(20.0f);
 		
 		//set the engines framebuffer shader to our hdr shader.
-		this.setFramebuffer(getShader("hdr"));
+		Engine.setFramebuffer(Engine.getShader("hdr"));
 		
 		scene = new Scene();
 		scene.lights.add(new PointLight(new Vec3(-3, 0, -3), new Vec3(4f, 4f, 4f), 0.09f, 0.032f));
@@ -81,10 +82,10 @@ public class HdrDemo extends Engine {
 	@Override
 	public void render() {		
 		//Bind two textures in different indexes so the shader has both.
-		getTexture("container2.png").bind(0);
-		getTexture("container2_specular.png").bind(1);
+		Engine.getTexture("container2.png").bind(0);
+		Engine.getTexture("container2_specular.png").bind(1);
 		
-		Shader s = getShader("standard");
+		Shader s = Engine.getShader("standard");
 		
 		//bind our shader
 		s.bind();
@@ -114,7 +115,7 @@ public class HdrDemo extends Engine {
 		}
 		
 		//setup materials and then draw the floor
-		getTexture("brickwall.jpg").bind(0);
+		Engine.getTexture("brickwall.jpg").bind(0);
 		Texture.unBind(1);
 		
 		s.uniformMat4("model", new Mat4().translate(new Vec3(0, -5, 0)).scale(new Vec3(100, 100, 100)));
@@ -122,7 +123,7 @@ public class HdrDemo extends Engine {
 		s.uniformVec3("material.specularColor", new Vec3(0.6, 0.6, 0.6));
 		planeMesh.draw();
 		
-		scene.render(Engine.instance.camera);
+		scene.render(Engine.camera);
 	}
 	
 	public void kill() {

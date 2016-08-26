@@ -17,7 +17,7 @@ public class OrthographicCamera extends Camera {
 	}
 	
 	public void update() {
-		float cameraSpeed = 10.0f * Engine.instance.deltaTime;
+		float cameraSpeed = 10.0f * Engine.deltaTime;
 		
 		if(Input.isKeyDown(GLFW_KEY_W)) {
 	        position.y += cameraSpeed;

@@ -13,7 +13,7 @@ public class FPSCamera extends Camera {
 	public float roll = 0;
 	public Vec3 up = new Vec3(0.0f, 1.0f, 0.0f);
 	
-	private static final float MOUSE_SENSITIVITY = 5f;
+	private static final float MOUSE_SENSITIVITY = 7f;
 	public static float WASD_SENSITIVITY = 10f;
 	
 	private static float lastX;
@@ -153,7 +153,7 @@ public class FPSCamera extends Camera {
 			lastX = (float)Input.mousePos.x;
 			lastY = (float)Input.mousePos.y;
 
-			float sensitivity = 0.05f;
+			float sensitivity = MOUSE_SENSITIVITY * Engine.deltaTime;
 			xoffset *= sensitivity;
 			yoffset *= sensitivity;
 			
@@ -189,7 +189,7 @@ public class FPSCamera extends Camera {
 		
 		if (Input.scrollingAmount <= 1) Input.scrollingAmount = 1;
 		
-		float cameraSpeed = 50.0f * Engine.instance.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
+		float cameraSpeed = WASD_SENSITIVITY * Engine.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
 	    if(Input.isKeyDown(GLFW_KEY_W)) {
 	        position = position.add((front.multiply(cameraSpeed)));
 	    }

@@ -1,7 +1,6 @@
 package com.team.engine;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
@@ -45,7 +44,7 @@ public class Scene {
 		for (PointLight light : lights) {
 			s.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
 			s.uniformVec3("lightColor", light.color);
-			Engine.instance.cubeMesh.draw();
+			Engine.cubeMesh.draw();
 		}
 	}
 	
