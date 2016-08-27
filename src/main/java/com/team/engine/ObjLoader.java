@@ -2,8 +2,6 @@ package com.team.engine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,6 +11,11 @@ import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
 public class ObjLoader {
+	
+	/**
+	 * Parses an obj file and returns the mesh. Currently this parser has NO support for obj materials,
+	 * obj objects, and automatic texture loading. That is all up to the user currently.
+	 */
 	public static Mesh loadFile(String path) {
 		ArrayList<Vec3> positions = new ArrayList<Vec3>();
 		ArrayList<Vec2> uvs = new ArrayList<Vec2>();

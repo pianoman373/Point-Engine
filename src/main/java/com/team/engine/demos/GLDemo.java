@@ -63,9 +63,6 @@ public class GLDemo extends AbstractGame {
 		
 		Engine.skybox = new Cubemap("skybox");
 		Engine.background = new Vec3(0.0, 0.0, 0.0);
-		
-		Engine.loadShader("hdr");
-		Engine.setFramebuffer(Engine.getShader("hdr"));
 
 		scene = new Scene();
 		scene.setupPhysics();

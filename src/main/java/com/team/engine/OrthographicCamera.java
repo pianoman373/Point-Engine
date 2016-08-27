@@ -6,6 +6,10 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
+/**
+ * A 2D camera implementation. Engine.camera will automatically be orthographic
+ * if running in 2D mode.
+ */
 public class OrthographicCamera extends Camera {
 	
 	private Vec2 position = new Vec2(0, 0);

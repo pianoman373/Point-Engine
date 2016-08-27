@@ -1,6 +1,5 @@
 package com.team.engine;
 
-import java.io.InputStream;
 import java.util.Iterator;
 
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -10,7 +9,6 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.World;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 
@@ -21,6 +19,10 @@ import tiled.core.Tile;
 import tiled.core.TileLayer;
 import tiled.io.TMXMapReader;
 
+/**
+ * Grid2D is meant to act as a simple 2D voxel renderer.
+ * Currently it is just a support for tiled maps.
+ */
 public class Grid2D {
 	private byte[][] tiles;
 	private int width;
@@ -29,16 +31,6 @@ public class Grid2D {
 	private int mapHeight;
 	private Mesh mesh;
 	public Body body;
-	
-	public Grid2D(byte[][] tiles, int width, int height, int mapWidth, int mapHeight) {
-		this.tiles = tiles;
-		this.width = width;
-		this.height = height;
-		this.mapWidth = mapWidth;
-		this.mapHeight = mapHeight;
-		Engine.loadTexture("retro-terrain.png", true);
-		buildMesh();
-	}
 	
 	public Grid2D(String tmxfile, World world) {
 		Engine.loadTexture("retro-terrain.png", true);
@@ -108,6 +100,9 @@ public class Grid2D {
 		buildMesh();
 	}
 	
+	/**
+	 * Uses ModelBuilder to make one mesh for the entire map.
+	 */
 	private void buildMesh() {
 		ModelBuilder mb = new ModelBuilder();
 	    
@@ -125,6 +120,9 @@ public class Grid2D {
 		this.mesh = mb.toMesh();
 	}
 	
+	/**
+	 * Computes the uv coordinate for the given integer index;
+	 */
 	private Vec2 computeUV(int index) {
 		return new Vec2((index - 1) % width, (index - 1) / height);
 	}

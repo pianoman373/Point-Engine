@@ -62,7 +62,6 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 		
 		Engine.loadShader("point");
 		Engine.loadShader("light");
-		Engine.setFramebuffer(new Shader("shaders/hdr"));
 		
 		Random rand = new Random();
 		

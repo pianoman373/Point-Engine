@@ -19,7 +19,6 @@ public class Mesh {
 	private int VAO;
 	private int EBO;
 	private int VBO;
-	
 	private int length;
 	private boolean indexed = false;
 	

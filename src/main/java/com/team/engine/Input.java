@@ -1,15 +1,6 @@
 package com.team.engine;
 
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
-import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
-import static org.lwjgl.glfw.GLFW.GLFW_KEY_M;
-import static org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_1;
-import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
-import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
-import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
+import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -22,27 +13,42 @@ import net.java.games.input.Component.Identifier;
 
 /**
  * This is the main class for receiving any sort of input.
- * 
- * Needs a few more hooks, but for now all you'll really be
- * using are mousePos and isKeydown.
- * 
  */
 public class Input {
-	public static boolean[] keys = new boolean[1024];
-	public static boolean[] mouse = new boolean[10];
+	private static boolean[] keys = new boolean[1024];
+	private static boolean[] mouse = new boolean[10];
+	
 	public static Vec2 mousePos = new Vec2(0, 0);
 	public static boolean firstMouse = true;
 	public static boolean mouseGrabbed = false;
 	public static double scrollingAmount = 0;
 	
+	/**
+	 * Returns true if the specified key is down. Keys are from glfw, for 
+	 * 
+	 * Example: 
+	 * 
+	 * Input.isKeyDown(GLFW_KEY_A);
+	 */
 	public static boolean isKeyDown(int key) {
 		return keys[key];
 	}
 	
+	/**
+	 * Returns true if the specified mouse button is down.
+	 */
 	public static boolean isButtonDown(int key) {
 		return mouse[key];
 	}
 
+	/**
+	 * Returns the axis value for the specified controller identifier.
+	 * Buttons will only be 0.0 or 1.0, while joysticks and triggers range from -1.0 to 1.0.
+	 * 
+	 * Example:
+	 * 
+	 * Input.controllerValue(Identifier.Axis.X);
+	 */
 	public static float controllerValue(Identifier i, int controller) {
 		if (Engine.controllers.length > controller) {
 			return Engine.controllers[0].getComponent(i).getPollData();
@@ -52,6 +58,14 @@ public class Input {
 		}
 	}
 	
+	/**
+	 * Returns the axis value for the specified controller identifier.
+	 * Buttons will only be 0.0 or 1.0, while joysticks and triggers range from -1.0 to 1.0.
+	 * 
+	 * Example:
+	 * 
+	 * Input.controllerValue(Identifier.Axis.X);
+	 */
 	public static float controllerValue(Identifier i) {
 		return controllerValue(i, 0);
 	}

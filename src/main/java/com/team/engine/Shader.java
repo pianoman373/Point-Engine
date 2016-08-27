@@ -1,12 +1,10 @@
 package com.team.engine;
 
-import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -66,49 +64,31 @@ public class Shader {
 		glUseProgram(0);
 	}
 	
-	/**
-	 * Translates a Vec4 object into the glsl uniform.
-	 */
 	public void uniformVec4(String name, Vec4 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		glUniform4f(vertexColorLocation, value.x, value.y, value.z, value.w);
 	}
 	
-	/**
-	 * Translates a Vector3 object into the glsl uniform.
-	 */
 	public void uniformVec3(String name, Vec3 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		glUniform3f(vertexColorLocation, value.x, value.y, value.z);
 	}
 	
-	/**
-	 * Translates a Vector2 object into the glsl uniform.
-	 */
 	public void uniformVec2(String name, Vec2 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		glUniform2f(vertexColorLocation, value.x, value.y);
 	}
 	
-	/**
-	 * Sends a float to the glsl uniform.
-	 */
 	public void uniformFloat(String name, float value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		glUniform1f(vertexColorLocation, value);
 	}
 	
-	/**
-	 * Sends an int to the glsl uniform.
-	 */
 	public void uniformInt(String name, int value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		glUniform1i(vertexColorLocation, value);
 	}
 	
-	/**
-	 * Sends a boolean to the glsl uniform.
-	 */
 	public void uniformBool(String name, boolean value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		
@@ -120,15 +100,11 @@ public class Shader {
 		}
 	}
 	
-	/**
-	 * Translates a Mat4 object into the glsl uniform.
-	 */
 	public void uniformMat4(String name, Mat4 value) {
 		int vertexColorLocation = glGetUniformLocation(this.id, name);
 		glUniformMatrix4fv(vertexColorLocation, false, value.getBuffer());
 	}
 	
-	//TODO: Maybe we could do something like ISerializable, but for uniforms instead of hardcoding the objects in here.
 	public void uniformPointLight(String name, PointLight value) {
 		this.uniformVec3(name + ".position", value.position);
 		this.uniformVec3(name + ".color", value.color);
@@ -142,7 +118,6 @@ public class Shader {
 	}
 
 	public void uniformScene(Scene scene) {
-
 		this.uniformInt("pointLightCount", scene.lights.size());
 		for (int i = 0; i < scene.lights.size(); i++) {
 			this.uniformPointLight("pointLights[" + i + "]", scene.lights.get(i));

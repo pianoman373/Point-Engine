@@ -5,7 +5,6 @@ package com.team.engine;
  * This can be considered as class every main game class should extend.
  */
 public abstract class AbstractGame {
-	
 	/**
 	 * Called one time only when the game is first loaded.
 	 */

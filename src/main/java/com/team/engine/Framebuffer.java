@@ -13,15 +13,28 @@ import com.team.engine.vecmath.Vec2i;
 
 public class Framebuffer {
 	private int fbo;
-	private int[] textures;
 	public Texture[] tex;
 	
-	public Framebuffer(Vec2i dimensions, int count, boolean doRbo) {
-		fbo = glGenFramebuffers();
+	private Framebuffer(Vec2i dimensions, int fbo, int[] textures) {
+		this.tex = new Texture[textures.length];
+		this.fbo = fbo;
+		
+		for (int i = 0; i < textures.length; i++) {
+			this.tex[i] = new Texture(textures[i], dimensions);
+		}
+	}
+	
+	/**
+	 * Creates a standard framebuffer.
+	 * 
+	 * doRbo should only be enabled if this framebuffer will be rendered to the final screen image.
+	 */
+	public static Framebuffer standard(Vec2i dimensions, int count, boolean doRbo) {
+		int fbo = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		
-		textures = new int[count];
-		tex = new Texture[count];
+		int[] textures = new int[count];
+		
 		
 		for (int i = 0; i < count; i++) {
 			textures[i] = glGenTextures();
@@ -40,7 +53,7 @@ public class Framebuffer {
 			
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textures[i], 0);
 			
-			tex[i] = new Texture(textures[i], dimensions);
+			
 		}
 		
 		if (doRbo) {
@@ -60,10 +73,15 @@ public class Framebuffer {
 		glDrawBuffers(GLBuffers.StaticBuffer(attachments));
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+		
+		return new Framebuffer(dimensions, fbo, textures);
 	}
 	
-	public Framebuffer(Vec2i dimensions) {
-		fbo = glGenFramebuffers();
+	/**
+	 * Creates a framebuffer for shadows.
+	 */
+	public static Framebuffer shadow(Vec2i dimensions) {
+		int fbo = glGenFramebuffers();
 		
 		int depthMap;
 		depthMap = glGenTextures();
@@ -89,7 +107,7 @@ public class Framebuffer {
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); 
 		
-		tex = new Texture[] {new Texture(depthMap, dimensions)};
+		return new Framebuffer(dimensions, fbo, new int[] {depthMap});
 	}
 	
 	public void bind() {
