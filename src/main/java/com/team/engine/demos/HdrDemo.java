@@ -44,7 +44,7 @@ public class HdrDemo extends AbstractGame {
 	}
 
 	@Override
-	public void setupGame() {
+	public void init() {
 		//Load all our shaders and textures from disk.
 		Engine.loadTexture("container2.png");
 		Engine.loadTexture("container2_specular.png");

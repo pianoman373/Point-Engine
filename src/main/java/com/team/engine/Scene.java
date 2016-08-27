@@ -16,7 +16,7 @@ import javax.vecmath.Vector3f;
 public class Scene {
 	public ArrayList<PointLight> lights = new ArrayList<>();
 	public ArrayList<GameObject> objects = new ArrayList<>();
-	public DirectionalLight sun = new DirectionalLight(new Vec3(0.0f, -1.0f, -1.0f), new Vec3(2.0f, 2.0f, 2.0f));
+	public DirectionalLight sun = new DirectionalLight(new Vec3(0.7f, -1.0f, 1.0f), new Vec3(2.0f, 2.0f, 2.0f));
 
 	public DiscreteDynamicsWorld dynamicsWorld;
 

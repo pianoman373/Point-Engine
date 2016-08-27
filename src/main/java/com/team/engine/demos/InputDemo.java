@@ -41,7 +41,7 @@ public class InputDemo extends AbstractGame {
 	//private static Controller controller;
 
 	@Override
-	public void setupGame() {
+	public void init() {
 		/*if (Controllers.getControllerCount() > 0) {
 			controller = Controllers.getController(0);
 		}*/

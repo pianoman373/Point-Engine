@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -85,11 +86,9 @@ public class Texture {
 	 * All the IO stuff here.
 	 */
 	public static RawImage getRawImage(String path) {
-		InputStream in;
 		BufferedImage image;
 		try {
-			System.out.println("loading: " + path);
-			in = ObjLoader.class.getClassLoader().getResourceAsStream(path);
+			InputStream in = new FileInputStream(path);
 			image = ImageIO.read(in);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -14,7 +14,7 @@ public class FPSCamera extends Camera {
 	public Vec3 up = new Vec3(0.0f, 1.0f, 0.0f);
 	
 	private static final float MOUSE_SENSITIVITY = 7f;
-	public static float WASD_SENSITIVITY = 10f;
+	public static float WASD_SENSITIVITY = 100f;
 	
 	private static float lastX;
 	private static float lastY;
@@ -223,5 +223,10 @@ public class FPSCamera extends Camera {
 	@Override
 	public Vec3 getPosition() {
 		return this.position;
+	}
+
+	@Override
+	public Vec3 getDirection() {
+		return this.front;
 	}
 }

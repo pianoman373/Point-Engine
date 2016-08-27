@@ -9,12 +9,13 @@ import javax.swing.JOptionPane;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
+import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2i;
 import com.team.engine.vecmath.Vec3;
-import com.team.engine.vecmath.Vec4;
 
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -24,9 +25,10 @@ import net.java.games.input.ControllerEnvironment;
  * note: You cannot call any opengl functions before first calling initialize() since it starts up OpenGL.
  */
 public abstract class Engine {
-	public static final int WINDOW_WIDTH = 1280;
-	public static final int WINDOW_HEIGHT = 720;
+	public static int WINDOW_WIDTH = 1280;
+	public static int WINDOW_HEIGHT = 720;
 	public static final int SHADOW_RESOLUTION = 4096;
+	public static final boolean FULLSCREEN = false;
 	public static final int MAX_FPS = 60;
 
 	public static Camera camera;
@@ -62,10 +64,15 @@ public abstract class Engine {
 	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	
 	private static AbstractGame game;
-
+	
 
 	public static void setFramebuffer(Shader shader) {
 		framebufferShader = shader;
+	}
+	
+	public static Mat4 getShadowMat() {
+		Vec3 offsetPosition = camera.getPosition().add(camera.getDirection().multiply(29f));
+		return Mat4.orthographic(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f).multiply(Mat4.LookAt(offsetPosition, offsetPosition.add(new Vec3(0.7f, -1.0f, 1.0f)), new Vec3(0.0f, 1.0f, 0.0f)));
 	}
 
 	/**
@@ -92,7 +99,7 @@ public abstract class Engine {
 		pingPong1 = new Framebuffer(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
 		pingPong2 = new Framebuffer(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
 
-		game.setupGame();
+		game.init();
 
 		glClearColor(background.x, background.y, background.z, 1.0f);
 		glEnable(GL_DEPTH_TEST);
@@ -147,7 +154,7 @@ public abstract class Engine {
 			s.uniformMat4("camView", camera.getView());
 			s.uniformMat4("camProjection", camera.getProjection());
 			s.uniformMat4("view", new Mat4());
-			s.uniformMat4("projection", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(camera.getPosition().negate()));
+			s.uniformMat4("projection", getShadowMat());
 			
 			//s.uniformMat4("view", this.camera.getView());
 			//s.uniformMat4("projection", this.camera.getProjection());
@@ -261,10 +268,20 @@ public abstract class Engine {
 		glfwInit();
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		
-		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game", NULL, NULL);
+		if(FULLSCREEN) {
+			long monitor = glfwGetPrimaryMonitor();
+		    GLFWVidMode vidMode = glfwGetVideoMode(monitor);
+		    WINDOW_WIDTH = vidMode.width();
+		    WINDOW_HEIGHT = vidMode.height();
+		    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game", monitor, NULL);
+		}
+		else {
+			window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game", NULL, NULL);
+		}
+		
 		if (window == NULL) {
 			JOptionPane.showMessageDialog(null, "Sorry, your graphics card is incompatible with openGL 3");
 		    glfwTerminate();

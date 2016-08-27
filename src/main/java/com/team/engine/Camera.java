@@ -9,6 +9,9 @@ public abstract class Camera {
 	public abstract Mat4 getView();
 	
 	public abstract Mat4 getProjection();
+	
+	public abstract Vec3 getDirection();
+	
 	public abstract Vec3 getPosition();
 	
 	public abstract void update();

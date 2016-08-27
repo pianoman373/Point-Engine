@@ -36,7 +36,7 @@ public class Demo2D extends AbstractGame {
 	}
 
 	@Override
-	public void setupGame() {
+	public void init() {
 		Engine.background = new Vec3(0.0f, 0.5f, 1.0f);
 
 		Engine.loadShader("sprite");

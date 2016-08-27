@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import com.team.engine.vecmath.Vec2;
@@ -17,8 +20,7 @@ public class ObjLoader {
 		ArrayList<Integer> faces = new ArrayList<Integer>();
 		
 		try {
-			InputStream in = ObjLoader.class.getClassLoader().getResourceAsStream(path);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+			BufferedReader reader = Files.newBufferedReader(Paths.get(Constants.RESOURCE_PATH + path), Charset.defaultCharset());
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				String[] splitline = line.split(" ");

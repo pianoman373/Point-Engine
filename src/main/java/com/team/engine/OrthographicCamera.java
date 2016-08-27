@@ -42,5 +42,10 @@ public class OrthographicCamera extends Camera {
 	public Vec3 getPosition() {
 		return new Vec3(this.position.x, this.position.y, 0);
 	}
+
+	@Override
+	public Vec3 getDirection() {
+		return new Vec3(0.0f, 0.0f, 1.0f);
+	}
 	
 }

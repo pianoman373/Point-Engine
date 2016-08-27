@@ -45,7 +45,7 @@ public class GLDemo extends AbstractGame {
 	}
 
 	@Override
-	public void setupGame() {
+	public void init() {
 		Engine.loadTexture("container2.png");
 		Engine.loadTexture("container2_specular.png");
 		Engine.loadTexture("brickwall.jpg");
@@ -118,7 +118,7 @@ public class GLDemo extends AbstractGame {
 		s.uniformMaterial(crateMaterial);
 		s.uniformInt("skybox", 2);
 		s.uniformInt("shadowMap", 3);
-		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.camera.getPosition().negate()));
+		s.uniformMat4("lightSpace", Engine.getShadowMat());
 
 		s.uniformScene(scene);
 		
@@ -158,7 +158,7 @@ public class GLDemo extends AbstractGame {
 	@Override
 	public void postRenderUniforms(Shader shader) {
 		//Send our exposure uniform to the post processing shader.
-		shader.uniformFloat("exposure", 3.0f);
+		shader.uniformFloat("exposure", 2.0f);
 	}
 
 	@Override
@@ -219,7 +219,7 @@ class Crate extends GameObject {
 		s.uniformMaterial(GLDemo.crateMaterial);
 		s.uniformInt("skybox", 2);
 		s.uniformInt("shadowMap", 3);
-		s.uniformMat4("lightSpace", Mat4.orthographic(-40.0f, 40.0f, -40.0f, 40.0f, -40.0f, 40.0f).rotate(new Vec4(1.0f, 0.0f, 0.0f, 45f)).translate(Engine.camera.getPosition().negate()));
+		s.uniformMat4("lightSpace", Engine.getShadowMat());
 
 		s.uniformScene(scene);
 		

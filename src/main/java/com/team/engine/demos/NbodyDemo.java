@@ -57,7 +57,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 	private static boolean readyToRender = false;
 
 	@Override
-	public void setupGame() {
+	public void init() {
 		FPSCamera.WASD_SENSITIVITY = 25.0f;
 		
 		Engine.loadShader("point");

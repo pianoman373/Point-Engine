@@ -32,7 +32,7 @@ public class ModelLoaderDemo extends AbstractGame {
 	}
 
 	@Override
-	public void setupGame() {
+	public void init() {
 		Engine.loadTexture("HallwayFloorAlbedo.png");
 		Engine.loadTexture("HallwayFloorSpecularGloss.png");
 		
