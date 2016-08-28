@@ -61,8 +61,6 @@ public class Grid2D {
 				float xpos = ((float)ob.getX() / 16f) + (rwidth / 2f);
 				float ypos = ((float)ob.getY() / 16f) + (rheight / 2f);
 				
-				System.out.println(rwidth / 2 + ", " + rheight / 2);
-				
 				//bf.getShape().translate(xpos - 0.5f, (mapHeight - 1) - ypos + 0.5f);
 				
 				BodyDef def = new BodyDef();

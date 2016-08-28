@@ -94,7 +94,6 @@ public class Input {
 	}
 	
 	protected static void mouseEvent(long window, int button, int action, int mods) {
-		System.out.println(button);
 		if (button == GLFW_MOUSE_BUTTON_1) {
 			if (action == GLFW_PRESS) {
 				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);

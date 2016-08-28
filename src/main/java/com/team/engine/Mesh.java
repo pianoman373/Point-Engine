@@ -284,7 +284,6 @@ public class Mesh {
 	public void draw() {
 		glBindVertexArray(VAO);
 		if (indexed) {
-			//System.out.println("rendering indexed");
 			glDrawElements(GL_TRIANGLES, length, GL_UNSIGNED_INT, 0);
 		}
 		else {

@@ -36,7 +36,6 @@ public class Texture {
 	 */
 	public Texture(String path, boolean pixelated) {
 		id = glGenTextures();
-		//System.out.println(handle);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, id);
 	
