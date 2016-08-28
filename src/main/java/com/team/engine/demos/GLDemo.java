@@ -97,16 +97,12 @@ public class GLDemo extends AbstractGame {
 	}
 
 	@Override
-	public void render() {
-		Engine.shadowBuffer.tex[0].bind(4);
-		
+	public void render() {		
 		//Bind our shader.
 		Shader s = Engine.getShader("standard");
 		s.bind();
 		
 		s.uniformMaterial(groundMaterial);
-		s.uniformInt("shadowMap", 4);
-		s.uniformMat4("lightSpace", Engine.getShadowMat());
 		
 		//draw the ground
 		s.uniformMat4("model", new Mat4().translate(new Vec3(0, -60f, 0)).scale(100f));
@@ -164,14 +160,12 @@ class Crate extends GameObject {
 	}
 	
 	public void render(Scene scene, Camera cam) {
-		Engine.shadowBuffer.tex[0].bind(4);
+		
 		
 		Shader s = Engine.getShader("standard");
 		s.bind();
 		
 		s.uniformMaterial(GLDemo.crateMaterial);
-		s.uniformInt("shadowMap", 4);
-		s.uniformMat4("lightSpace", Engine.getShadowMat());
 		
 		Transform trans = new Transform();
 		Quat4f q = new Quat4f();

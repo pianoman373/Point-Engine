@@ -13,9 +13,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
-import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2i;
-import com.team.engine.vecmath.Vec3;
 
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -27,14 +25,11 @@ import net.java.games.input.ControllerEnvironment;
 public class Engine {
 	public static int WINDOW_WIDTH = 1280;
 	public static int WINDOW_HEIGHT = 720;
-	public static int SHADOW_RESOLUTION = 4096;
 	public static final boolean FULLSCREEN = false;
 
 	public static Camera camera;
 	/** all currently plugged in controller objects */
 	public static Controller[] controllers;
-	/** The buffer containing the shadow map, you can use it to bind the shadowmap texture */
-	public static Framebuffer shadowBuffer;
 	public static Mesh cubeMesh;
 	/** This is constantly updated every frame. It represents the time elapsed in seconds since the last frame.
 	 * It is usually less than 0 (unless you have serious lag). It should be used for any physics and movement
@@ -71,14 +66,6 @@ public class Engine {
 	public static void setFramebuffer(Shader shader) {
 		framebufferShader = shader;
 	}
-	
-	/**
-	 * Gets the matrix (model * view) of the current shadow.
-	 */
-	public static Mat4 getShadowMat() {
-		Vec3 offsetPosition = camera.getPosition().add(camera.getDirection().multiply(29f));
-		return Mat4.orthographic(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f).multiply(Mat4.LookAt(offsetPosition, offsetPosition.add(new Vec3(-1.0f, -0.5f, 0.2f)), new Vec3(0.0f, 1.0f, 0.0f)));
-	}
 
 	/**
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
@@ -104,7 +91,6 @@ public class Engine {
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 2 ping pong shaders for bloom
-		shadowBuffer = Framebuffer.shadow(new Vec2i(SHADOW_RESOLUTION, SHADOW_RESOLUTION));
 		fbuffer = Framebuffer.standard(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 2, true);
 		pingPong1 = Framebuffer.standard(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
 		pingPong2 = Framebuffer.standard(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
@@ -178,15 +164,15 @@ public class Engine {
 			game.tick();
 			camera.update();
 			
-			if (!is2d) {
+			if (!is2d && scene.sun.castShadow) {
 				//now we render the scene from the shadow-caster's point of view
-				shadowBuffer.bind();
-				glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+				scene.sun.shadowBuffer.bind();
+				glViewport(0, 0, scene.sun.shadowResolution, scene.sun.shadowResolution);
 				clear();
 			
 				Shader s = getShader("shadow");
 				s.bind();
-				s.uniformMat4("lightSpace", getShadowMat());
+				s.uniformMat4("lightSpace", scene.sun.getShadowMat());
 			
 				//tell the main game to render any shadow casters now
 				glCullFace(GL_FRONT);

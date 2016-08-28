@@ -128,6 +128,14 @@ public class Shader {
 		
 		this.uniformVec3("dirLight.direction", scene.sun.direction);
 		this.uniformVec3("dirLight.color", scene.sun.color);
+		
+		this.uniformBool("dirLight.hasShadowMap", scene.sun.castShadow);
+		if (scene.sun.castShadow) {
+			scene.sun.shadowBuffer.tex[0].bind(4);
+			this.uniformInt("dirLight.shadowMap", 4);
+			this.uniformMat4("lightSpace", scene.sun.getShadowMat());
+		}
+		
 		this.uniformFloat("ambient", scene.ambient);
 		
 		scene.skybox.bind(3);
