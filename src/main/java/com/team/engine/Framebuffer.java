@@ -69,7 +69,7 @@ public class Framebuffer {
 			}
 		}
 		
-		int[] attachments = new int[] { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		int[] attachments = new int[] { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 		glDrawBuffers(GLBuffers.StaticBuffer(attachments));
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);  

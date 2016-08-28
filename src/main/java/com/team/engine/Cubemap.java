@@ -33,12 +33,12 @@ public class Cubemap extends Texture {
 	 */
 	public Cubemap(String folder) {
 		this(new String[] {
-				folder + "/right.jpg",
-				folder + "/left.jpg",
-				folder + "/top.jpg",
-				folder + "/bottom.jpg",
-				folder + "/back.jpg",
-				folder + "/front.jpg"
+				folder + "/right.png",
+				folder + "/left.png",
+				folder + "/top.png",
+				folder + "/bottom.png",
+				folder + "/back.png",
+				folder + "/front.png"
 		});
 	}
 	

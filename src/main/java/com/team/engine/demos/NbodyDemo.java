@@ -209,7 +209,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 	@Override
 	public void postRenderUniforms(Shader shader) {
 		//Send our exposure uniform to the post processing shader.
-				shader.uniformFloat("exposure", 2.0f);
+		shader.uniformFloat("exposure", 2.0f);
 	}
 
 	@Override

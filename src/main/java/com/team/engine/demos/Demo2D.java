@@ -37,7 +37,7 @@ public class Demo2D extends AbstractGame {
 
 	@Override
 	public void init() {
-		Engine.background = new Vec3(0.0f, 0.5f, 1.0f);
+		Engine.scene2d.skyColor = new Vec3(0.0f, 0.5f, 1.0f);
 
 		Engine.loadShader("sprite");
 		Engine.loadTexture("crate.png");

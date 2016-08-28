@@ -21,9 +21,15 @@ import javax.vecmath.Vector3f;
 public class Scene {
 	public ArrayList<PointLight> lights = new ArrayList<>();
 	public ArrayList<GameObject> objects = new ArrayList<>();
-	public DirectionalLight sun = new DirectionalLight(new Vec3(0.7f, -1.0f, 1.0f), new Vec3(2.0f, 2.0f, 2.0f));
+	public DirectionalLight sun = new DirectionalLight(new Vec3(-1.0f, -0.5f, 0.2f), new Vec3(2.5f, 2.3f, 2.0f));
 
 	public DiscreteDynamicsWorld dynamicsWorld;
+	public float ambient = 0.5f;
+	/** The skybox that will be automatically rendered in the background. 
+	 * Can be null to use background color instead */
+	public Cubemap skybox = null;
+	/** Background color if skybox is null */
+	public Vec3 skyColor = new Vec3(0.0f, 0.0f, 0.0f);
 
 	/**
 	 * Initializes the dynamicsWorld for this scene
@@ -54,6 +60,10 @@ public class Scene {
 			s.uniformVec3("lightColor", light.color);
 			Engine.cubeMesh.draw();
 		}
+	}
+	
+	public void update() {
+		dynamicsWorld.stepSimulation(Engine.deltaTime, 10);
 	}
 	
 	public void renderShadow(Shader s) {

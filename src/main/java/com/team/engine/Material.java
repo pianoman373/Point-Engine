@@ -8,24 +8,33 @@ import com.team.engine.vecmath.Vec3;
  */
 public class Material {
 
-    public int diffuseTex;
+    public String diffuseTex;
     public Vec3 diffuseColor;
     public boolean diffuseTextured;
 
-    public int specularTex;
+    public String specularTex;
     public Vec3 specularColor;
     public boolean specularTextured;
+    
+    public String normalTex;
+    public boolean normalTextured;
 
     public float shininess;
 
-    private Material(int diffuseTex, Vec3 diffuseColor, boolean diffuseTextured, int specularTex, Vec3 specularColor, boolean specularTextured, float shininess) {
+    private Material(String diffuseTex, Vec3 diffuseColor, String specularTex, Vec3 specularColor, String normalTex, float shininess) {
         this.diffuseTex = diffuseTex;
         this.diffuseColor = diffuseColor;
-        this.diffuseTextured = diffuseTextured;
-
+        if (diffuseTex != null) this.diffuseTextured = true;
+        else this.diffuseTextured = false;
+        
         this.specularTex = specularTex;
         this.specularColor = specularColor;
-        this.specularTextured = specularTextured;
+        if (specularTex != null) this.specularTextured = true;
+        else this.specularTextured = false;
+        
+        this.normalTex = normalTex;
+        if (normalTex != null) this.normalTextured = true;
+        else this.normalTextured = false;
 
         this.shininess = shininess;
     }
@@ -34,18 +43,14 @@ public class Material {
      * Creates a non-textured material.
      */
     public Material(Vec3 diffuseColor, Vec3 specularColor, float shininess) {
-        this(0, diffuseColor, false, 1, specularColor, false, shininess);
+        this(null, diffuseColor, null, specularColor, null, shininess);
     }
 
     /**
-     * Creates a textured material. Textures are not objects, but integers. These integers
-     * represent the texture slot you bound it in. Such as for: 
-     * 
-     * Engine.getTexture("tex.png").bind(3);
-     * 
-     * The parameter to send that texture as a material input would be 3.
+     * Creates a textured material. Strings you supply will be loaded as textures, and automatically
+     * bound when sent as a uniform.
      */
-    public Material(int diffuseTex, int specularTex, float shininess) {
-        this(diffuseTex, new Vec3(), true, specularTex, new Vec3(), true, shininess);
+    public Material(String diffuseTex, String specularTex, String normalTex, float shininess) {
+        this(diffuseTex, new Vec3(), specularTex, new Vec3(), normalTex, shininess);
     }
 }

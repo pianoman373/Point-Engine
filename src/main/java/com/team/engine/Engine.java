@@ -24,18 +24,13 @@ import net.java.games.input.ControllerEnvironment;
  *
  * note: You cannot call any opengl functions before first calling start() since it starts up OpenGL.
  */
-public abstract class Engine {
+public class Engine {
 	public static int WINDOW_WIDTH = 1280;
 	public static int WINDOW_HEIGHT = 720;
 	public static int SHADOW_RESOLUTION = 4096;
 	public static final boolean FULLSCREEN = false;
 
 	public static Camera camera;
-	/** The skybox that will be automatically rendered in the background. 
-	 * Can be null to use background color instead */
-	public static Cubemap skybox = null;
-	/** Background color if skybox is null */
-	public static Vec3 background = new Vec3(0.0f, 0.0f, 0.0f);
 	/** all currently plugged in controller objects */
 	public static Controller[] controllers;
 	/** The buffer containing the shadow map, you can use it to bind the shadowmap texture */
@@ -49,6 +44,10 @@ public abstract class Engine {
 	public static float deltaTime = 0.0f;
 	/** turn on to render everything in wireframe */
 	public static boolean wireframe = false;
+	/** The main Scene object you should use */
+	public static Scene scene;
+	public static Scene2d scene2d;
+	public static boolean is2d;
 
 	private static Shader framebufferShader;
 	private static long window;
@@ -78,27 +77,26 @@ public abstract class Engine {
 	 */
 	public static Mat4 getShadowMat() {
 		Vec3 offsetPosition = camera.getPosition().add(camera.getDirection().multiply(29f));
-		return Mat4.orthographic(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f).multiply(Mat4.LookAt(offsetPosition, offsetPosition.add(new Vec3(0.7f, -1.0f, 1.0f)), new Vec3(0.0f, 1.0f, 0.0f)));
+		return Mat4.orthographic(-30.0f, 30.0f, -30.0f, 30.0f, -30.0f, 30.0f).multiply(Mat4.LookAt(offsetPosition, offsetPosition.add(new Vec3(-1.0f, -0.5f, 0.2f)), new Vec3(0.0f, 1.0f, 0.0f)));
 	}
 
 	/**
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
 	 */
-	public static void start(boolean is2d, AbstractGame g) {
+	public static void start(boolean i2d, AbstractGame g) {
 		//the contents of this function are the backbone of the engine. It contains the main loop
 		//and all the rendering. I will comment through every step.
 		game = g;
+		is2d = i2d;
 		setupContext();
 
 		//load all our vital shaders
 		loadShader("hdr");
+		loadShader("framebuffer");
 		loadShader("blur");
 		loadShader("skybox");
 		loadShader("light");
 		loadShader("shadow");
-		
-		//set hdr as default post-processing
-		framebufferShader = getShader("hdr");
 
 		//vital meshes
 		framebufferMesh = new Mesh(Primitives.framebuffer());
@@ -119,17 +117,29 @@ public abstract class Engine {
 		//create the camera depending on what mode we're in
 		if (is2d) {
 			camera = new OrthographicCamera();
+			scene2d = new Scene2d();
+			framebufferShader = getShader("framebuffer");
 		}
 		else {
 			camera = new FPSCamera();
+			
+			//setup the scene and it's physics
+			scene = new Scene();
+			scene.setupPhysics();
+			framebufferShader = getShader("hdr");
 		}
 		
 		//initialize the main game
 		game.init();
 		
 		//set the color used for clear as the background color
-		glClearColor(background.x, background.y, background.z, 1.0f);
-		
+		if (is2d) {
+			glClearColor(scene2d.skyColor.x, scene2d.skyColor.y, scene2d.skyColor.z, 1.0f);
+		}
+		else {
+			glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 1.0f);
+		}
+			
 		//create values for calculating delta time
 		float time = 0;
 		lastFrame = (float)glfwGetTime();
@@ -159,37 +169,48 @@ public abstract class Engine {
 			}
 
 			//tick the main game and update camera
+			if (is2d) {
+				scene2d.update();
+			}
+			else {
+				scene.update();				
+			}
 			game.tick();
 			camera.update();
 			
-			//now we render the scene from the shadow-caster's point of view
-			shadowBuffer.bind();
-			glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
-			clear();
+			if (!is2d) {
+				//now we render the scene from the shadow-caster's point of view
+				shadowBuffer.bind();
+				glViewport(0, 0, SHADOW_RESOLUTION, SHADOW_RESOLUTION);
+				clear();
 			
-			Shader s = getShader("shadow");
-			s.bind();
-			s.uniformMat4("lightSpace", getShadowMat());
+				Shader s = getShader("shadow");
+				s.bind();
+				s.uniformMat4("lightSpace", getShadowMat());
 			
-			//tell the main game to render any shadow casters now
-			glCullFace(GL_FRONT);
-			game.renderShadow(s);
-			glCullFace(GL_BACK);
+				//tell the main game to render any shadow casters now
+				glCullFace(GL_FRONT);
+				game.renderShadow(s);
 			
+				scene.renderShadow(s);
+				glCullFace(GL_BACK);
+			}
 			//bind the main rendering buffer and now we're ready to render normally
 			fbuffer.bind();
 			glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 			clear();
 
 			//first, render the skybox if there is one
-			if (skybox != null) {
-				glDepthMask(false);
-				getShader("skybox").bind();
-				skybox.bind();
+			if (!is2d) {
+				if (scene.skybox != null) {
+					glDepthMask(false);
+					getShader("skybox").bind();
+					scene.skybox.bind();
 
-				skyboxMesh.draw();
+					skyboxMesh.draw();
 
-				glDepthMask(true);
+					glDepthMask(true);
+				}
 			}
 
 			if (wireframe) {
@@ -198,6 +219,12 @@ public abstract class Engine {
 
 			//and finally, tell the game to render, this goes to the framebuffer not the screen
 			game.render();
+			if (is2d) {
+				scene2d.render(camera);
+			}
+			else {
+				scene.render(camera);
+			}
 
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -211,8 +238,13 @@ public abstract class Engine {
 			clear();
 			
 			//here we bind the post proccessing shader and render the framebuffer to the screen and apply bloom and hdr if using hdr shaders
-			game.postRenderUniforms(framebufferShader);
 			framebufferShader.bind();
+			framebufferShader.uniformFloat("exposure", 1.0f);
+			game.postRenderUniforms(framebufferShader);
+			
+			framebufferShader.uniformInt("screenTexture", 0);
+			framebufferShader.uniformInt("bloomTexture", 1);
+			
 			pingPong2.tex[0].bind(1);
 			fbuffer.tex[0].bind(0);
 			framebufferShader.uniformInt("screenTexture", 0);

@@ -53,9 +53,7 @@ public class ModelLoaderDemo extends AbstractGame {
 		objMesh2 = ObjLoader.loadFile("hallway_walls.obj");
 		objMesh3 = ObjLoader.loadFile("hallway_roof.obj");
 		
-		Engine.skybox = new Cubemap("skybox/");
-		
-		Engine.background = new Vec3(0, 0, 0);
+		Engine.scene.skybox = new Cubemap("skybox/");
 	}
 
 	@Override
@@ -68,7 +66,7 @@ public class ModelLoaderDemo extends AbstractGame {
 		//Bind our shader.
 		Shader s = Engine.getShader("standard");
 		s.bind();
-		Engine.skybox.bind(2);
+		Engine.scene.skybox.bind(2);
 		
 		//Send material parametersand ambient.
 		s.uniformFloat("ambient", 0.2f);

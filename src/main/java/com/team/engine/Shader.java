@@ -55,6 +55,9 @@ public class Shader {
 		this.uniformMat4("view", Engine.camera.getView());
 		this.uniformVec3("eyePos", Engine.camera.getPosition());
 		this.uniformMat4("projection", Engine.camera.getProjection());
+		if (!Engine.is2d) {
+			this.uniformScene(Engine.scene);			
+		}
 	}
 	
 	/**
@@ -125,16 +128,29 @@ public class Shader {
 		
 		this.uniformVec3("dirLight.direction", scene.sun.direction);
 		this.uniformVec3("dirLight.color", scene.sun.color);
+		this.uniformFloat("ambient", scene.ambient);
+		
+		scene.skybox.bind(3);
+		this.uniformInt("skybox", 3);
 	}
 
 	public void uniformMaterial(Material mat) {
-		this.uniformInt("material.diffuse",  mat.diffuseTex);
+		if (mat.diffuseTex != null)
+			Engine.getTexture(mat.diffuseTex).bind(0);
+		this.uniformInt("material.diffuse",  0);
 		this.uniformVec3("material.diffuseColor", mat.diffuseColor);
 		this.uniformBool("material.diffuseTextured", mat.diffuseTextured);
 
-		this.uniformInt("material.specular", mat.specularTex);
+		if (mat.specularTex != null)
+			Engine.getTexture(mat.specularTex).bind(1);
+		this.uniformInt("material.specular", 1);
 		this.uniformVec3("material.specularColor", mat.specularColor);
 		this.uniformBool("material.specularTextured", mat.specularTextured);
+		
+		if (mat.normalTex != null)
+			Engine.getTexture(mat.normalTex).bind(2);
+		this.uniformInt("material.normal", 2);
+		this.uniformBool("material.normalTextured", mat.normalTextured);
 
 		this.uniformFloat("material.shininess", mat.shininess);
 	}
@@ -151,6 +167,7 @@ public class Shader {
 	 * This actually returns one big string of a file's contents.
 	 */
 	private static String read(String path) {
+		System.out.println("loading shader: " + path);
 		String shader = "";
 		try {
 			BufferedReader reader = Files.newBufferedReader(Paths.get(path), Charset.defaultCharset());
