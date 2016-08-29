@@ -56,7 +56,7 @@ public class GLDemo extends AbstractGame {
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 		groundMesh = new Mesh(Primitives.cube(16.0f));
 		//load our monkey from disk
-		objMesh = ObjLoader.loadFile("monkey.obj");
+		objMesh = ObjLoader.loadFile("torus.obj");
 		
 		Engine.scene.skybox = new Cubemap("skybox-2");
 		

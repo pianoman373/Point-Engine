@@ -31,16 +31,16 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 		Engine.start(false, new NbodyDemo());
 	}
 	
-	private static final boolean POINT_TO_POINT_GRAVITY = true;
+	private static final boolean POINT_TO_POINT_GRAVITY = false;
 	private static final float POINT_TO_POINT_STRENGTH = 0.001f;
-	private static final float POINT_VELOCITY = 0.1f;
+	private static final float POINT_VELOCITY = 0.09f;
 	private static final float SUN_STRENGTH = 10f;
-	private static final int POINT_COUNT = 5000;
+	private static final int POINT_COUNT = 100000;
 	private static final int SPREAD = 8;
-	private static final int MIN_SPREAD = 5;
+	private static final int MIN_SPREAD = 10;
 	private static final float VERTICAL_SIZE = 0f;
 	private static final float VERTICAL_SHAPE = 5f;
-	private static final float DRAG = 0.0001f;
+	private static final float DRAG = 0.0000f;
 	private static final float REDSHIFT_RANGE = 0.4f;
 	private static final int TIMESTEP = 0;
 	
