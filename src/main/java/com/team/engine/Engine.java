@@ -23,10 +23,6 @@ import net.java.games.input.ControllerEnvironment;
  * note: You cannot call any opengl functions before first calling start() since it starts up OpenGL.
  */
 public class Engine {
-	public static int WINDOW_WIDTH = 1280;
-	public static int WINDOW_HEIGHT = 720;
-	public static final boolean FULLSCREEN = false;
-
 	public static Camera camera;
 	/** all currently plugged in controller objects */
 	public static Controller[] controllers;
@@ -91,9 +87,9 @@ public class Engine {
 		cubeMesh = new Mesh(Primitives.cube(1.0f));
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 2 ping pong shaders for bloom
-		fbuffer = Framebuffer.standard(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 2, true);
-		pingPong1 = Framebuffer.standard(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
-		pingPong2 = Framebuffer.standard(new Vec2i(WINDOW_WIDTH, WINDOW_HEIGHT), 1, false);
+		fbuffer = Framebuffer.standard(new Vec2i(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT), 2, true);
+		pingPong1 = Framebuffer.standard(new Vec2i(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT), 1, false);
+		pingPong2 = Framebuffer.standard(new Vec2i(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT), 1, false);
 
 		//setup our opengl states
 		glEnable(GL_DEPTH_TEST);
@@ -183,7 +179,7 @@ public class Engine {
 			}
 			//bind the main rendering buffer and now we're ready to render normally
 			fbuffer.bind();
-			glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+			glViewport(0, 0, Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT);
 			clear();
 
 			//first, render the skybox if there is one
@@ -316,15 +312,15 @@ public class Engine {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		
 		//here we create our window in fullscreen or a normal window
-		if(FULLSCREEN) {
+		if(Graphics.FULLSCREEN) {
 			long monitor = glfwGetPrimaryMonitor();
 		    GLFWVidMode vidMode = glfwGetVideoMode(monitor);
-		    WINDOW_WIDTH = vidMode.width();
-		    WINDOW_HEIGHT = vidMode.height();
-		    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game", monitor, NULL);
+		    Graphics.WINDOW_WIDTH = vidMode.width();
+		    Graphics.WINDOW_HEIGHT = vidMode.height();
+		    window = glfwCreateWindow(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT, "Game", monitor, NULL);
 		}
 		else {
-			window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Game", NULL, NULL);
+			window = glfwCreateWindow(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT, "Game", NULL, NULL);
 		}
 		
 		if (window == NULL) {
