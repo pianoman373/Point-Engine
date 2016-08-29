@@ -59,12 +59,12 @@ public class FPSCamera extends Camera {
 		lastY = (float)Input.mousePos.y;
 		
 		if (Input.isKeyDown(GLFW_KEY_E)) {
-			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, 0.3f));
+			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, 20f * Engine.deltaTime));
 			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 			up = new Vec3(vec.x, vec.y, vec.z);
 		}
 		if (Input.isKeyDown(GLFW_KEY_Q)) {
-			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -0.3f));
+			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -20f * Engine.deltaTime));
 			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
 			up = new Vec3(vec.x, vec.y, vec.z);
 		}
