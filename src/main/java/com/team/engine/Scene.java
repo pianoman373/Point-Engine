@@ -31,7 +31,7 @@ public class Scene {
 	public Vec3 skyColor = new Vec3(0.0f, 0.0f, 0.0f);
 	
 	public Scene() {
-		sun = new DirectionalLight(new Vec3(-1.0f, -0.5f, 0.2f), new Vec3(2.5f, 2.3f, 2.0f), true, 30, 4096);
+		sun = new DirectionalLight(new Vec3(-1.0f, -0.5f, 0.2f), new Vec3(2.5f, 2.3f, 2.0f), Graphics.ENABLE_SHADOWS, 30, Graphics.SHADOW_RESOLUTION);
 	}
 
 	/**

@@ -217,7 +217,9 @@ public class Engine {
 			}
 
 			//take the output of our render and blur it
-			doBloom();
+			if (Graphics.ENABLE_BLOOM) {	
+				doBloom();
+			}
 
 			//we unbind framebuffers which means the output of this render will go to the screen
 			Framebuffer.unbind();
@@ -231,10 +233,17 @@ public class Engine {
 			framebufferShader.uniformInt("screenTexture", 0);
 			framebufferShader.uniformInt("bloomTexture", 1);
 			
-			pingPong2.tex[0].bind(1);
 			fbuffer.tex[0].bind(0);
 			framebufferShader.uniformInt("screenTexture", 0);
-			framebufferShader.uniformInt("bloomTexture", 1);
+			
+			if (Graphics.ENABLE_BLOOM) {
+				pingPong2.tex[0].bind(1);
+				framebufferShader.uniformInt("bloomTexture", 1);
+				framebufferShader.uniformBool("doBloom", true);
+			}
+			else {
+				framebufferShader.uniformBool("doBloom", false);
+			}
 
 			//draw it all to the screen
 			framebufferMesh.draw();

@@ -138,8 +138,10 @@ public class Shader {
 		
 		this.uniformFloat("ambient", scene.ambient);
 		
-		scene.skybox.bind(3);
-		this.uniformInt("skybox", 3);
+		if (scene.skybox != null) {
+			scene.skybox.bind(3);
+			this.uniformInt("skybox", 3);
+		}
 	}
 
 	public void uniformMaterial(Material mat) {
@@ -155,11 +157,13 @@ public class Shader {
 		this.uniformVec3("material.specularColor", mat.specularColor);
 		this.uniformBool("material.specularTextured", mat.specularTextured);
 		
-		if (mat.normalTex != null)
-			Engine.getTexture(mat.normalTex).bind(2);
-		this.uniformInt("material.normal", 2);
-		this.uniformBool("material.normalTextured", mat.normalTextured);
-
+		if (Graphics.ENABLE_NORMAL_MAPPING) {
+			if (mat.normalTex != null)
+				Engine.getTexture(mat.normalTex).bind(2);
+			this.uniformInt("material.normal", 2);
+			this.uniformBool("material.normalTextured", mat.normalTextured);
+		}
+		
 		this.uniformFloat("material.shininess", mat.shininess);
 	}
 	
