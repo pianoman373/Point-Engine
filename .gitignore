@@ -6,3 +6,4 @@ $ cat .gitignore
 !/resources
 !.classpath
 !/native
+Graphics.java
