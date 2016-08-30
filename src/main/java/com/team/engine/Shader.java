@@ -141,6 +141,10 @@ public class Shader {
 		if (scene.skybox != null) {
 			scene.skybox.bind(3);
 			this.uniformInt("skybox", 3);
+			this.uniformBool("hasSkybox", true);
+		}
+		else {
+			this.uniformBool("hasSkybox", false);
 		}
 	}
 
