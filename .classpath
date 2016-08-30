@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/libs/java"/>
-	<classpathentry kind="src" path="ignored"/>
 	<classpathentry kind="lib" path="lib/jbullet.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:///home/joseph/git/Game-Engine/doc/bullet-javadoc"/>
