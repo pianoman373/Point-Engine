@@ -76,6 +76,7 @@ public class Scene {
 	}
 
 	public void add(GameObject o) {
+		o.init(this);
 		objects.add(o);
 	}
 
