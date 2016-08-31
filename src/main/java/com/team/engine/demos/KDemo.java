@@ -36,6 +36,9 @@ public class KDemo extends AbstractGame {
 	@Override
 	public void init() {
 		
+		Engine.scene.sun.direction = new Vec3(0.0f, -1.0f, 0.0f);
+		Engine.scene.sun.color = new Vec3(1.2f, 1.2f, 1.2f);
+		
 		Engine.loadTexture("stone_tile.png");
 		Engine.loadTexture("stone_tile_normal.png");
 		Engine.loadTexture("stone_tile_specular.png");
