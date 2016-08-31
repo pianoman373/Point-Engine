@@ -1,8 +1,4 @@
-/*
-!/src
-!.gitignore
-!/lib
-!/resources
-!.classpath
-!/native
-Graphics.java
+*.class
+.settings
+.project
+/bin/
