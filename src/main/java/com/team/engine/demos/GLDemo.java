@@ -4,6 +4,7 @@ import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
+import com.bulletphysics.collision.shapes.CapsuleShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.team.engine.*;
@@ -60,7 +61,7 @@ public class GLDemo extends AbstractGame {
 			float angle = 20.0f * i;
 			Engine.scene.add(new MeshObject(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial));
 		}
-		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new SphereShape(1.0f), 0f, objMesh,1f,  monkeyMaterial));
+		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new CapsuleShape(1, 2), 1f, objMesh,1f,  monkeyMaterial));
 		Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f,  groundMaterial));
 	}
 
