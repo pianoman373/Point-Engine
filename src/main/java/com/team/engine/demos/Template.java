@@ -13,7 +13,7 @@ import com.team.engine.Primitives;
  * A demo utilizing sprite rendering, Grid2D's and dyn4j physics.
  */
 public class Template extends AbstractGame {
-	private Material planeMaterial = new Material(new Vec3(0.5f, 0.5f, 0.5f), new Vec3(0.1f, 0.1f, 0.1f), 16f);
+	private Material planeMaterial = new Material(new Vec3(0.5f, 0.5f, 0.5f), 0.1f, 16f);
 	private Mesh planeMesh;
 	
 	public static void main(String[] args) {

@@ -9,48 +9,61 @@ import com.team.engine.vecmath.Vec3;
 public class Material {
 
     public String diffuseTex;
-    public Vec3 diffuseColor;
+    public Vec3 diffuse;
     public boolean diffuseTextured;
 
-    public String specularTex;
-    public Vec3 specularColor;
-    public boolean specularTextured;
-    
+    public String roughnessTex;
+    public float roughness;
+    public boolean roughnessTextured;
+
     public String normalTex;
     public boolean normalTextured;
 
-    public float shininess;
+    public String metallicTex;
+    public float metallic;
+    public boolean metallicTextured;
 
-    private Material(String diffuseTex, Vec3 diffuseColor, String specularTex, Vec3 specularColor, String normalTex, float shininess) {
+    private Material(String diffuseTex, Vec3 diffuse, String roughnessTex, float roughness, String normalTex, String metallicTex, float metallic) {
         this.diffuseTex = diffuseTex;
-        this.diffuseColor = diffuseColor;
+        this.diffuse = diffuse;
         if (diffuseTex != null) this.diffuseTextured = true;
         else this.diffuseTextured = false;
-        
-        this.specularTex = specularTex;
-        this.specularColor = specularColor;
-        if (specularTex != null) this.specularTextured = true;
-        else this.specularTextured = false;
-        
+
+        this.roughnessTex = roughnessTex;
+        this.roughness = roughness;
+        if (roughnessTex != null) this.roughnessTextured = true;
+        else this.roughnessTextured = false;
+
         this.normalTex = normalTex;
         if (normalTex != null) this.normalTextured = true;
         else this.normalTextured = false;
 
-        this.shininess = shininess;
+        this.metallic = metallic;
+        this.metallicTex = metallicTex;
+        if (metallicTex != null) this.metallicTextured = true;
+        else this.metallicTextured = false;
     }
 
     /**
      * Creates a non-textured material.
      */
-    public Material(Vec3 diffuseColor, Vec3 specularColor, float shininess) {
-        this(null, diffuseColor, null, specularColor, null, shininess);
+    public Material(Vec3 diffuse, float roughness, float metallic) {
+        this(null, diffuse, null, roughness, null, null, metallic);
     }
 
     /**
      * Creates a textured material. Strings you supply will be loaded as textures, and automatically
      * bound when sent as a uniform.
      */
-    public Material(String diffuseTex, String specularTex, String normalTex, float shininess) {
-        this(diffuseTex, new Vec3(), specularTex, new Vec3(), normalTex, shininess);
+    public Material(String diffuseTex, String roughnessTex, String normalTex, String metallicTex) {
+        this(diffuseTex, new Vec3(), roughnessTex, 0f, normalTex, metallicTex, 0.0f);
+    }
+    
+    /**
+     * Creates a textured material with a constant for metallic. Strings you supply will be loaded as textures, and automatically
+     * bound when sent as a uniform.
+     */
+    public Material(String diffuseTex, String roughnessTex, String normalTex, float metallic) {
+        this(diffuseTex, new Vec3(), roughnessTex, 0f, normalTex, null, metallic);
     }
 }
