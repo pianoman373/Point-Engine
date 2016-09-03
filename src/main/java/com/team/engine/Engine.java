@@ -93,6 +93,7 @@ public class Engine {
 
 		//setup our opengl states
 		glEnable(GL_DEPTH_TEST);
+		//glEnable(GL_CULL_FACE)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
@@ -116,10 +117,10 @@ public class Engine {
 		
 		//set the color used for clear as the background color
 		if (is2d) {
-			glClearColor(scene2d.skyColor.x, scene2d.skyColor.y, scene2d.skyColor.z, 1.0f);
+			glClearColor(scene2d.skyColor.x, scene2d.skyColor.y, scene2d.skyColor.z, 0.0f);
 		}
 		else {
-			glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 1.0f);
+			glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 0.0f);
 		}
 			
 		//create values for calculating delta time
@@ -182,18 +183,7 @@ public class Engine {
 			glViewport(0, 0, Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT);
 			clear();
 
-			//first, render the skybox if there is one
-			if (!is2d) {
-				if (scene.skybox != null) {
-					glDepthMask(false);
-					getShader("skybox").bind();
-					scene.skybox.bind();
-
-					skyboxMesh.draw();
-
-					glDepthMask(true);
-				}
-			}
+			
 
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -201,6 +191,22 @@ public class Engine {
 
 			//and finally, tell the game to render, this goes to the framebuffer not the screen
 			game.render();
+			
+			//first, render the skybox if there is one
+			if (!is2d) {
+				if (scene.skybox != null) {
+					glDepthMask(false);
+					glDepthFunc(GL_LEQUAL);
+					getShader("skybox").bind();
+					scene.skybox.bind();
+
+					skyboxMesh.draw();
+
+					glDepthFunc(GL_LESS);
+					glDepthMask(true);
+				}
+			}
+			
 			if (is2d) {
 				scene2d.render(camera);
 			}
@@ -241,8 +247,12 @@ public class Engine {
 				framebufferShader.uniformBool("doBloom", false);
 			}
 
+			
+			//glDepthFunc(GL_ALWAYS);
 			//draw it all to the screen
 			framebufferMesh.draw();
+			
+			//glDepthFunc(GL_LESS);
 
 			//now we swap buffers which updates the window
 			glfwSwapBuffers(window);

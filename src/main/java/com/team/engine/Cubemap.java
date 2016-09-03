@@ -3,6 +3,7 @@ package com.team.engine;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
+import static org.lwjgl.opengl.GL30.*;
 
 /**
  * The cubemap is simply an array of 6 textures stored in an object. You can specify 
@@ -14,6 +15,9 @@ public class Cubemap extends Texture {
 		super(glGenTextures(), null);
 		glBindTexture(GL_TEXTURE_CUBE_MAP, this.id);
 		
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 6);
+		
 		//iterate over all 6 textures and send their raw data to the cubemap
 		for (int i = 0; i < 6; i++) {
 			RawImage image = Texture.getRawImage(Constants.RESOURCE_PATH + "textures/" + images[i]);
@@ -22,10 +26,11 @@ public class Cubemap extends Texture {
 		
 		//interpolation settings and texture wrapping for the texture
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 	}
 
 	/**

@@ -4,8 +4,7 @@ import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
-import com.bulletphysics.collision.shapes.ConvexHullShape;
-import com.bulletphysics.collision.shapes.SphereShape;
+import com.bulletphysics.collision.shapes.CapsuleShape;
 import com.team.engine.*;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.MeshObject;
@@ -31,9 +30,9 @@ public class GLDemo extends AbstractGame {
 	public static Mesh groundMesh;
 	private Mesh objMesh;
 
-	public static Material crateMaterial = new Material("container2.png", "container2_specular.png", null, 256.0f);
-	public static Material groundMaterial = new Material("brickwall.jpg", null, "brickwall_normal.jpg", 256.0f);
-	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), new Vec3(0.3f, 0.3f, 0.3f), 64.0f);
+	public static Material crateMaterial = new Material("container2.png", "container2_specular.png", null, null);
+	public static Material groundMaterial = new Material("brickwall.jpg", null, "brickwall_normal.jpg", null);
+	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.1f, 1.0f);
 	
 	public static void main(String[] args) {
 		Engine.start(false, new GLDemo());
@@ -60,7 +59,7 @@ public class GLDemo extends AbstractGame {
 			float angle = 20.0f * i;
 			Engine.scene.add(new MeshObject(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial));
 		}
-		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new SphereShape(1.0f), 0f, objMesh,1f,  monkeyMaterial));
+		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new CapsuleShape(1, 2), 0f, objMesh,1f,  monkeyMaterial));
 		Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f,  groundMaterial));
 	}
 
