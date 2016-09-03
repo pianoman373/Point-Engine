@@ -1,4 +1,4 @@
-package com.team.engine.demos;
+package com.team.engine.demos.kdemo;
 
 import com.team.engine.Engine;
 import com.team.engine.PointLight;
@@ -55,7 +55,7 @@ public class KDemo extends AbstractGame {
 		
 		Engine.scene.add(new PointLight(new Vec3(0.0f, 0.0f, 0.0f), new Vec3(1.0f, 1.0f, 1.0f), 0.42f, 0.2f));
 		
-		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new SphereShape(1.0f), 1f, sphereMesh, 1f, sphereMaterial));
+		Engine.scene.add(new MeshSphere(new Vec3(), new Quat4f(), new SphereShape(1.0f), 1f, sphereMesh, 1f, sphereMaterial));
 		Engine.scene.add(new MeshObject(new Vec3(0.0f, 5.0f, 0.0f), new Quat4f(), new BoxShape(new Vector3f(0.0f, 0.0f, 0.0f)), 0f, boxMesh, 1f, boxMaterial));
 		Engine.scene.add(new MeshObject(new Vec3(0.0f, -10f, 0.0f), new Quat4f(1.0f, 0.0f, 0.0f, 60.0f), new BoxShape(new Vector3f(50f, 0f, 50f)), 0f, planeMesh, 100f,  groundMaterial));
 
@@ -63,6 +63,8 @@ public class KDemo extends AbstractGame {
 	
 	@Override
 	public void tick() {
+		
+		
 		
 	}
 
