@@ -22,9 +22,9 @@ import com.team.engine.Primitives;
  * A demo utilizing sprite rendering, Grid2D's and dyn4j physics.
  */
 public class KDemo extends AbstractGame {
-	public static Material groundMaterial = new Material("stone_tile.png", "stone_tile_specular.png", "stone_tile_normal.png", 256.0f);
-	public static Material sphereMaterial = new Material(new Vec3(0.2f, 0.2f, 0.2f), new Vec3(0.5f, 0.5f, 0.5f), 25.0f);
-	public static Material boxMaterial = new Material("planks.jpg", null, null, 256.0f);
+	public static Material groundMaterial = new Material("stone_tile.png", "stone_tile_specular.png", "stone_tile_normal.png", 0.2f);
+	public static Material sphereMaterial = new Material(new Vec3(1, 1, 1), 0.0f, 1.0f);
+	public static Material boxMaterial = new Material("planks.jpg", null, null, 0.0f);
 	
 	private Mesh planeMesh;
 	private Mesh sphereMesh;
