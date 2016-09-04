@@ -68,6 +68,9 @@ public class Scene {
 	
 	public void update() {
 		dynamicsWorld.stepSimulation(Engine.deltaTime, 10);
+		for (int i = 0; i < this.objects.size(); i ++) {
+			objects.get(i).update();
+		}
 	}
 	
 	public void renderShadow(Shader s) {
