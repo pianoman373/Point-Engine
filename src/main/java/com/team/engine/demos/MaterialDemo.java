@@ -18,10 +18,8 @@ import com.team.engine.vecmath.Vec3;
 public class MaterialDemo extends AbstractGame {
 	private Mesh objMesh1;
 	private Mesh objMesh2;
-
-	public static Material outsideMaterial = new Material(new Vec3(1.0f, 0.2f, 0.0f), 0.0f, 1.0f);
-	public static Material insideMaterial = new Material(new Vec3(0.3f, 0.3f, 0.3f), 0.3f, 0.0f);
-	public static Material gunMaterial = new Material("Cerberus_A.png", "Cerberus_R.png", "Cerberus_N.png", "Cerberus_M.png");
+	
+	private Mesh planeMesh;
 	
 	public static void main(String[] args) {
 		Engine.start(false, new MaterialDemo());
@@ -30,23 +28,39 @@ public class MaterialDemo extends AbstractGame {
 	@Override
 	public void init() {
 		
-		Engine.loadShader("standard");
+		Engine.loadShader("pbr");
 		
 		Engine.loadTexture("Cerberus_A.png");
-		Engine.loadTexture("Cerberus_N.png");
 		Engine.loadTexture("Cerberus_M.png");
+		Engine.loadTexture("Cerberus_N.png");
 		Engine.loadTexture("Cerberus_R.png");
 		
-		objMesh1 = ObjLoader.loadFile("gun.obj");
-		objMesh2 = ObjLoader.loadFile("matmodel-2.obj");
+		Engine.loadTexture("stone_tile.png");
+		Engine.loadTexture("stone_tile_normal.png");
+		Engine.loadTexture("stone_tile_specular.png");
 		
-		Engine.scene.skybox = new Cubemap("skybox-2");
-		//Engine.scene.sun.color = new Vec3(0.5, 0.5, 0.5);
-		Engine.scene.sun.castShadow = false;
-		Engine.scene.ambient = 0.1f;
+		objMesh1 = ObjLoader.loadFile("sphere.obj");
+		objMesh2 = ObjLoader.loadFile("gun.obj");
+		planeMesh = new Mesh(Primitives.plane(10));
 		
-		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), null, 0f, objMesh1, 5f, gunMaterial));
-		//Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), null, 0f, objMesh2, 1f, outsideMaterial));
+		Engine.scene.skybox = new Cubemap("skybox-4");
+		Engine.scene.irradiance = new Cubemap("skybox-4-irradiance");
+		Engine.scene.sun.color = new Vec3(0.7, 0.7, 0.7);
+		Engine.scene.add(new PointLight(new Vec3(-1, 4.7, -3), new Vec3(0.3f, 0.3f, 0.7f), 0.09f, 0.032f));
+		
+		for (int x = 0; x < 7; x++) {
+			for (int y = 0; y < 7; y++) {
+				Material mat = new Material("stone_tile.png", y / 7f, "stone_tile_normal.png", x / 7f);
+				Engine.scene.add(new MeshObject(new Vec3(x * 3, y * 3, 0), new Quat4f(), null, 0f, objMesh1, 1f, mat));
+			}
+		}
+		
+		
+		
+		Material mat = new Material("stone_tile.png", 0.6f, "stone_tile_normal.png", "stone_tile_specular.png");
+		Engine.scene.add(new MeshObject(new Vec3(0, -1, 0), new Quat4f(), null, 0f, planeMesh, 100f, mat));
+		Material mat2 = new Material("Cerberus_A.png", "Cerberus_R.png", "Cerberus_N.png", "Cerberus_M.png");
+		Engine.scene.add(new MeshObject(new Vec3(0, 5, -5), new Quat4f(0, 0, 0, (float)Math.toRadians(45)), null, 0f, objMesh2, 5f, mat2));
 	}
 
 	private static float accum;

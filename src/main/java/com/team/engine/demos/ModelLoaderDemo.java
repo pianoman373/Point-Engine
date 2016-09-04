@@ -3,6 +3,7 @@ package com.team.engine.demos;
 import javax.vecmath.Quat4f;
 
 import com.team.engine.AbstractGame;
+import com.team.engine.Cubemap;
 import com.team.engine.Engine;
 import com.team.engine.Mesh;
 import com.team.engine.MeshObject;
@@ -22,9 +23,9 @@ public class ModelLoaderDemo extends AbstractGame {
 	private Mesh objMesh2;
 	private Mesh objMesh3;
 
-	private Material mat1 = new Material("HallwayFloorAlbedo.png", "HallwayFloorRoughness.png", "HallwayFloorNormals.png", null);
-	private Material mat2 = new Material("HallwayWallsAlbedo.png", "HallwayWallsRoughness.png", "HallwayWallsNormals.png", null);
-	private Material mat3 = new Material("HallwayRoofAlbedo.png", "HallwayRoofRoughness.png", "HallwayRoofNormals.png", null);
+	private Material mat1 = new Material("HallwayFloorAlbedo.png", 0.4f, "HallwayFloorNormals.png", "HallwayFloorRoughness.png");
+	private Material mat2 = new Material("HallwayWallsAlbedo.png", 0.4f, "HallwayWallsNormals.png", "HallwayWallsRoughness.png");
+	private Material mat3 = new Material("HallwayRoofAlbedo.png", 0.4f, "HallwayRoofNormals.png", "HallwayRoofRoughness.png");
 
 	public static void main(String[] args) {
 		Engine.start(false, new ModelLoaderDemo());
@@ -44,7 +45,10 @@ public class ModelLoaderDemo extends AbstractGame {
 		Engine.loadTexture("HallwayRoofRoughness.png");
 		Engine.loadTexture("HallwayRoofNormals.png");
 
-		Engine.loadShader("standard");
+		Engine.loadShader("pbr");
+		
+		Engine.scene.skybox = new Cubemap("skybox-4");
+		Engine.scene.irradiance = new Cubemap("skybox-4-irradiance");
 
 		objMesh1 = ObjLoader.loadFile("hallway_floor.obj");
 		objMesh2 = ObjLoader.loadFile("hallway_walls.obj");

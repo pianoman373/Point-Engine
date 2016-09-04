@@ -23,15 +23,16 @@ public class Scene {
 	public ArrayList<GameObject> objects = new ArrayList<>();
 	public DirectionalLight sun;
 	public DiscreteDynamicsWorld dynamicsWorld;
-	public float ambient = 0.3f;
+	public Vec3 ambient = new Vec3(0.3f, 0.3f, 0.3f);
 	/** The skybox that will be automatically rendered in the background. 
 	 * Can be null to use background color instead */
 	public Cubemap skybox = null;
+	public Cubemap irradiance = null;
 	/** Background color if skybox is null */
 	public Vec3 skyColor = new Vec3(0.0f, 0.0f, 0.0f);
 	
 	public Scene() {
-		sun = new DirectionalLight(new Vec3(-1.0f, -0.5f, 0.2f), new Vec3(2.0f, 2.0f, 2.0f), Graphics.ENABLE_SHADOWS, 30, Graphics.SHADOW_RESOLUTION);
+		sun = new DirectionalLight(new Vec3(-1.0f, -1.0f, 0.2f), new Vec3(2.0f, 2.0f, 2.0f), Graphics.ENABLE_SHADOWS, 30, Graphics.SHADOW_RESOLUTION);
 	}
 
 	/**

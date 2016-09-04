@@ -131,12 +131,12 @@ public class Shader {
 
 		this.uniformBool("dirLight.hasShadowMap", scene.sun.castShadow);
 		if (scene.sun.castShadow) {
-			scene.sun.shadowBuffer.tex[0].bind(5);
-			this.uniformInt("dirLight.shadowMap", 5);
+			scene.sun.shadowBuffer.tex[0].bind(6);
+			this.uniformInt("dirLight.shadowMap", 6);
 			this.uniformMat4("lightSpace", scene.sun.getShadowMat());
 		}
 
-		this.uniformFloat("ambient", scene.ambient);
+		this.uniformVec3("ambient", scene.ambient);
 
 		if (scene.skybox != null) {
 			scene.skybox.bind(4);
@@ -146,14 +146,24 @@ public class Shader {
 		else {
 			this.uniformBool("hasSkybox", false);
 		}
+		
+		if (scene.irradiance != null) {
+			scene.irradiance.bind(5);
+			this.uniformInt("irradiance", 5);
+			this.uniformBool("hasIrradiance", true);
+		}
+		else {
+			this.uniformInt("irradiance", 4);
+			this.uniformBool("hasIrradiance", false);
+		}
 	}
 
 	public void uniformMaterial(Material mat) {
-		if (mat.diffuseTex != null)
-			Engine.getTexture(mat.diffuseTex).bind(0);
-		this.uniformInt("material.diffuseTex",  0);
-		this.uniformVec3("material.diffuse", mat.diffuse);
-		this.uniformBool("material.diffuseTextured", mat.diffuseTextured);
+		if (mat.albedoTex != null)
+			Engine.getTexture(mat.albedoTex).bind(0);
+		this.uniformInt("material.albedoTex",  0);
+		this.uniformVec3("material.albedo", mat.albedo);
+		this.uniformBool("material.albedoTextured", mat.albedoTextured);
 
 		if (mat.roughnessTex != null)
 			Engine.getTexture(mat.roughnessTex).bind(1);

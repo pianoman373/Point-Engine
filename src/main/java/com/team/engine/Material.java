@@ -8,9 +8,9 @@ import com.team.engine.vecmath.Vec3;
  */
 public class Material {
 
-    public String diffuseTex;
-    public Vec3 diffuse;
-    public boolean diffuseTextured;
+    public String albedoTex;
+    public Vec3 albedo;
+    public boolean albedoTextured;
 
     public String roughnessTex;
     public float roughness;
@@ -23,11 +23,11 @@ public class Material {
     public float metallic;
     public boolean metallicTextured;
 
-    private Material(String diffuseTex, Vec3 diffuse, String roughnessTex, float roughness, String normalTex, String metallicTex, float metallic) {
-        this.diffuseTex = diffuseTex;
-        this.diffuse = diffuse;
-        if (diffuseTex != null) this.diffuseTextured = true;
-        else this.diffuseTextured = false;
+    private Material(String albedoTex, Vec3 albedo, String roughnessTex, float roughness, String normalTex, String metallicTex, float metallic) {
+        this.albedoTex = albedoTex;
+        this.albedo = albedo;
+        if (albedoTex != null) this.albedoTextured = true;
+        else this.albedoTextured = false;
 
         this.roughnessTex = roughnessTex;
         this.roughness = roughness;
@@ -47,24 +47,46 @@ public class Material {
     /**
      * Creates a non-textured material.
      */
-    public Material(Vec3 diffuse, float roughness, float metallic) {
-        this(null, diffuse, null, roughness, null, null, metallic);
+    public Material(Vec3 albedo, float roughness, float metallic) {
+        this(null, albedo, null, roughness, null, null, metallic);
+    }
+
+    /**
+     * Creates a material with textured albedo, but constants for everything else.
+     */
+    public Material(String albedo, float roughness, float metallic) {
+        this(albedo, new Vec3(), null, roughness, null, null, metallic);
+    }
+
+    /**
+     * Creates a material with textured albedo and normal, but constants for everything else.
+     */
+    public Material(String albedoTex, float roughness, String normalTex, float metallic) {
+        this(albedoTex, new Vec3(), null, roughness, normalTex, null, metallic);
     }
 
     /**
      * Creates a textured material. Strings you supply will be loaded as textures, and automatically
      * bound when sent as a uniform.
      */
-    public Material(String diffuseTex, String roughnessTex, String normalTex, String metallicTex) {
-        this(diffuseTex, new Vec3(), roughnessTex, 0f, normalTex, metallicTex, 0.0f);
+    public Material(String albedoTex, String roughnessTex, String normalTex, String metallicTex) {
+        this(albedoTex, new Vec3(), roughnessTex, 0f, normalTex, metallicTex, 0.0f);
     }
-    
+
+    /**
+     * Creates a textured material with a constant for roughness. Strings you supply will be loaded as textures, and automatically
+     * bound when sent as a uniform.
+     */
+    public Material(String albedoTex, float roughness, String normalTex, String metallicTex) {
+        this(albedoTex, new Vec3(), null, roughness, normalTex, metallicTex, 0.0f);
+    }
+
     /**
      * Creates a textured material with a constant for metallic. Strings you supply will be loaded as textures, and automatically
      * bound when sent as a uniform.
      */
-    public Material(String diffuseTex, String roughnessTex, String normalTex, float metallic) {
-        this(diffuseTex, new Vec3(), roughnessTex, 0f, normalTex, null, metallic);
+    public Material(String albedoTex, String roughnessTex, String normalTex, float metallic) {
+        this(albedoTex, new Vec3(), roughnessTex, 0f, normalTex, null, metallic);
     }
 
     /**
