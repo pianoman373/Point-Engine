@@ -7,7 +7,6 @@ import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CapsuleShape;
 import com.team.engine.*;
 import com.team.engine.vecmath.Vec3;
-import com.team.engine.MeshObject;
 
 
 /**
@@ -30,9 +29,9 @@ public class GLDemo extends AbstractGame {
 	public static Mesh groundMesh;
 	private Mesh objMesh;
 
-	public static Material crateMaterial = new Material("container2.png", "container2_specular.png", null, null);
-	public static Material groundMaterial = new Material("brickwall.jpg", null, "brickwall_normal.jpg", null);
-	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.1f, 1.0f);
+	public static Material crateMaterial = new Material("container2.png", "container2_specular.png", null, 0.1f);
+	public static Material groundMaterial = new Material("brickwall.jpg", 0.8f, "brickwall_normal.jpg", 0.0f);
+	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.4f, 1.0f);
 	
 	public static void main(String[] args) {
 		Engine.start(false, new GLDemo());
@@ -46,6 +45,7 @@ public class GLDemo extends AbstractGame {
 		Engine.loadTexture("brickwall_normal.jpg");
 		
 		Engine.loadShader("standard");
+		Engine.loadShader("pbr");
 		
 		//Create the cube mesh object from the primitive.
 		cubeMesh = new Mesh(Primitives.cube(1.0f));

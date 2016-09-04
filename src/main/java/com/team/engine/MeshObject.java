@@ -59,7 +59,7 @@ public class MeshObject extends GameObject {
 	}
 	
 	public void render(Scene scene, Camera cam) {
-		Shader s = Engine.getShader("standard");
+		Shader s = Engine.getShader("pbr");
 		s.bind();
 		
 		s.uniformMaterial(this.material);
