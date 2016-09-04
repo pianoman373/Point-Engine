@@ -24,7 +24,7 @@ import com.team.engine.Primitives;
 public class KDemo extends AbstractGame {
 	public static Material groundMaterial = new Material("stone_tile.png", "stone_tile_specular.png", "stone_tile_normal.png", 0.2f);
 	public static Material sphereMaterial = new Material(new Vec3(1, 1, 1), 0.0f, 1.0f);
-	public static Material boxMaterial = new Material("planks.jpg", null, null, 0.0f);
+	public static Material boxMaterial = new Material("planks.jpg", 0.9f, null, "planks_specular.jpg");
 	
 	private Mesh planeMesh;
 	private Mesh sphereMesh;

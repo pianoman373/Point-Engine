@@ -16,7 +16,6 @@ public class MeshSphere extends MeshObject {
 	}
 
 	public void update() {
-		System.out.println("YOLOLA.");
 	}
 	
 }

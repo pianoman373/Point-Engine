@@ -66,4 +66,12 @@ public class Material {
     public Material(String diffuseTex, String roughnessTex, String normalTex, float metallic) {
         this(diffuseTex, new Vec3(), roughnessTex, 0f, normalTex, null, metallic);
     }
+
+    /**
+     * Creates a textured material with a constant for roughness. Strings you supply will be loaded as textures, and automatically
+     * bound when sent as a uniform.
+     */
+    public Material(String diffuseTex, float roughness, String normalTex, String metallicTex) {
+        this(diffuseTex, new Vec3(), null, roughness, normalTex, metallicTex, 0.0f);
+    }
 }
