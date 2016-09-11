@@ -9,8 +9,6 @@ import org.lwjgl.glfw.GLFWScrollCallback;
 
 import com.team.engine.vecmath.Vec2;
 
-import net.java.games.input.Component.Identifier;
-
 /**
  * This is the main class for receiving any sort of input.
  */
@@ -39,35 +37,6 @@ public class Input {
 	 */
 	public static boolean isButtonDown(int key) {
 		return mouse[key];
-	}
-
-	/**
-	 * Returns the axis value for the specified controller identifier.
-	 * Buttons will only be 0.0 or 1.0, while joysticks and triggers range from -1.0 to 1.0.
-	 * 
-	 * Example:
-	 * 
-	 * Input.controllerValue(Identifier.Axis.X);
-	 */
-	public static float controllerValue(Identifier i, int controller) {
-		if (Engine.controllers.length > controller) {
-			return Engine.controllers[0].getComponent(i).getPollData();
-		}
-		else {
-			return 0.0f;
-		}
-	}
-	
-	/**
-	 * Returns the axis value for the specified controller identifier.
-	 * Buttons will only be 0.0 or 1.0, while joysticks and triggers range from -1.0 to 1.0.
-	 * 
-	 * Example:
-	 * 
-	 * Input.controllerValue(Identifier.Axis.X);
-	 */
-	public static float controllerValue(Identifier i) {
-		return controllerValue(i, 0);
 	}
 	
 	protected static void keyEvent(long window, int key, int action) {

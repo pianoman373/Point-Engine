@@ -1,6 +1,8 @@
 package com.team.engine;
 
-public interface GameObject {
+import org.jbox2d.dynamics.Fixture;
+
+public interface GameObject2D {
 	/**
 	 * Called when the object is added to the scene.
 	 */
@@ -10,5 +12,7 @@ public interface GameObject {
 	
 	public void render(Scene scene, Camera cam);
 	
-	public void renderShadow(Shader s);
+	public void onContact(Fixture f);
+	
+	public void endContact(Fixture f);
 }

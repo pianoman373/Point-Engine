@@ -14,9 +14,6 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
 import com.team.engine.vecmath.Vec2i;
-
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
  *
@@ -24,8 +21,6 @@ import net.java.games.input.ControllerEnvironment;
  */
 public class Engine {
 	public static Camera camera;
-	/** all currently plugged in controller objects */
-	public static Controller[] controllers;
 	public static Mesh cubeMesh;
 	/** This is constantly updated every frame. It represents the time elapsed in seconds since the last frame.
 	 * It is usually less than 0 (unless you have serious lag). It should be used for any physics and movement
@@ -37,7 +32,6 @@ public class Engine {
 	public static boolean wireframe = false;
 	/** The main Scene object you should use */
 	public static Scene scene;
-	public static Scene2d scene2d;
 	public static boolean is2d;
 
 	private static Shader framebufferShader;
@@ -55,6 +49,8 @@ public class Engine {
 	private static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
 	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	private static AbstractGame game;
+	
+	native static int sayHello();
 	
 	/**
 	 * Sets a shader to be used for post-processing.
@@ -97,31 +93,24 @@ public class Engine {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
+		//setup the scene and it's physics
+		scene = new Scene();
+		
 		//create the camera depending on what mode we're in
 		if (is2d) {
 			camera = new OrthographicCamera();
-			scene2d = new Scene2d();
 			framebufferShader = getShader("framebuffer");
 		}
 		else {
 			camera = new FPSCamera();
-			
-			//setup the scene and it's physics
-			scene = new Scene();
-			scene.setupPhysics();
 			framebufferShader = getShader("hdr");
 		}
+		scene.setupPhysics();
 		
 		//initialize the main game
 		game.init();
 		
-		//set the color used for clear as the background color
-		if (is2d) {
-			glClearColor(scene2d.skyColor.x, scene2d.skyColor.y, scene2d.skyColor.z, 0.0f);
-		}
-		else {
-			glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 0.0f);
-		}
+		glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 0.0f);
 			
 		//create values for calculating delta time
 		float time = 0;
@@ -131,9 +120,6 @@ public class Engine {
 		while (!glfwWindowShouldClose(window)) {
 			//refresh input
 			glfwPollEvents();
-			for (Controller c : controllers) {
-				c.poll();
-			}
 			
 			//calculate delta time
 			float currentFrame = (float)glfwGetTime();
@@ -151,13 +137,9 @@ public class Engine {
 				fps = 0;
 			}
 
-			//tick the main game and update camera
-			if (is2d) {
-				scene2d.update();
-			}
-			else {
-				scene.update();				
-			}
+			
+			scene.update();				
+			
 			game.tick();
 			camera.update();
 			
@@ -207,12 +189,7 @@ public class Engine {
 				}
 			}
 			
-			if (is2d) {
-				scene2d.render(camera);
-			}
-			else {
-				scene.render(camera);
-			}
+			scene.render(camera);
 
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -311,6 +288,9 @@ public class Engine {
 	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		System.out.println(System.getProperty("java.library.path"));
+		System.load(Paths.get("native").toAbsolutePath().toString() + "/libPointEngine.so");
+		
+		System.out.println(sayHello());
 
 		//set up our window options
 		glfwInit();
@@ -351,9 +331,6 @@ public class Engine {
 		glfwSetCursorPosCallback(window, cursorCallback);
 		glfwSetMouseButtonCallback(window, mouseCallback);
 		glfwSetScrollCallback(window, scrollCallback);
-		
-		//set controllers
-		controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		
 		//and finally create the opengl context and we're ready to go
 		GL.createCapabilities();

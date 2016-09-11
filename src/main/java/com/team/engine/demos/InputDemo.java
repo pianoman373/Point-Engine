@@ -13,8 +13,6 @@ import com.team.engine.Engine;
 import com.team.engine.Input;
 import com.team.engine.Shader;
 
-import net.java.games.input.Component.Identifier;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class InputDemo extends AbstractGame {
@@ -71,8 +69,8 @@ public class InputDemo extends AbstractGame {
 		if (accumulator > REFRESH_RATE) {
 			accumulator -= REFRESH_RATE;
 			
-			float lookX = Input.controllerValue(Identifier.Axis.X);
-			float lookY = Input.controllerValue(Identifier.Axis.Y);
+			float lookX = 0; //Input.controllerValue(Identifier.Axis.X);
+			float lookY = 0; //Input.controllerValue(Identifier.Axis.Y);
 			
 			float keyX = 0;
 			float keyY = 0;

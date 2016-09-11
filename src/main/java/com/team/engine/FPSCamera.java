@@ -109,4 +109,9 @@ public class FPSCamera extends Camera {
 	public Vec3 getDirection() {
 		return this.front;
 	}
+
+	@Override
+	public void setPosition(Vec3 pos) {
+		this.position = position;
+	}
 }

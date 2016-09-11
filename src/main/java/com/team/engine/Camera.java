@@ -14,5 +14,7 @@ public abstract class Camera {
 	
 	public abstract Vec3 getPosition();
 	
+	public abstract void setPosition(Vec3 pos);
+	
 	public abstract void update();
 }

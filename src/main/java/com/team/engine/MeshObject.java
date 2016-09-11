@@ -14,7 +14,7 @@ import com.team.engine.vecmath.Vec3;
 /**
  * MeshObject is a quick and easy to use implementation of GameObject. It handles simple physics and mesh rendering.
  */
-public class MeshObject extends GameObject {
+public class MeshObject implements GameObject {
 	public RigidBody rb;
 	private Mesh mesh;
 	private Material material;
@@ -51,7 +51,7 @@ public class MeshObject extends GameObject {
 	}
 	
 	public void init(Scene scene) {
-		scene.dynamicsWorld.addRigidBody(this.rb);
+		scene.world.addRigidBody(this.rb);
 	}
 	
 	public void update() {

@@ -12,7 +12,7 @@ import com.team.engine.vecmath.Vec3;
  */
 public class OrthographicCamera extends Camera {
 	
-	private Vec2 position = new Vec2(0, 0);
+	private Vec3 position = new Vec3(0, 0, 0);
 	private float zoom = 10f;
 
 	@Override
@@ -44,12 +44,17 @@ public class OrthographicCamera extends Camera {
 
 	@Override
 	public Vec3 getPosition() {
-		return new Vec3(this.position.x, this.position.y, 0);
+		return this.position;
 	}
 
 	@Override
 	public Vec3 getDirection() {
 		return new Vec3(0.0f, 0.0f, 1.0f);
+	}
+
+	@Override
+	public void setPosition(Vec3 pos) {
+		this.position = pos;
 	}
 	
 }
