@@ -122,36 +122,6 @@ public class Primitives {
 		};
 	}
 	
-	public static Mesh planeMesh(float uvScale) {
-		float[] positions = new float[] {
-			0.5f,  0.0f, 0.5f,
-		     0.5f, 0.0f, -0.5f,
-		    -0.5f, 0.0f, -0.5f,
-		    -0.5f,  0.0f, 0.5f
-		};
-		
-		float[] normals = new float[] {
-				0.0f, 1.0f, 0.0f,
-				0.0f, 1.0f, 0.0f,
-				0.0f, 1.0f, 0.0f,
-				0.0f, 1.0f, 0.0f
-		};
-		
-		float[] uvs = new float[] {
-				uvScale, 0.0f,
-				uvScale, uvScale,
-				0.0f, uvScale,
-				0.0f, 0.0f
-		};
-		
-		int[] indices = new int[] {
-				0, 1, 3,   // First Triangle
-			    1, 2, 3    // Second Triangle
-		};
-		
-		return new Mesh(positions, normals, uvs, indices);
-	}
-	
 	public static float[] framebuffer() {
 		return new float[] {  
 			    // Positions   		//normals		  // TexCoords

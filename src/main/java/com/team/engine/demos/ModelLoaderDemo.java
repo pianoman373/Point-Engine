@@ -9,9 +9,7 @@ import com.team.engine.Mesh;
 import com.team.engine.MeshObject;
 import com.team.engine.ObjLoader;
 import com.team.engine.PointLight;
-import com.team.engine.Primitives;
 import com.team.engine.Shader;
-import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.Material;
 

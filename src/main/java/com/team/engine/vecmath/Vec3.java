@@ -2,6 +2,7 @@ package com.team.engine.vecmath;
 
 import java.nio.FloatBuffer;
 
+import org.jbox2d.common.Vector2;
 import org.lwjgl.BufferUtils;
 
 import javax.vecmath.Vector3f;
@@ -34,6 +35,15 @@ public class Vec3 {
         this.x = vec.x;
         this.y = vec.y;
         this.z = vec.z;
+    }
+    
+    /**
+     * Creates a Vec3 out of another Vec2 (box2D's vec2) and a specified z.
+     */
+    public Vec3(Vector2 v, float z) {
+    	this.x = v.x;
+        this.y = v.y;
+        this.z = z;
     }
     
     public Vec3(double x, double y, double z) {

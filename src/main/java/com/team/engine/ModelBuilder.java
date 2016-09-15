@@ -40,6 +40,13 @@ public class ModelBuilder {
 	}
 	
 	/**
+	 * Adds a raw vertex to the model with no normals.
+	 */
+	public void vertex(float x, float y, float z) {
+		vertex(x, y, z, 0f, 0f, 0f, 0f, 0f);
+	}
+	
+	/**
 	 * Creates a square out of the specified points and uvs.
 	 */
 	public void square(float x1, float y1, float x2, float y2, float u1, float v1, float u2, float v2) {
@@ -74,6 +81,6 @@ public class ModelBuilder {
 			uvArray[i] = uvs.get(i);
 		}
 		
-		return new Mesh(positionArray, normalArray, uvArray);
+		return Mesh.normal(positionArray, normalArray, uvArray, false);
 	}
 }

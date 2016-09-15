@@ -11,13 +11,18 @@ import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSo
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import javax.vecmath.Vector3f;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
+import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.collision.shapes.ShapeType;
 import org.jbox2d.common.Vector2;
 import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
@@ -44,8 +49,28 @@ public class Scene implements ContactListener {
 	/** Background color if skybox is null */
 	public Vec3 skyColor = new Vec3(0.0f, 0.0f, 0.0f);
 	
+	private Mesh squareOutline;
+	
 	public Scene() {
 		sun = new DirectionalLight(new Vec3(-1.0f, -1.0f, 0.2f), new Vec3(2.0f, 2.0f, 2.0f), Graphics.ENABLE_SHADOWS, 30, Graphics.SHADOW_RESOLUTION);
+		
+		Engine.loadShader("color");
+		
+		ModelBuilder b = new ModelBuilder();
+		
+		b.vertex(-0.5f, -0.5f, 0.0f);
+		b.vertex(-0.5f, 0.5f, 0.0f);
+		
+		b.vertex(-0.5f, 0.5f, 0.0f);
+		b.vertex(0.5f, 0.5f, 0.0f);
+		
+		b.vertex(0.5f, 0.5f, 0.0f);
+		b.vertex(0.5f, -0.5f, 0.0f);
+		
+		b.vertex(0.5f, -0.5f, 0.0f);
+		b.vertex(-0.5f, -0.5f, 0.0f);
+		
+		squareOutline = b.toMesh();
 	}
 
 	/**
@@ -85,6 +110,39 @@ public class Scene implements ContactListener {
 			s.uniformVec3("lightColor", light.color);
 			Engine.cubeMesh.draw();
 		}
+		//debugRender();
+	}
+	
+	private void debugRender() {
+		Shader s = Engine.getShader("color");
+		s.bind();
+		
+		for (GameObject2D obj : objects2D) {
+			glLineWidth(2);
+			s.uniformVec3("color", new Vec3(0, 1, 0));
+			s.uniformMat4("model", new Mat4().translate(new Vec3(obj.body.getPosition(), 10)).scale(0.1f));
+			
+			Fixture f = obj.body.getFixtureList();
+			
+			while (f != null) {
+				if (f.getShape().getType() == ShapeType.POLYGON) {
+					PolygonShape pshape = (PolygonShape)f.getShape();
+					
+					
+					Vector2[] vertices = pshape.getVertices();
+					ModelBuilder mb = new ModelBuilder();
+					for (Vector2 i : vertices) {
+						mb.vertex(i.x, i.y, 0);
+					}
+					mb.toMesh().draw(GL_LINES);
+				}
+				f.getShape();
+				
+				f = f.getNext();
+			}
+		}
+		
+		squareOutline.draw(GL_LINES);
 	}
 	
 	public void update() {
@@ -124,12 +182,12 @@ public class Scene implements ContactListener {
 	public void beginContact(Contact contact) {
 		Body bodyA = contact.getFixtureA().getBody();
 		if (bodyA.getUserData() instanceof GameObject2D) {
-			((GameObject2D)bodyA.getUserData()).onContact(contact.getFixtureA());
+			((GameObject2D)bodyA.getUserData()).onContact(contact.getFixtureA(), (GameObject2D)contact.getFixtureB().getBody().getUserData());
 		}
 		
 		Body bodyB = contact.getFixtureB().getBody();
 		if (bodyB.getUserData() instanceof GameObject2D) {
-			((GameObject2D)bodyB.getUserData()).onContact(contact.getFixtureB());
+			((GameObject2D)bodyB.getUserData()).onContact(contact.getFixtureB(), (GameObject2D)contact.getFixtureA().getBody().getUserData());
 		}
 	}
 
@@ -137,12 +195,12 @@ public class Scene implements ContactListener {
 	public void endContact(Contact contact) {
 		Body bodyA = contact.getFixtureA().getBody();
 		if (bodyA.getUserData() instanceof GameObject2D) {
-			((GameObject2D)bodyA.getUserData()).endContact(contact.getFixtureA());
+			((GameObject2D)bodyA.getUserData()).endContact(contact.getFixtureA(), (GameObject2D)contact.getFixtureB().getBody().getUserData());
 		}
 		
 		Body bodyB = contact.getFixtureB().getBody();
 		if (bodyB.getUserData() instanceof GameObject2D) {
-			((GameObject2D)bodyB.getUserData()).endContact(contact.getFixtureB());
+			((GameObject2D)bodyB.getUserData()).endContact(contact.getFixtureB(), (GameObject2D)contact.getFixtureA().getBody().getUserData());
 		}
 	}
 

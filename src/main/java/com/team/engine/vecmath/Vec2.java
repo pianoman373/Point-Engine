@@ -2,6 +2,7 @@ package com.team.engine.vecmath;
 
 import java.nio.FloatBuffer;
 
+import org.jbox2d.common.Vector2;
 import org.lwjgl.BufferUtils;
 
 public class Vec2 {
@@ -10,15 +11,23 @@ public class Vec2 {
     public float y;
 
     /**
-     * Creates a default 3-tuple vector with all values set to 0.
+     * Creates a default 2-tuple vector with all values set to 0.
      */
     public Vec2() {
         this.x = 0f;
         this.y = 0f;
     }
+    
+    /**
+     * Creates a vector out of another vector (box2D's vector type).
+     */
+    public Vec2(Vector2 v) {
+        this.x = v.x;
+        this.y = v.y;
+    }
 
     /**
-     * Creates a 3-tuple vector with specified values.
+     * Creates a 2-tuple vector with specified values.
      */
     public Vec2(float x, float y) {
         this.x = x;

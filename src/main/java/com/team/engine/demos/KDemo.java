@@ -47,8 +47,8 @@ public class KDemo extends AbstractGame {
 		Engine.loadTexture("planks_specular.jpg");
 		
 		Engine.loadShader("pbr");
-		planeMesh = new Mesh(Primitives.plane(16.0f));
-		boxMesh = new Mesh(Primitives.cube(16.0f));
+		planeMesh = Mesh.raw(Primitives.plane(16.0f), true);
+		boxMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		sphereMesh = ObjLoader.loadFile("sphere.obj");
 
 		Engine.scene.skybox = new Cubemap("skybox-k");

@@ -23,7 +23,7 @@ public class Template extends AbstractGame {
 	@Override
 	public void init() {
 		Engine.loadShader("standard");
-		planeMesh = new Mesh(Primitives.cube(1.0f));
+		planeMesh = Mesh.raw(Primitives.cube(1.0f), true);
 		
 		Engine.scene.add(new PointLight(new Vec3(0.0f, 0.0f, 0.0f), new Vec3(1.0f, 1.0f, 1.0f), 0.42f, 0.2f));
 	}

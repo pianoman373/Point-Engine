@@ -21,13 +21,46 @@ import com.team.engine.vecmath.Vec3;
  */
 public class Mesh {
 	private int VAO;
-	private int EBO;
 	private int VBO;
+	private int EBO;
 	private int length;
 	private boolean indexed = false;
 	
+	private Mesh(int VAO, int VBO, int EBO, int length, boolean indexed) {
+		this.VAO = VAO;
+		this.VBO = VBO;
+		this.EBO = EBO;
+		this.indexed = indexed;
+		this.length = length;
+	}
+	
+	private static void setupAttribs(boolean tangents) {
+		if (tangents) {
+			glVertexAttribPointer(0, 3, GL_FLOAT, false, 11 * 4, 0);
+			glEnableVertexAttribArray(0);
+			
+			glVertexAttribPointer(1, 3, GL_FLOAT, false, 11 * 4, 3 * 4);
+			glEnableVertexAttribArray(1);
+			
+			glVertexAttribPointer(2, 2, GL_FLOAT, false, 11 * 4, 6 * 4);
+			glEnableVertexAttribArray(2);
+			
+			glVertexAttribPointer(3, 3, GL_FLOAT, false, 11 * 4, 8 * 4);
+			glEnableVertexAttribArray(3);
+		} else {
+			glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0);
+			glEnableVertexAttribArray(0);
+			
+			glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * 4, 3 * 4);
+			glEnableVertexAttribArray(1);
+			
+			glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 6 * 4);
+			glEnableVertexAttribArray(2);
+		}
+	}
+	
 	//takes a normal buffer of vertices and returns the same one but with tangents
-	private float[] toTangentBuffer(float[] vertices) {
+	private static float[] toTangentBuffer(float[] vertices) {
 		ArrayList<Float> newVertices = new ArrayList<>();
 		
 		for (int i = 0; i < vertices.length; i += 8 * 3) {
@@ -93,18 +126,23 @@ public class Mesh {
 	 * Creates an indexed mesh out of the specified vertex data array and indices.
 	 * 
 	 * The mesh vertex data is in the form: x, y, z, nx, ny, nz, u, v
+	 * 
+	 * Indexed meshes can require less data for meshes than non-indexed meshes. Each vertex is regarded in a list with a certain index,
+	 * the index array then contains a single number per vertex which points to the real vertex. This eliminates having to specify the same vertex twice.
+	 * Indexing will have no affect on a mesh that does not have smoothed normals, e.g cubes.
+	 * 
+	 * tangents specifies whether tangents should be calculated for the mesh. Set it to false
+	 * if you know your model will not be normal mapped. A large model with tangents will render significantly slower
+	 * than one without tangents. If the model is normal mapped and tangents are disabled, unexpected results will happen.
 	 */
-	public Mesh(float[] vertices, int[] indices) {
-		indexed = true;
-		VAO = glGenVertexArrays();
+	public static Mesh rawIndexed(float[] vertices, int[] indices, boolean tangents) {
+		int VAO = glGenVertexArrays();
 		glBindVertexArray(VAO);
 		
-		EBO = glGenBuffers();
-		VBO = glGenBuffers();
+		int EBO = glGenBuffers();
+		int VBO = glGenBuffers();
 		
-		length = vertices.length / 8;
-		
-		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(toTangentBuffer(vertices));
+		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(tangents ? toTangentBuffer(vertices) : vertices);
 		IntBuffer indexBuffer = GLBuffers.StaticBuffer(indices);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -113,22 +151,25 @@ public class Mesh {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
 		
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 8 * 4, 0);
-		glEnableVertexAttribArray(0);
-		
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 8 * 4, 3 * 4);
-		glEnableVertexAttribArray(1);
-		
-		glVertexAttribPointer(2, 2, GL_FLOAT, false, 8 * 4, 6 * 4);
-		glEnableVertexAttribArray(2);
+		setupAttribs(tangents);
 		
 		glBindVertexArray(0);
+		
+		return new Mesh(VAO, VBO, EBO, vertices.length / 8, true);
 	}
 	
 	/**
 	 * Creates an indexed mesh out of the specified vertex data arrays and indices.
+	 * 
+	 * Indexed meshes can require less data for meshes than non-indexed meshes. Each vertex is regarded in a list with a certain index,
+	 * the index array then contains a single number per vertex which points to the real vertex. This eliminates having to specify the same vertex twice.
+	 * Indexing will have no affect on a mesh that does not have smoothed normals, e.g cubes.
+	 * 
+	 * tangents specifies whether tangents should be calculated for the mesh. Set it to false
+	 * if you know your model will not be normal mapped. A large model with tangents will render significantly slower
+	 * than one without tangents. If the model is normal mapped and tangents are disabled, unexpected results will happen.
 	 */
-	public Mesh(float[] positions, float[] normals, float[] uvs, int[] indices) {
+	public static Mesh normalIndexed(float[] positions, float[] normals, float[] uvs, int[] indices, boolean tangents) {
 		int size = positions.length + normals.length + uvs.length;
 		
 		float[] vertices = new float[size];
@@ -151,45 +192,21 @@ public class Mesh {
 			k += 2;
 		}
 		
-		
-		
-		indexed = true;
-		VAO = glGenVertexArrays();
-		glBindVertexArray(VAO);
-		
-		EBO = glGenBuffers();
-		VBO = glGenBuffers();
-		
-		length = indices.length;
-		
-		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(toTangentBuffer(vertices));
-		IntBuffer indexBuffer = GLBuffers.StaticBuffer(indices);
-		
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
-		
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL_STATIC_DRAW);
-		
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 11 * 4, 0);
-		glEnableVertexAttribArray(0);
-		
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 11 * 4, 3 * 4);
-		glEnableVertexAttribArray(1);
-		
-		glVertexAttribPointer(2, 2, GL_FLOAT, false, 11 * 4, 6 * 4);
-		glEnableVertexAttribArray(2);
-		
-		glVertexAttribPointer(3, 3, GL_FLOAT, false, 11 * 4, 8 * 4);
-		glEnableVertexAttribArray(3);
-		
-		glBindVertexArray(0);
+		return rawIndexed(vertices, indices, tangents);
 	}
 	
 	/**
 	 * Creates a non-indexed mesh out of the specified vertex data arrays.
+	 * 
+	 * Non-indexed meshes require much more data than indexed meshes. If two vertices
+	 * share the same point on a mesh, it will need to be included twice. However, they tend to be easier
+	 * to make.
+	 * 
+	 * tangents specifies whether tangents should be calculated for the mesh. Set it to false
+	 * if you know your model will not be normal mapped. A large model with tangents will render significantly slower
+	 * than one without tangents. If the model is normal mapped and tangents are disabled, unexpected results will happen.
 	 */
-	public Mesh(float[] positions, float[] normals, float[] uvs) {
+	public static Mesh normal(float[] positions, float[] normals, float[] uvs, boolean tangents) {
 		int size = positions.length + normals.length + uvs.length;
 		
 		float[] vertices = new float[size];
@@ -212,69 +229,40 @@ public class Mesh {
 			k += 2;
 		}
 		
-		
-		
-		indexed = false;
-		VAO = glGenVertexArrays();
-		glBindVertexArray(VAO);
-		
-		VBO = glGenBuffers();
-		
-		length = positions.length;
-		
-		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(toTangentBuffer(vertices));
-		
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
-		
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 11 * 4, 0);
-		glEnableVertexAttribArray(0);
-		
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 11 * 4, 3 * 4);
-		glEnableVertexAttribArray(1);
-		
-		glVertexAttribPointer(2, 2, GL_FLOAT, false, 11 * 4, 6 * 4);
-		glEnableVertexAttribArray(2);
-		
-		glVertexAttribPointer(3, 3, GL_FLOAT, false, 11 * 4, 8 * 4);
-		glEnableVertexAttribArray(3);
-		
-		glBindVertexArray(0);
+		return raw(vertices, tangents);
 	}
 	
 	/**
 	 * Creates a non-indexed mesh out of the specified vertex data array.
 	 * 
+	 * Non-indexed meshes require much more data than indexed meshes. If two vertices
+	 * share the same point on a mesh, it will need to be included twice. However, they tend to be easier
+	 * to make.
+	 * 
 	 * The mesh vertex data is in the form: x, y, z, nx, ny, nz, u, v
+	 * 
+	 * tangents specifies whether tangents should be calculated for the mesh. Set it to false
+	 * if you know your model will not be normal mapped. A large model with tangents will render significantly slower
+	 * than one without tangents. If the model is normal mapped and tangents are disabled, unexpected results will happen.
 	 */
-	public Mesh(float[] vertices) {
+	public static Mesh raw(float[] vertices, boolean tangents) {
 		
-		VAO = glGenVertexArrays();
+		int VAO = glGenVertexArrays();
 		glBindVertexArray(VAO);
 		
-		EBO = glGenBuffers();
-		VBO = glGenBuffers();
+		int EBO = glGenBuffers();
+		int VBO = glGenBuffers();
 		
-		length = vertices.length / 8;
-		
-		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(toTangentBuffer(vertices));
+		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(tangents ? toTangentBuffer(vertices) : vertices);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
 		
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 11 * 4, 0);
-		glEnableVertexAttribArray(0);
-		
-		glVertexAttribPointer(1, 3, GL_FLOAT, false, 11 * 4, 3 * 4);
-		glEnableVertexAttribArray(1);
-		
-		glVertexAttribPointer(2, 2, GL_FLOAT, false, 11 * 4, 6 * 4);
-		glEnableVertexAttribArray(2);
-		
-		glVertexAttribPointer(3, 3, GL_FLOAT, false, 11 * 4, 8 * 4);
-		glEnableVertexAttribArray(3);
+		setupAttribs(tangents);
 		
 		glBindVertexArray(0);
+		
+		return new Mesh(VAO, VBO, EBO, vertices.length / 8, false);
 	}
 	
 	/**
@@ -282,12 +270,20 @@ public class Mesh {
 	 * which constructor was used.
 	 */
 	public void draw() {
+		draw(GL_TRIANGLES);
+	}
+	
+	/**
+	 * Draws the Mesh with the specified mode. Common modes are GL_TRIANGLES,
+	 * GL_LINES, and GL_QUADS.
+	 */
+	public void draw(int mode) {
 		glBindVertexArray(VAO);
 		if (indexed) {
-			glDrawElements(GL_TRIANGLES, length, GL_UNSIGNED_INT, 0);
+			glDrawElements(mode, length, GL_UNSIGNED_INT, 0);
 		}
 		else {
-			glDrawArrays(GL_TRIANGLES, 0, length);
+			glDrawArrays(mode, 0, length);
 		}
 		glBindVertexArray(0);
 	}

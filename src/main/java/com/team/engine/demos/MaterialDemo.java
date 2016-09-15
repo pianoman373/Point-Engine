@@ -1,13 +1,7 @@
 package com.team.engine.demos;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-
-import static org.lwjgl.glfw.GLFW.*;
-
 import javax.vecmath.Quat4f;
 
-import com.bulletphysics.collision.shapes.SphereShape;
 import com.team.engine.*;
 import com.team.engine.vecmath.Vec3;
 
@@ -41,11 +35,11 @@ public class MaterialDemo extends AbstractGame {
 		
 		objMesh1 = ObjLoader.loadFile("sphere.obj");
 		objMesh2 = ObjLoader.loadFile("gun.obj");
-		planeMesh = new Mesh(Primitives.plane(10));
+		planeMesh = Mesh.raw(Primitives.plane(10), true);
 		
 		Engine.scene.skybox = new Cubemap("skybox-4");
 		Engine.scene.irradiance = new Cubemap("skybox-4-irradiance");
-		Engine.scene.sun.color = new Vec3(0.7, 0.7, 0.7);
+		Engine.scene.sun.color = new Vec3(0.0, 0.0, 0.0);
 		Engine.scene.sun.direction = new Vec3(-0.3, -1.0, -1.0);
 		Engine.scene.add(new PointLight(new Vec3(-1, 4.7, -3), new Vec3(0.3f, 0.3f, 0.7f), 0.09f, 0.032f));
 		
@@ -63,8 +57,6 @@ public class MaterialDemo extends AbstractGame {
 		Material mat2 = new Material("Cerberus_A.png", "Cerberus_R.png", "Cerberus_N.png", "Cerberus_M.png");
 		Engine.scene.add(new MeshObject(new Vec3(0, 5, -5), new Quat4f(0, 0, 0, (float)Math.toRadians(45)), null, 0f, objMesh2, 5f, mat2));
 	}
-
-	private static float accum;
 
 	@Override
 	public void tick() {

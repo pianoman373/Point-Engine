@@ -13,6 +13,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 
+import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec2i;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
@@ -22,6 +23,7 @@ import com.team.engine.vecmath.Vec2i;
 public class Engine {
 	public static Camera camera;
 	public static Mesh cubeMesh;
+	public static Mesh spriteMesh;
 	/** This is constantly updated every frame. It represents the time elapsed in seconds since the last frame.
 	 * It is usually less than 0 (unless you have serious lag). It should be used for any physics and movement
 	 * related functions. Multiply the distance traveled by the delta time every second, and you will always travel
@@ -78,9 +80,10 @@ public class Engine {
 		loadShader("shadow");
 
 		//vital meshes
-		framebufferMesh = new Mesh(Primitives.framebuffer());
-		skyboxMesh = new Mesh(Primitives.skybox());
-		cubeMesh = new Mesh(Primitives.cube(1.0f));
+		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);
+		skyboxMesh = Mesh.raw(Primitives.skybox(), false);
+		cubeMesh = Mesh.raw(Primitives.cube(1.0f), true);
+		spriteMesh = Mesh.raw(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)), true);
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 2 ping pong shaders for bloom
 		fbuffer = Framebuffer.standard(new Vec2i(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT), 2, true);

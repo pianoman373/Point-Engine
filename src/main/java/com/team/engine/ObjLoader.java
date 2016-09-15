@@ -86,7 +86,7 @@ public class ObjLoader {
 				k += 2;
 			}
 			
-			return new Mesh(finalPositions, finalNormals, finalUvs, indices);
+			return Mesh.normalIndexed(finalPositions, finalNormals, finalUvs, indices, true);
 			
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -48,8 +48,8 @@ public class GLDemo extends AbstractGame {
 		Engine.loadShader("pbr");
 		
 		//Create the cube mesh object from the primitive.
-		cubeMesh = new Mesh(Primitives.cube(1.0f));
-		groundMesh = new Mesh(Primitives.cube(16.0f));
+		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
+		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		//load our monkey from disk
 		objMesh = ObjLoader.loadFile("capsule.obj");
 		

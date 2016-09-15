@@ -112,6 +112,6 @@ public class FPSCamera extends Camera {
 
 	@Override
 	public void setPosition(Vec3 pos) {
-		this.position = position;
+		this.position = pos;
 	}
 }

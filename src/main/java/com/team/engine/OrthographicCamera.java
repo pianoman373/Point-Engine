@@ -3,7 +3,6 @@ package com.team.engine;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.vecmath.Mat4;
-import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
 /**
