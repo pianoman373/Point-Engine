@@ -2,6 +2,8 @@ package com.team.engine;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.nio.file.Paths;
 import java.util.HashMap;
 
@@ -11,6 +13,11 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.openal.AL;
+import org.lwjgl.openal.ALC;
+import org.lwjgl.openal.ALC10;
+import org.lwjgl.openal.ALCCapabilities;
+import org.lwjgl.opengl.ARBSeamlessCubeMap;
 import org.lwjgl.opengl.GL;
 
 import com.team.engine.vecmath.Vec2;
@@ -50,6 +57,7 @@ public class Engine {
 	private static float lastFrame = 0.0f;
 	private static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
 	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
+	private static HashMap<String, Audio> sounds = new HashMap<String, Audio>();
 	private static AbstractGame game;
 	
 	native static int sayHello();
@@ -78,6 +86,9 @@ public class Engine {
 		loadShader("skybox");
 		loadShader("light");
 		loadShader("shadow");
+		loadShader("sprite");
+		
+		loadTexture("ascii.png", true);
 
 		//vital meshes
 		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);
@@ -92,6 +103,7 @@ public class Engine {
 
 		//setup our opengl states
 		glEnable(GL_DEPTH_TEST);
+		glEnable(ARBSeamlessCubeMap.GL_TEXTURE_CUBE_MAP_SEAMLESS);
 		//glEnable(GL_CULL_FACE)
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -173,9 +185,6 @@ public class Engine {
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			}
-
-			//and finally, tell the game to render, this goes to the framebuffer not the screen
-			game.render();
 			
 			//first, render the skybox if there is one
 			if (!is2d) {
@@ -193,6 +202,10 @@ public class Engine {
 			}
 			
 			scene.render(camera);
+			
+			//and finally, tell the game to render, this goes to the framebuffer not the screen
+			game.render();
+			
 
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -337,6 +350,14 @@ public class Engine {
 		
 		//and finally create the opengl context and we're ready to go
 		GL.createCapabilities();
+		
+		//setup openAL
+		long device = ALC10.alcOpenDevice((ByteBuffer)null);
+		ALCCapabilities deviceCaps = ALC.createCapabilities(device);
+
+		long context = ALC10.alcCreateContext(device, (IntBuffer)null);
+		ALC10.alcMakeContextCurrent(context);
+		AL.createCapabilities(deviceCaps);
 	}
 
 	/**
@@ -367,6 +388,23 @@ public class Engine {
 	 */
 	public static Shader getShader(String path) {
 		return shaders.get(path);
+	}
+	
+	/**
+	 * This will load audio from the specified path on disk into memory.
+	 * This does NOT play or even return the audio. Use getAudio for that.
+	 */
+	public static void loadAudio(String path) {
+		Audio a = new Audio("audio/" + path);
+		sounds.put(path, a);
+	}
+	
+	/**
+	 * This will return an audio object from memory ONLY if it has been loaded with loadSAudio.
+	 * The object will only be returned, you will have to play it yourself.
+	 */
+	public static Audio getAudio(String path) {
+		return sounds.get(path);
 	}
 
 	/**

@@ -36,6 +36,12 @@ public class Scene implements ContactListener {
 	public ArrayList<GameObject> objects = new ArrayList<>();
 	public ArrayList<GameObject2D> objects2D = new ArrayList<>();
 	
+	public ArrayList<GameObject> objectsWaiting = new ArrayList<>();
+	public ArrayList<GameObject2D> objects2DWaiting = new ArrayList<>();
+	
+	public ArrayList<GameObject2D> objects2DDelete = new ArrayList<>();
+	public ArrayList<GameObject> objectsDelete = new ArrayList<>();
+	
 	public DirectionalLight sun;
 	public DiscreteDynamicsWorld world;
 	
@@ -146,6 +152,27 @@ public class Scene implements ContactListener {
 	}
 	
 	public void update() {
+		//remove all objects pending to be deleted from the scene
+		for (GameObject obj: objectsDelete) {
+			objects.remove(obj);
+		}
+		
+		for (GameObject2D obj: objects2DDelete) {
+			objects2D.remove(obj);
+			world2D.destroyBody(obj.body);
+		}
+		
+		//add all pending objects to the scene
+		for (GameObject obj: objectsWaiting) {
+			objects.add(obj);
+		}
+		objectsWaiting.clear();
+		
+		for (GameObject2D obj: objects2DWaiting) {
+			objects2D.add(obj);
+		}
+		objects2DWaiting.clear();
+		
 		for (GameObject obj: objects) {
 			obj.update();
 		}
@@ -166,16 +193,30 @@ public class Scene implements ContactListener {
 
 	public void add(GameObject o) {
 		o.init(this);
-		objects.add(o);
+		objectsWaiting.add(o);
 	}
 	
 	public void add(GameObject2D o) {
 		o.init(this);
-		objects2D.add(o);
+		objects2DWaiting.add(o);
 	}
 
 	public void add(PointLight light) {
 		lights.add(light);
+	}
+	
+	public void delete(GameObject2D obj) {
+		objects2DDelete.add(obj);
+	}
+	
+	public void delete(GameObject obj) {
+		objectsDelete.add(obj);
+	}
+	
+	public void killWithTag(String tag) {
+		for (GameObject2D obj: objects2D) {
+			if (obj.tag.equals(tag)) objects2DDelete.add(obj);
+		}
 	}
 
 	@Override

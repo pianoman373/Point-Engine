@@ -2,12 +2,15 @@ package com.team.engine.demos;
 
 import org.jbox2d.common.Vector2;
 import org.jbox2d.dynamics.Fixture;
+import org.luaj.vm2.Globals;
+import org.luaj.vm2.LuaValue;
+import org.luaj.vm2.lib.jse.JsePlatform;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.AbstractGame;
-import com.team.engine.Audio;
 import com.team.engine.Engine;
+import com.team.engine.FontRenderer;
 import com.team.engine.GameObject2D;
 import com.team.engine.Input;
 import com.team.engine.Scene;
@@ -20,10 +23,9 @@ import com.team.engine.vecmath.Vec3;
  * A demo utilizing sprite rendering, Grid2D's and box2D physics.
  */
 public class FlappyBirdDemo extends AbstractGame {
-	private Audio audio;
+	private Globals globals;
 
 	public Bird player;
-
 
 	public static void main(String[] args) {
 		Engine.start(true, new FlappyBirdDemo());
@@ -35,35 +37,36 @@ public class FlappyBirdDemo extends AbstractGame {
 
 		Engine.loadShader("sprite");
 		Engine.loadTexture("crate.png");
-
-		//grid = new Grid2D("retro.tmx");
-		//1Engine.scene.add(grid);
+		
+		Engine.loadAudio("output.wav");
+		Engine.loadAudio("powerup.wav");
 		
 		player = new Bird();
 		Engine.scene.add(player);
 		player.setPosition(new Vec2(-5.0f, 0.0f));
 		
-		for (int i = 0; i < 20; i++) {
-			float offset = (((float)Math.random() * 6.0f) - 3.0f);
-			Pipe pipe = new Pipe();
-			Engine.scene.add(pipe);
-			pipe.setPosition(new Vec2(i * 5, -7 + offset));
-			
-			Pipe pipe2 = new Pipe();
-			Engine.scene.add(pipe2);
-			pipe2.setPosition(new Vec2(i * 5, 7 + offset));
-		}
+		Engine.getAudio("output.wav").play(true, 0.7f);
 		
-		audio = new Audio();
-		audio.execute();
+		globals = JsePlatform.standardGlobals();
+		LuaValue library = LuaValue.tableOf();
+		globals.set("point", library);
+		LuaValue chunk = globals.loadfile("resources/scripts/test.lua");
+		chunk.call();
+		
+		//globals.get("point").get("init").call();
 	}
 	
 	@Override
-	public void tick() {}
+	public void tick() {
+		//globals.get("point").get("tick").call();
+	}
 
 	@Override
 	public void render() {
 		//grid.render();
+		FontRenderer.draw(-1f + 0.05f, 1f - 0.1f, 1, "Deaths: " + this.player.deaths);
+		
+		//globals.get("point").get("render").call();
 	}
 
 	@Override
@@ -71,7 +74,7 @@ public class FlappyBirdDemo extends AbstractGame {
 
 	@Override
 	public void kill() {
-		audio.killALData();
+		
 	}
 
 	@Override
@@ -93,6 +96,9 @@ class Pipe extends Sprite {
 class Bird extends Sprite {
 	private boolean readyToFlap = true;
 	private boolean isDead = false;
+	private int pipesPlaced = 0;
+	
+	public int deaths = 0;
 	
 	public Bird() {
 		super(null, new Vec2(0.5f, 0.5f), true, true);
@@ -135,12 +141,28 @@ class Bird extends Sprite {
 		body.setTransform(pos, vel.y * (3.14f / 180) * 4);
 		
 		Engine.camera.setPosition(new Vec3(body.getPosition().x, 0, 0));
+		
+		
+		if (pos.x > pipesPlaced * 5) {
+			float offset = (((float)Math.random() * 6.0f) - 3.0f);
+			Pipe pipe = new Pipe();
+			Engine.scene.add(pipe);
+			pipe.setPosition(new Vec2(pos.x + 15, -7 + offset));
+		
+			Pipe pipe2 = new Pipe();
+			Engine.scene.add(pipe2);
+			pipe2.setPosition(new Vec2(pos.x + 15, 7 + offset));
+			pipesPlaced++;
+		}
 	}
 	
 	public void onContact(Fixture f, GameObject2D other) {
 		if (other.tag.equals("pipe")) {
-			System.out.println("pipe collision!!!!!");
 			this.isDead = true;
+			deaths++;
+			Engine.getAudio("powerup.wav").play(false, 1.0f);
+			Engine.scene.killWithTag("pipe");
+			pipesPlaced = 0;
 		}
 	}
 	
