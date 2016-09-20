@@ -53,7 +53,7 @@ public class MaterialDemo extends AbstractGame {
 		
 		for (int x = 0; x < 7; x++) {
 			for (int y = 0; y < 7; y++) {
-				Material mat = new Material("stone_tile.png", y / 7f, null, x / 7f);
+				Material mat = new Material("stone_tile.png", y / 7f, "stone_tile_normal.png", x / 7f);
 				Engine.scene.add(new MeshObject(new Vec3(x * 3, y * 3, 0), new Quat4f(), null, 0f, objMesh1, 1f, mat));
 			}
 		}

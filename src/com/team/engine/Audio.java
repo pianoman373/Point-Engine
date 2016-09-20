@@ -45,11 +45,13 @@ public class Audio {
   boolean loadALData(String file) {
     // Load wav data into a buffer.
     AL10.alGenBuffers(buffer);
- 
+    
+
+    
     if(AL10.alGetError() != AL10.AL_NO_ERROR)
       return false;
  
-    WaveData waveFile = WaveData.create(Constants.RESOURCE_PATH + file);
+    WaveData waveFile = WaveData.create(Settings.RESOURCE_PATH + file);
  
     AL10.alBufferData(buffer.get(0), waveFile.format, waveFile.data, waveFile.samplerate);
     waveFile.dispose();

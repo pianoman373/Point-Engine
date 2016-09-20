@@ -95,7 +95,7 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void render() {		
-		FontRenderer.draw(0, 0, 10, "Hello World!");
+		
 	}
 
 	@Override

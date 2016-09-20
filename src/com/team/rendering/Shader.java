@@ -9,9 +9,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import com.team.engine.Constants;
 import com.team.engine.Engine;
-import com.team.engine.Graphics;
+import com.team.engine.Settings;
 import com.team.engine.Scene;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
@@ -31,14 +30,14 @@ public class Shader {
 		int vertexShader;
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-		glShaderSource(vertexShader, read(Constants.RESOURCE_PATH + filename + ".vsh"));
+		glShaderSource(vertexShader, read(Settings.RESOURCE_PATH + filename + ".vsh"));
 		glCompileShader(vertexShader);
 		check(vertexShader);
 
 		int fragmentShader;
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-		glShaderSource(fragmentShader, read(Constants.RESOURCE_PATH + filename + ".fsh"));
+		glShaderSource(fragmentShader, read(Settings.RESOURCE_PATH + filename + ".fsh"));
 		glCompileShader(fragmentShader);
 		check(fragmentShader);
 
@@ -175,7 +174,7 @@ public class Shader {
 		this.uniformFloat("material.roughness", mat.roughness);
 		this.uniformBool("material.roughnessTextured", mat.roughnessTextured);
 
-		if (Graphics.ENABLE_NORMAL_MAPPING) {
+		if (Settings.ENABLE_NORMAL_MAPPING) {
 			if (mat.normalTex != null)
 				Engine.getTexture(mat.normalTex).bind(2);
 			this.uniformInt("material.normalTex", 2);

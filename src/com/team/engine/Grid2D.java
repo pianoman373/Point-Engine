@@ -41,7 +41,7 @@ public class Grid2D extends PhysicsObject2D {
 		height = 16;
 		
 		try {
-			map = reader.readMap(Constants.RESOURCE_PATH + tmxfile);
+			map = reader.readMap(Settings.RESOURCE_PATH + tmxfile);
 			
 			TileLayer layer = (TileLayer) map.getLayer(0);
 			mapWidth = layer.getWidth();

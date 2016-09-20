@@ -102,9 +102,9 @@ public class Engine {
 		spriteMesh = Mesh.raw(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)), true);
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 2 ping pong shaders for bloom
-		fbuffer = Framebuffer.standard(new Vec2i(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT), 2, true);
-		pingPong1 = Framebuffer.standard(new Vec2i(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT), 1, false);
-		pingPong2 = Framebuffer.standard(new Vec2i(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT), 1, false);
+		fbuffer = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 2, true);
+		pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 1, false);
+		pingPong2 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 1, false);
 
 		//setup our opengl states
 		glEnable(GL_DEPTH_TEST);
@@ -134,17 +134,23 @@ public class Engine {
 			
 		//create values for calculating delta time
 		float time = 0;
+		float capTime = 0;
 		lastFrame = (float)glfwGetTime();
 		int fps = 0;
 
 		while (!glfwWindowShouldClose(window)) {
-			//refresh input
-			glfwPollEvents();
+			//limit fps
+			if ((float)glfwGetTime()-lastFrame <= 1.0f/Settings.MAX_FPS) {
+				continue;
+			}
 			
 			//calculate delta time
 			float currentFrame = (float)glfwGetTime();
 			deltaTime = currentFrame - lastFrame;
 			lastFrame = currentFrame;
+			
+			//refresh input
+			glfwPollEvents();
 			
 			//calculate fps
 			time += deltaTime;
@@ -182,7 +188,7 @@ public class Engine {
 			}
 			//bind the main rendering buffer and now we're ready to render normally
 			fbuffer.bind();
-			glViewport(0, 0, Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT);
+			glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
 			clear();
 
 			
@@ -217,7 +223,7 @@ public class Engine {
 			}
 
 			//take the output of our render and blur it
-			if (Graphics.ENABLE_BLOOM) {	
+			if (Settings.ENABLE_BLOOM) {	
 				doBloom();
 			}
 
@@ -236,7 +242,7 @@ public class Engine {
 			fbuffer.tex[0].bind(0);
 			framebufferShader.uniformInt("screenTexture", 0);
 			
-			if (Graphics.ENABLE_BLOOM) {
+			if (Settings.ENABLE_BLOOM) {
 				pingPong2.tex[0].bind(1);
 				framebufferShader.uniformInt("bloomTexture", 1);
 				framebufferShader.uniformBool("doBloom", true);
@@ -323,15 +329,15 @@ public class Engine {
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		
 		//here we create our window in fullscreen or a normal window
-		if(Graphics.FULLSCREEN) {
+		if(Settings.FULLSCREEN) {
 			long monitor = glfwGetPrimaryMonitor();
 		    GLFWVidMode vidMode = glfwGetVideoMode(monitor);
-		    Graphics.WINDOW_WIDTH = vidMode.width();
-		    Graphics.WINDOW_HEIGHT = vidMode.height();
-		    window = glfwCreateWindow(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT, "Game", monitor, NULL);
+		    Settings.WINDOW_WIDTH = vidMode.width();
+		    Settings.WINDOW_HEIGHT = vidMode.height();
+		    window = glfwCreateWindow(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT, "Game", monitor, NULL);
 		}
 		else {
-			window = glfwCreateWindow(Graphics.WINDOW_WIDTH, Graphics.WINDOW_HEIGHT, "Game", NULL, NULL);
+			window = glfwCreateWindow(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT, "Game", NULL, NULL);
 		}
 		
 		if (window == NULL) {

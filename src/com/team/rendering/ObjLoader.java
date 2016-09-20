@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import com.team.engine.Constants;
+import com.team.engine.Settings;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
@@ -24,7 +24,7 @@ public class ObjLoader {
 		ArrayList<Integer> faces = new ArrayList<Integer>();
 		
 		try {
-			BufferedReader reader = Files.newBufferedReader(Paths.get(Constants.RESOURCE_PATH + path), Charset.defaultCharset());
+			BufferedReader reader = Files.newBufferedReader(Paths.get(Settings.RESOURCE_PATH + "meshes/" + path), Charset.defaultCharset());
 			String line = null;
 			while ((line = reader.readLine()) != null) {
 				String[] splitline = line.split(" ");

@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 
-import com.team.engine.Constants;
+import com.team.engine.Settings;
 import com.team.engine.vecmath.Vec2i;
 
 public class Texture {
@@ -40,7 +40,7 @@ public class Texture {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, id);
 	
-		RawImage img = getRawImage(Constants.RESOURCE_PATH + path);
+		RawImage img = getRawImage(Settings.RESOURCE_PATH + path);
 		
 		dimensions = new Vec2i(img.width, img.height);
 	

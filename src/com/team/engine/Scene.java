@@ -66,7 +66,7 @@ public class Scene implements ContactListener {
 	private Mesh squareOutline;
 	
 	public Scene() {
-		sun = new DirectionalLight(new Vec3(-1.0f, -1.0f, 0.2f), new Vec3(2.0f, 2.0f, 2.0f), Graphics.ENABLE_SHADOWS, 30, Graphics.SHADOW_RESOLUTION);
+		sun = new DirectionalLight(new Vec3(-1.0f, -1.0f, 0.2f), new Vec3(2.0f, 2.0f, 2.0f), Settings.ENABLE_SHADOWS, 30, Settings.SHADOW_RESOLUTION);
 		
 		Engine.loadShader("color");
 		

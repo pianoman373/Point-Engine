@@ -5,7 +5,7 @@ import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
-import com.team.engine.Constants;
+import com.team.engine.Settings;
 
 /**
  * The cubemap is simply an array of 6 textures stored in an object. You can specify 
@@ -22,7 +22,7 @@ public class Cubemap extends Texture {
 		
 		//iterate over all 6 textures and send their raw data to the cubemap
 		for (int i = 0; i < 6; i++) {
-			RawImage image = Texture.getRawImage(Constants.RESOURCE_PATH + "textures/" + images[i]);
+			RawImage image = Texture.getRawImage(Settings.RESOURCE_PATH + "textures/" + images[i]);
 			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
 		}
 		

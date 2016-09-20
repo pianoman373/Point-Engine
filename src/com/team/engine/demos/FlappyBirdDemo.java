@@ -38,14 +38,14 @@ public class FlappyBirdDemo extends AbstractGame {
 		Engine.loadShader("sprite");
 		Engine.loadTexture("crate.png");
 		
-		Engine.loadAudio("output.wav");
+		Engine.loadAudio("breakout.wav");
 		Engine.loadAudio("powerup.wav");
 		
 		player = new Bird();
 		Engine.scene.add(player);
 		player.setPosition(new Vec2(-5.0f, 0.0f));
 		
-		Engine.getAudio("output.wav").play(true, 0.7f);
+		Engine.getAudio("breakout.wav").play(true, 0.7f);
 		
 		globals = JsePlatform.standardGlobals();
 		LuaValue library = LuaValue.tableOf();
