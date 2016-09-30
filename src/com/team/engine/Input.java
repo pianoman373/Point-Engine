@@ -2,6 +2,9 @@ package com.team.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
@@ -37,6 +40,38 @@ public class Input {
 	 */
 	public static boolean isButtonDown(int key) {
 		return mouse[key];
+	}
+	
+	public static boolean isControllerPresent() {
+		return glfwGetJoystickName(0) != null;
+	}
+	
+	public static String getControllerName() {
+		return glfwGetJoystickName(0);
+	}
+	
+	public static float getJoystickAxis(int axis) {
+		if (isControllerPresent()) {
+			FloatBuffer axes = glfwGetJoystickAxes(0);
+			
+			return axes.get(axis);
+		}
+		
+		return 0.0f;
+	}
+	
+	public static boolean getJoystickButton(int button) {
+		if (isControllerPresent()) {
+			ByteBuffer buttons = glfwGetJoystickButtons(0);
+			
+			if (buttons.get(button) == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	protected static void keyEvent(long window, int key, int action) {
