@@ -1,11 +1,15 @@
 #include <cstdio>
 #include <string>
 #include <cstdlib>
+
 #include <openvr.h>
+
+#define DYNAMIC_LIB_EXT	".so"
+#define PLATSUBDIR	"linux64"
 
 
 int main() {
-	//vprintf("hello world from native land!");
+	printf("hello world from native land!");
 
 	// Loading the SteamVR Runtime
 	vr::EVRInitError eError = vr::VRInitError_None;

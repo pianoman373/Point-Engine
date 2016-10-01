@@ -315,11 +315,11 @@ public class Engine {
 	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		System.out.println(System.getProperty("java.library.path"));
-		System.load(Paths.get("native").toAbsolutePath().toString() + "/PointEngine.dll");
+		//System.load(Paths.get("native").toAbsolutePath().toString() + "/PointEngine.dll");
 		
-		OpenVR.setup();
+		//OpenVR.setup();
 		
-		System.out.println(sayHello());
+		//System.out.println(sayHello());
 
 		//set up our window options
 		glfwInit();

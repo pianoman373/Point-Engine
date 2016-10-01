@@ -1,7 +1,11 @@
 package com.team.engine.demos;
 
+import java.nio.IntBuffer;
+
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
+
+import org.lwjgl.BufferUtils;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CapsuleShape;
@@ -16,6 +20,9 @@ import com.team.rendering.ObjLoader;
 import com.team.rendering.PointLight;
 import com.team.rendering.Primitives;
 import com.team.rendering.Shader;
+
+import vr.IVRSystem;
+import vr.VR;
 
 
 /**
@@ -42,6 +49,8 @@ public class GLDemo extends AbstractGame {
 	public static Material groundMaterial = new Material("brickwall.jpg", 0.8f, "brickwall_normal.jpg", 0.0f);
 	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.4f, 1.0f);
 	
+	public IVRSystem hmd;
+	
 	public static void main(String[] args) {
 		Engine.start(false, new GLDemo());
 	}
@@ -55,6 +64,18 @@ public class GLDemo extends AbstractGame {
 		
 		Engine.loadShader("standard");
 		Engine.loadShader("pbr");
+		
+		// Loading the SteamVR Runtime
+		IntBuffer errorBuffer = BufferUtils.createIntBuffer(10);
+		
+        hmd = VR.VR_Init(errorBuffer, VR.EVRApplicationType.VRApplication_Scene);
+
+        if (errorBuffer.get(0) != VR.EVRInitError.VRInitError_None) {
+            hmd = null;
+            String s = "Unable to init VR runtime: " + VR.VR_GetVRInitErrorAsEnglishDescription(errorBuffer.get(0));
+            throw new Error("VR_Init Failed, " + s);
+        }
+
 		
 		//Create the cube mesh object from the primitive.
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
