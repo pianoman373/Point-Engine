@@ -22,7 +22,7 @@ import com.team.engine.Primitives;
  * A demo utilizing sprite rendering, Grid2D's and dyn4j physics.
  */
 public class KDemo extends AbstractGame {
-	public static Material groundMaterial = new Material("stone_tile.png", "stone_tile_specular.png", "stone_tile_normal.png", 0.2f);
+	public static Material groundMaterial = new Material("stone_tile.png", 0.4f, "stone_tile_normal.png", "stone_tile_specular.png");
 	public static Material sphereMaterial = new Material(new Vec3(1, 1, 1), 0.0f, 1.0f);
 	public static Material boxMaterial = new Material("planks.jpg", 0.9f, null, "planks_specular.jpg");
 	
@@ -46,7 +46,7 @@ public class KDemo extends AbstractGame {
 		Engine.loadTexture("planks.jpg");
 		Engine.loadTexture("planks_specular.jpg");
 		
-		Engine.loadShader("standard");
+		Engine.loadShader("pbr");
 		planeMesh = new Mesh(Primitives.plane(16.0f));
 		boxMesh = new Mesh(Primitives.cube(16.0f));
 		sphereMesh = ObjLoader.loadFile("sphere.obj");
@@ -70,7 +70,7 @@ public class KDemo extends AbstractGame {
 
 	@Override
 	public void render() {
-		Shader s = Engine.getShader("standard");
+		Shader s = Engine.getShader("pbr");
 		s.bind();
 	}
 
