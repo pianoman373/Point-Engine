@@ -1,0 +1,3 @@
+C:/Users/Joseph/git/Game-Engine/c-libary/build/CMakeFiles/test.exe.dir
+C:/Users/Joseph/git/Game-Engine/c-libary/build/CMakeFiles/edit_cache.dir
+C:/Users/Joseph/git/Game-Engine/c-libary/build/CMakeFiles/rebuild_cache.dir

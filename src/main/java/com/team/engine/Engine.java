@@ -60,8 +60,6 @@ public class Engine {
 	private static HashMap<String, Audio> sounds = new HashMap<String, Audio>();
 	private static AbstractGame game;
 	
-	native static int sayHello();
-	
 	/**
 	 * Sets a shader to be used for post-processing.
 	 */
@@ -304,9 +302,9 @@ public class Engine {
 	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		System.out.println(System.getProperty("java.library.path"));
-		System.load(Paths.get("native").toAbsolutePath().toString() + "/libPointEngine.so");
+		System.load(Paths.get("native").toAbsolutePath().toString() + "/PointEngine.dll");
 		
-		System.out.println(sayHello());
+		OpenVR.setup();
 
 		//set up our window options
 		glfwInit();
