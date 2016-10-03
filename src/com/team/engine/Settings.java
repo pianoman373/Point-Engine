@@ -10,7 +10,7 @@ public class Settings {
 	public static int WINDOW_HEIGHT = 1512;
 	public static final boolean FULLSCREEN = false;
 	public static final boolean VR = true;
-	public static final float MAX_FPS = 70;
+	public static final float MAX_FPS = 150;
 	/**
 	 * Where all resources start at.
 	 */
