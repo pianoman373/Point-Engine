@@ -21,8 +21,12 @@ import com.team.rendering.PointLight;
 import com.team.rendering.Primitives;
 import com.team.rendering.Shader;
 
+import vr.IVRCompositor_FnTable;
 import vr.IVRSystem;
+import vr.Texture_t;
+import vr.TrackedDevicePose_t;
 import vr.VR;
+import vr.VREvent_t;
 
 
 /**
@@ -43,13 +47,15 @@ public class GLDemo extends AbstractGame {
 
 	public static Mesh cubeMesh;
 	public static Mesh groundMesh;
+	
 	private Mesh objMesh;
+	
 
 	public static Material crateMaterial = new Material("container2.png", "container2_specular.png", null, 0.1f);
 	public static Material groundMaterial = new Material("brickwall.jpg", 0.8f, "brickwall_normal.jpg", 0.0f);
 	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.4f, 1.0f);
 	
-	public IVRSystem hmd;
+	
 	
 	public static void main(String[] args) {
 		Engine.start(false, new GLDemo());
@@ -64,17 +70,6 @@ public class GLDemo extends AbstractGame {
 		
 		Engine.loadShader("standard");
 		Engine.loadShader("pbr");
-		
-		// Loading the SteamVR Runtime
-		IntBuffer errorBuffer = BufferUtils.createIntBuffer(10);
-		
-        hmd = VR.VR_Init(errorBuffer, VR.EVRApplicationType.VRApplication_Scene);
-
-        if (errorBuffer.get(0) != VR.EVRInitError.VRInitError_None) {
-            hmd = null;
-            String s = "Unable to init VR runtime: " + VR.VR_GetVRInitErrorAsEnglishDescription(errorBuffer.get(0));
-            throw new Error("VR_Init Failed, " + s);
-        }
 
 		
 		//Create the cube mesh object from the primitive.
@@ -111,16 +106,23 @@ public class GLDemo extends AbstractGame {
 			Engine.scene.add(p);
 
 			accum = 0;
-		}
+		}	
 	}
 
 	@Override
-	public void render() {		
+	public void render() {	
+		
+		// Process SteamVR events
+        //VREvent_t event = new VREvent_t();
+        //while (hmd.PollNextEvent.apply(event, event.size()) != 0) {
+        	
+        //}
+	}
+
+	@Override
+	public void postRenderUniforms(Shader shader) {
 		
 	}
-
-	@Override
-	public void postRenderUniforms(Shader shader) {}
 
 	@Override
 	public void kill() {

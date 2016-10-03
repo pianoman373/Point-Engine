@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
@@ -27,6 +28,12 @@ import com.team.rendering.Mesh;
 import com.team.rendering.Primitives;
 import com.team.rendering.Shader;
 import com.team.rendering.Texture;
+
+import vr.IVRCompositor_FnTable;
+import vr.IVRSystem;
+import vr.Texture_t;
+import vr.TrackedDevicePose_t;
+import vr.VR;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
  *
@@ -50,7 +57,7 @@ public class Engine {
 
 	private static Shader framebufferShader;
 	private static long window;
-	private static Framebuffer fbuffer;
+	public static Framebuffer fbuffer;
 	private static Framebuffer pingPong1;
 	private static Framebuffer pingPong2;
 	private static Mesh framebufferMesh;
@@ -64,6 +71,11 @@ public class Engine {
 	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	private static HashMap<String, Audio> sounds = new HashMap<String, Audio>();
 	private static AbstractGame game;
+	
+	//vr stuff
+	private static IVRCompositor_FnTable compositor;
+	private static TrackedDevicePose_t.ByReference trackedDevicePosesReference = new TrackedDevicePose_t.ByReference();
+	public static IVRSystem hmd;
 	
 	native static int sayHello();
 	
@@ -250,16 +262,19 @@ public class Engine {
 			else {
 				framebufferShader.uniformBool("doBloom", false);
 			}
-
 			
-			//glDepthFunc(GL_ALWAYS);
-			//draw it all to the screen
 			framebufferMesh.draw();
-			
-			//glDepthFunc(GL_LESS);
 
 			//now we swap buffers which updates the window
 			glfwSwapBuffers(window);
+			
+			if (Settings.VR) {
+				compositor.Submit.apply(0, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
+			
+				compositor.Submit.apply(1, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
+			
+				compositor.WaitGetPoses.apply(trackedDevicePosesReference, VR.k_unMaxTrackedDeviceCount, null, 0);
+			}
 		}
 		
 		//if the loop ends, die peacefully
@@ -371,6 +386,34 @@ public class Engine {
 		long context = ALC10.alcCreateContext(device, (IntBuffer)null);
 		ALC10.alcMakeContextCurrent(context);
 		AL.createCapabilities(deviceCaps);
+		
+		if (Settings.VR) setupVR();
+	}
+	
+	private static void setupVR() {
+		// Loading the SteamVR Runtime
+		IntBuffer errorBuffer = BufferUtils.createIntBuffer(10);
+		
+        hmd = VR.VR_Init(errorBuffer, VR.EVRApplicationType.VRApplication_Scene);
+
+        if (errorBuffer.get(0) != VR.EVRInitError.VRInitError_None) {
+            hmd = null;
+            String s = "Unable to init VR runtime: " + VR.VR_GetVRInitErrorAsEnglishDescription(errorBuffer.get(0));
+            throw new Error("VR_Init Failed, " + s);
+        }
+        
+        IntBuffer width = BufferUtils.createIntBuffer(1), height = BufferUtils.createIntBuffer(1);
+        
+
+        hmd.GetRecommendedRenderTargetSize.apply(width, height);
+        
+        System.out.println("width: " + width.get(0) + ", height: " + height.get(0));
+        
+        compositor = new IVRCompositor_FnTable(VR.VR_GetGenericInterface(VR.IVRCompositor_Version, errorBuffer));
+
+        if (compositor == null || errorBuffer.get(0) != VR.EVRInitError.VRInitError_None) {
+            System.err.println("Compositor initialization failed. See log file for details");
+        }
 	}
 
 	/**

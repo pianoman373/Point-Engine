@@ -97,7 +97,7 @@ public class FPSCamera extends Camera {
 
 	@Override
 	public Mat4 getProjection() {
-		return Mat4.perspective(90.0f, Settings.WINDOW_WIDTH/Settings.WINDOW_HEIGHT, 0.1f, 10000000.0f);
+		return Mat4.perspective(90.0f, 1, 0.1f, 10000000.0f);
 	}
 
 	@Override
