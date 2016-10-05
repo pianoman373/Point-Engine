@@ -26,7 +26,7 @@ public class ModelLoaderDemo extends AbstractGame {
 	private Material mat3 = new Material("HallwayRoofAlbedo.png", 0.4f, "HallwayRoofNormals.png", "HallwayRoofRoughness.png");
 
 	public static void main(String[] args) {
-		Engine.start(false, new ModelLoaderDemo());
+		Engine.start(false, false, new ModelLoaderDemo());
 	}
 
 	@Override

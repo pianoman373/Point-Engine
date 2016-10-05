@@ -28,7 +28,7 @@ public class FlappyBirdDemo extends AbstractGame {
 	public Bird player;
 
 	public static void main(String[] args) {
-		Engine.start(true, new FlappyBirdDemo());
+		Engine.start(true, false, new FlappyBirdDemo());
 	}
 
 	@Override

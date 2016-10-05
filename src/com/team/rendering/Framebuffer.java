@@ -14,9 +14,10 @@ import com.team.engine.vecmath.Vec2i;
 
 public class Framebuffer {
 	private int fbo;
+	private int rbo;
 	public Texture[] tex;
 	
-	private Framebuffer(Vec2i dimensions, int fbo, int[] textures) {
+	private Framebuffer(Vec2i dimensions, int fbo, int rbo, int[] textures) {
 		this.tex = new Texture[textures.length];
 		this.fbo = fbo;
 		
@@ -57,8 +58,9 @@ public class Framebuffer {
 			
 		}
 		
+		int rbo = 0;
 		if (doRbo) {
-			int rbo = glGenRenderbuffers();
+			rbo = glGenRenderbuffers();
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo); 
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, dimensions.x, dimensions.y);  
 			glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -75,7 +77,7 @@ public class Framebuffer {
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);  
 		
-		return new Framebuffer(dimensions, fbo, textures);
+		return new Framebuffer(dimensions, fbo, rbo, textures);
 	}
 	
 	/**
@@ -108,7 +110,7 @@ public class Framebuffer {
 		glReadBuffer(GL_NONE);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); 
 		
-		return new Framebuffer(dimensions, fbo, new int[] {depthMap});
+		return new Framebuffer(dimensions, fbo, 0, new int[] {depthMap});
 	}
 	
 	public void bind() {
@@ -117,5 +119,11 @@ public class Framebuffer {
 	
 	public static void unbind() {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+	
+	public void delete() {
+		glDeleteFramebuffers(fbo);
+        glDeleteTextures(tex[0].id);
+        glDeleteRenderbuffers(rbo);
 	}
 }

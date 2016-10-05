@@ -33,7 +33,7 @@ public class InputDemo extends AbstractGame {
 			System.exit(1);
 		} else port = Integer.parseInt(args[0]);
 		
-		Engine.start(false, new InputDemo());
+		Engine.start(false, false, new InputDemo());
 	}
 	
 	//private static Controller controller;

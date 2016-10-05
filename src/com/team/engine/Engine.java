@@ -21,6 +21,7 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.opengl.ARBSeamlessCubeMap;
 import org.lwjgl.opengl.GL;
 
+import com.team.engine.demos.GLDemo;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec2i;
 import com.team.rendering.Framebuffer;
@@ -34,6 +35,7 @@ import vr.IVRSystem;
 import vr.Texture_t;
 import vr.TrackedDevicePose_t;
 import vr.VR;
+import vr.VREvent_t;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
  *
@@ -73,8 +75,21 @@ public class Engine {
 	private static AbstractGame game;
 	
 	//vr stuff
+	public static boolean isVR;
+	
 	private static IVRCompositor_FnTable compositor;
-	private static TrackedDevicePose_t.ByReference trackedDevicePosesReference = new TrackedDevicePose_t.ByReference();
+	
+	public static vr.HmdMatrix44_t lEyeProj;
+	public static vr.HmdMatrix44_t rEyeProj;
+	
+	public static vr.HmdMatrix34_t lEyeView;
+	public static vr.HmdMatrix34_t rEyeView;
+	
+	public static IntBuffer errorBuffer = BufferUtils.createIntBuffer(1);
+	
+	public static TrackedDevicePose_t.ByReference trackedDevicePosesReference = new TrackedDevicePose_t.ByReference();
+	public TrackedDevicePose_t[] trackedDevicePose = (TrackedDevicePose_t[]) trackedDevicePosesReference.toArray(VR.k_unMaxTrackedDeviceCount);
+	
 	public static IVRSystem hmd;
 	
 	native static int sayHello();
@@ -89,11 +104,12 @@ public class Engine {
 	/**
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
 	 */
-	public static void start(boolean i2d, AbstractGame g) {
+	public static void start(boolean i2d, boolean vr, AbstractGame g) {
 		//the contents of this function are the backbone of the engine. It contains the main loop
 		//and all the rendering. I will comment through every step.
 		game = g;
 		is2d = i2d;
+		isVR = vr;
 		setupContext();
 
 		//load all our vital shaders
@@ -174,12 +190,34 @@ public class Engine {
 				glfwSetWindowTitle(window, ("Game Engine FPS: " + fps));
 				fps = 0;
 			}
+			
+			if (isVR) {
+				if (hmd == null) {
+		        	System.out.println("HMD IS NULL!?!?!?!?!");
+		        	return;
+		        }
+				
+				// Process SteamVR events
+				VREvent_t event = new VREvent_t();
+				while (hmd.PollNextEvent.apply(event, event.size()) != 0) {
+	        	
+				}
+			}
 
 			
 			scene.update();				
 			
 			game.tick();
 			camera.update();
+			
+			//update matrices
+			if (isVR) {
+				lEyeProj = Engine.hmd.GetProjectionMatrix.apply(0, 0.1f, 10000000.0f, VR.EGraphicsAPIConvention.API_OpenGL);
+				rEyeProj = Engine.hmd.GetProjectionMatrix.apply(1, 0.1f, 10000000.0f, VR.EGraphicsAPIConvention.API_OpenGL);
+			
+				lEyeView = Engine.hmd.GetEyeToHeadTransform.apply(0);
+				rEyeView = Engine.hmd.GetEyeToHeadTransform.apply(1);
+			}
 			
 			if (!is2d && scene.sun.castShadow) {
 				//now we render the scene from the shadow-caster's point of view
@@ -202,8 +240,6 @@ public class Engine {
 			fbuffer.bind();
 			glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
 			clear();
-
-			
 
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -264,17 +300,22 @@ public class Engine {
 			}
 			
 			framebufferMesh.draw();
+			
+			if (isVR) {
+				compositor.Submit.apply(0, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
+			
+				compositor.Submit.apply(1, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
+				
+				compositor.WaitGetPoses.apply(trackedDevicePosesReference, VR.k_unMaxTrackedDeviceCount, null, 0);
+				
+			}
+			glFinish();
 
 			//now we swap buffers which updates the window
 			glfwSwapBuffers(window);
 			
-			if (Settings.VR) {
-				compositor.Submit.apply(0, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
-			
-				compositor.Submit.apply(1, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
-			
-				compositor.WaitGetPoses.apply(trackedDevicePosesReference, VR.k_unMaxTrackedDeviceCount, null, 0);
-			}
+			glFlush();
+			glFinish();
 		}
 		
 		//if the loop ends, die peacefully
@@ -387,12 +428,12 @@ public class Engine {
 		ALC10.alcMakeContextCurrent(context);
 		AL.createCapabilities(deviceCaps);
 		
-		if (Settings.VR) setupVR();
+		if (isVR) setupVR();
 	}
 	
 	private static void setupVR() {
 		// Loading the SteamVR Runtime
-		IntBuffer errorBuffer = BufferUtils.createIntBuffer(10);
+		System.out.println(errorBuffer.isDirect());
 		
         hmd = VR.VR_Init(errorBuffer, VR.EVRApplicationType.VRApplication_Scene);
 
@@ -402,12 +443,12 @@ public class Engine {
             throw new Error("VR_Init Failed, " + s);
         }
         
-        IntBuffer width = BufferUtils.createIntBuffer(1), height = BufferUtils.createIntBuffer(1);
+//        IntBuffer width = BufferUtils.createIntBuffer(1), height = BufferUtils.createIntBuffer(1);
+//        
+//        hmd.GetRecommendedRenderTargetSize.apply(width, height);
+//        
+//        System.out.println("width: " + width.get(0) + ", height: " + height.get(0));
         
-
-        hmd.GetRecommendedRenderTargetSize.apply(width, height);
-        
-        System.out.println("width: " + width.get(0) + ", height: " + height.get(0));
         
         compositor = new IVRCompositor_FnTable(VR.VR_GetGenericInterface(VR.IVRCompositor_Version, errorBuffer));
 
@@ -425,6 +466,13 @@ public class Engine {
 
 	private static void end() {
 		game.kill();
+		
+		if (hmd != null) {
+            VR.VR_Shutdown();
+            hmd = null;
+        }
+		fbuffer.delete();
+		
 		glfwTerminate();
 		System.exit(0);
 	}

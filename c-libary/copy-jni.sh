@@ -1,1 +1,0 @@
-javah -cp ../src/main/java/ -jni com.team.engine.OpenVR

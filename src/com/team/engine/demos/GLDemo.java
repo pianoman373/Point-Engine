@@ -1,11 +1,8 @@
 package com.team.engine.demos;
 
-import java.nio.IntBuffer;
-
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
-import org.lwjgl.BufferUtils;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CapsuleShape;
@@ -13,21 +10,12 @@ import com.team.engine.*;
 import com.team.engine.gameobject.MeshObject;
 import com.team.engine.vecmath.Vec3;
 import com.team.rendering.Cubemap;
-import com.team.rendering.FontRenderer;
 import com.team.rendering.Material;
 import com.team.rendering.Mesh;
 import com.team.rendering.ObjLoader;
 import com.team.rendering.PointLight;
 import com.team.rendering.Primitives;
 import com.team.rendering.Shader;
-
-import vr.IVRCompositor_FnTable;
-import vr.IVRSystem;
-import vr.Texture_t;
-import vr.TrackedDevicePose_t;
-import vr.VR;
-import vr.VREvent_t;
-
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
@@ -58,7 +46,7 @@ public class GLDemo extends AbstractGame {
 	
 	
 	public static void main(String[] args) {
-		Engine.start(false, new GLDemo());
+		Engine.start(false, false, new GLDemo());
 	}
 
 	@Override

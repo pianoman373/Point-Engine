@@ -28,7 +28,7 @@ import com.team.rendering.Shader;
  */
 public class NbodyDemo extends AbstractGame implements ActionListener{
 	public static void main(String[] args) {
-		Engine.start(false, new NbodyDemo());
+		Engine.start(false, false, new NbodyDemo());
 	}
 	
 	private static final boolean POINT_TO_POINT_GRAVITY = false;

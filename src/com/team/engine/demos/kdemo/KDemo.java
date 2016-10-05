@@ -31,7 +31,7 @@ public class KDemo extends AbstractGame {
 	private Mesh boxMesh;
 	
 	public static void main(String[] args) {
-		Engine.start(false, new KDemo());
+		Engine.start(false, false, new KDemo());
 	}
 
 	@Override

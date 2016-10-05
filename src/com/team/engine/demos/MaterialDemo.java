@@ -24,7 +24,7 @@ public class MaterialDemo extends AbstractGame {
 	private Mesh planeMesh;
 	
 	public static void main(String[] args) {
-		Engine.start(false, new MaterialDemo());
+		Engine.start(false, false, new MaterialDemo());
 	}
 
 	@Override

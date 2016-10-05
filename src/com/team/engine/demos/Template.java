@@ -17,7 +17,7 @@ public class Template extends AbstractGame {
 	private Mesh planeMesh;
 	
 	public static void main(String[] args) {
-		Engine.start(false, new Template());
+		Engine.start(false, false, new Template());
 	}
 
 	@Override

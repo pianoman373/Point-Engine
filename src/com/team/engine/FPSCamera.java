@@ -95,29 +95,38 @@ public class FPSCamera extends Camera {
 
 	@Override
 	public Mat4 getView() {
-		//return Mat4.LookAt(this.position, this.position.add(this.front), this.up);
-		
-		vr.HmdMatrix34_t mat = Engine.hmd.GetEyeToHeadTransform.apply(0);
-		
-		return new Mat4(
-				new Vec4(mat.m[0], mat.m[4], mat.m[8], 0f),
-				new Vec4(mat.m[1], mat.m[5], mat.m[9], 0f),
-				new Vec4(mat.m[2], mat.m[6], mat.m[10], 0f),
-				new Vec4(mat.m[3], mat.m[7], mat.m[11], 1f)).inverse().translate(new Vec3(1, 1, 1));
+		if (Engine.isVR) {
+			vr.HmdMatrix34_t mat = Engine.lEyeView;
+			
+			
+			return new Mat4(
+					new Vec4(mat.m[0], mat.m[4], mat.m[8], 0f),
+					new Vec4(mat.m[1], mat.m[5], mat.m[9], 0f),
+					new Vec4(mat.m[2], mat.m[6], mat.m[10], 0f),
+					new Vec4(mat.m[3], mat.m[7], mat.m[11], 1f)).inverse().translate(new Vec3(1, 1, 1));
+		}
+		else {
+			return Mat4.LookAt(this.position, this.position.add(this.front), this.up);
+		}
 	}
 
 	@Override
 	public Mat4 getProjection() {
-		//return Mat4.perspective(90.0f, 1, 0.1f, 10000000.0f);
 		
-		
-		vr.HmdMatrix44_t mat = Engine.hmd.GetProjectionMatrix.apply(0, 0.1f, 10000000.0f, VR.EGraphicsAPIConvention.API_OpenGL);
-		
-		return new Mat4(
-				new Vec4(mat.m[0], mat.m[4], mat.m[8], mat.m[12]),
-				new Vec4(mat.m[1], mat.m[5], mat.m[9], mat.m[13]),
-				new Vec4(mat.m[2], mat.m[6], mat.m[10], mat.m[14]),
-				new Vec4(mat.m[3], mat.m[7], mat.m[11], mat.m[15]));
+		if (Engine.isVR) {
+			
+			vr.HmdMatrix44_t mat = Engine.lEyeProj;
+			
+			
+			return new Mat4(
+					new Vec4(mat.m[0], mat.m[4], mat.m[8], mat.m[12]),
+					new Vec4(mat.m[1], mat.m[5], mat.m[9], mat.m[13]),
+					new Vec4(mat.m[2], mat.m[6], mat.m[10], mat.m[14]),
+					new Vec4(mat.m[3], mat.m[7], mat.m[11], mat.m[15]));
+		}
+		else {
+			return Mat4.perspective(90.0f, 1, 0.1f, 10000000.0f);
+		}
 	}
 
 	@Override
