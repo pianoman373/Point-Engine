@@ -13,13 +13,15 @@ import com.team.engine.GLBuffers;
 import com.team.engine.vecmath.Vec2i;
 
 public class Framebuffer {
-	private int fbo;
+	public int fbo;
 	private int rbo;
 	public Texture[] tex;
+	public Vec2i dimensions;
 	
 	private Framebuffer(Vec2i dimensions, int fbo, int rbo, int[] textures) {
 		this.tex = new Texture[textures.length];
 		this.fbo = fbo;
+		this.dimensions = dimensions;
 		
 		for (int i = 0; i < textures.length; i++) {
 			this.tex[i] = new Texture(textures[i], dimensions);

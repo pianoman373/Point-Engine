@@ -4,8 +4,6 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
-import vr.VR;
-
 import static org.lwjgl.glfw.GLFW.*;
 
 public class FPSCamera extends Camera {

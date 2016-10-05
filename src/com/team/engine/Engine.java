@@ -1,6 +1,7 @@
 package com.team.engine;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -21,7 +22,6 @@ import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.opengl.ARBSeamlessCubeMap;
 import org.lwjgl.opengl.GL;
 
-import com.team.engine.demos.GLDemo;
 import com.team.engine.rendering.Framebuffer;
 import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.Primitives;
@@ -160,7 +160,6 @@ public class Engine {
 			
 		//create values for calculating delta time
 		float time = 0;
-		float capTime = 0;
 		lastFrame = (float)glfwGetTime();
 		int fps = 0;
 
@@ -171,7 +170,7 @@ public class Engine {
 			}
 			
 			//clear the actual screen color
-			glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 1.0f);
+			glClearColor(0, 0, 0, 1.0f);
 			clear();
 			
 			//calculate delta time
@@ -221,23 +220,8 @@ public class Engine {
 				rEyeView = Engine.hmd.GetEyeToHeadTransform.apply(1);
 			}
 			
-			//first, render the skybox if there is one
-			if (!is2d) {
-				if (scene.skybox != null) {
-					//glDepthMask(false);
-					//glDepthFunc(GL_LEQUAL);
-					getShader("skybox").bind();
-					scene.skybox.bind();
-
-					skyboxMesh.draw();
-
-					//glDepthFunc(GL_LESS);
-					glDepthMask(true);
-				}
-			}
-			
 			if (!is2d && scene.sun.castShadow) {
-				//now we render the scene from the shadow-caster's point of view
+				//we render the scene from the shadow-caster's point of view
 				scene.sun.shadowBuffer.bind();
 				glViewport(0, 0, scene.sun.shadowResolution, scene.sun.shadowResolution);
 				clear();
@@ -245,43 +229,23 @@ public class Engine {
 				Shader s = getShader("shadow");
 				s.bind();
 				s.uniformMat4("lightSpace", scene.sun.getShadowMat());
-			
+				
 				//tell the main game to render any shadow casters now
-				glCullFace(GL_FRONT);
 				game.renderShadow(s);
 			
 				scene.renderShadow(s);
-				glCullFace(GL_BACK);
 			}
 			
-			//bind the main rendering buffer and now we're ready to render normally
-			fbuffer.bind();
-			glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+			//do actual rendering to the fbuffer
+			renderWorld(fbuffer, camera);
 			
-			//clear the renderbuffer
-			glClearColor(0, 0, 0, 0.0f);
-			clear();
-
-			if (wireframe) {
-				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			}
-			
-			scene.render(camera);
-			
-			//and finally, tell the game to render, this goes to the framebuffer not the screen
-			game.render();
-			
-
-			if (wireframe) {
-				glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			}
-
+			Texture blurredTex;
 			//take the output of our render and blur it
 			if (Settings.ENABLE_BLOOM) {	
-				doBloom();
+				blurredTex = gaussianBlur(fbuffer.tex[1]);
 			}
 
-			//we unbind framebuffers which means the output of this render will go to the screen
+			//we unbind framebuffers which means the output of this next render will go to the screen
 			Framebuffer.unbind();
 			
 			
@@ -297,7 +261,9 @@ public class Engine {
 			framebufferShader.uniformInt("screenTexture", 0);
 			
 			if (Settings.ENABLE_BLOOM) {
-				pingPong2.tex[0].bind(1);
+				
+				
+				blurredTex.bind(1);
 				framebufferShader.uniformInt("bloomTexture", 1);
 				framebufferShader.uniformBool("doBloom", true);
 			}
@@ -328,10 +294,48 @@ public class Engine {
 		end();
 	}
 	
+	public static void renderWorld(Framebuffer target, Camera cam) {
+		//bind the main rendering buffer and now we're ready to render normally
+		target.bind();
+		glViewport(0, 0, target.dimensions.x, target.dimensions.y);
+		
+		//clear the renderbuffer
+		glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 1.0f);
+		clear();
+		
+		//first, render the skybox if there is one
+		if (!is2d) {
+			if (scene.skybox != null) {
+				glDepthMask(false);
+				getShader("skybox").bind();
+				scene.skybox.bind();
+
+				skyboxMesh.draw();
+
+				glDepthMask(true);
+			}
+		}
+
+		if (wireframe) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}
+		
+		//now render the scene stuff first
+		scene.render(camera);
+		
+		//and finally, tell the game to render
+		game.render();
+		
+
+		if (wireframe) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
+	}
+	
 	/**
-	 * basically just blurs the second framebuffer
+	 * Takes a texture input, blurs it, and returns the output
 	 */
-	private static void doBloom() {
+	public static Texture gaussianBlur(Texture tex) {
 		boolean horizontal = true;
 		boolean first = true;
 		int amount = 10;
@@ -348,7 +352,7 @@ public class Engine {
 			s.uniformBool("horizontal", horizontal);
 
 			if (first) {
-				fbuffer.tex[1].bind();
+				tex.bind();
 			}
 			else {
 				if (horizontal) {
@@ -369,6 +373,8 @@ public class Engine {
 		}
 
 		Framebuffer.unbind();
+		
+		return pingPong2.tex[0];
 	}
 
 	/**
@@ -377,11 +383,6 @@ public class Engine {
 	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		System.out.println(System.getProperty("java.library.path"));
-		//System.load(Paths.get("native").toAbsolutePath().toString() + "/PointEngine.dll");
-		
-		//OpenVR.setup();
-		
-		//System.out.println(sayHello());
 
 		//set up our window options
 		glfwInit();
