@@ -2,7 +2,7 @@ package com.team.engine.gameobject;
 
 import com.team.engine.Camera;
 import com.team.engine.Scene;
-import com.team.rendering.Shader;
+import com.team.engine.rendering.Shader;
 
 public interface GameObject {
 	/**

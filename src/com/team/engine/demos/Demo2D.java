@@ -12,9 +12,9 @@ import com.team.engine.Input;
 import com.team.engine.Scene;
 import com.team.engine.gameobject.GameObject2D;
 import com.team.engine.gameobject.Sprite;
+import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
-import com.team.rendering.Shader;
 
 /**
  * A demo utilizing sprite rendering, Grid2D's and box2D physics.

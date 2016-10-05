@@ -18,10 +18,10 @@ import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
 import com.team.engine.FPSCamera;
 import com.team.engine.Scene;
+import com.team.engine.rendering.PointLight;
+import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
-import com.team.rendering.PointLight;
-import com.team.rendering.Shader;
 
 /**
  * A demo that can simulate orbits, clustering, and gravitational interactions.

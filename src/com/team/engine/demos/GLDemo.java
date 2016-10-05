@@ -8,14 +8,14 @@ import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CapsuleShape;
 import com.team.engine.*;
 import com.team.engine.gameobject.MeshObject;
+import com.team.engine.rendering.Cubemap;
+import com.team.engine.rendering.Material;
+import com.team.engine.rendering.Mesh;
+import com.team.engine.rendering.ObjLoader;
+import com.team.engine.rendering.PointLight;
+import com.team.engine.rendering.Primitives;
+import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Vec3;
-import com.team.rendering.Cubemap;
-import com.team.rendering.Material;
-import com.team.rendering.Mesh;
-import com.team.rendering.ObjLoader;
-import com.team.rendering.PointLight;
-import com.team.rendering.Primitives;
-import com.team.rendering.Shader;
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.

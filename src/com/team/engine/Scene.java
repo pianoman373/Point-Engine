@@ -10,14 +10,14 @@ import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.team.engine.gameobject.GameObject;
 import com.team.engine.gameobject.GameObject2D;
+import com.team.engine.rendering.Cubemap;
+import com.team.engine.rendering.DirectionalLight;
+import com.team.engine.rendering.Mesh;
+import com.team.engine.rendering.ModelBuilder;
+import com.team.engine.rendering.PointLight;
+import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
-import com.team.rendering.Cubemap;
-import com.team.rendering.DirectionalLight;
-import com.team.rendering.Mesh;
-import com.team.rendering.ModelBuilder;
-import com.team.rendering.PointLight;
-import com.team.rendering.Shader;
 
 import static org.lwjgl.opengl.GL11.*;
 

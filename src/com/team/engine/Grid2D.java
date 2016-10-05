@@ -6,11 +6,11 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 
 import com.team.engine.gameobject.PhysicsObject2D;
+import com.team.engine.rendering.Mesh;
+import com.team.engine.rendering.ModelBuilder;
+import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
-import com.team.rendering.Mesh;
-import com.team.rendering.ModelBuilder;
-import com.team.rendering.Shader;
 
 import tiled.core.Map;
 import tiled.core.MapObject;

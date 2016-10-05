@@ -11,7 +11,7 @@ import java.nio.ByteBuffer;
 import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
 import com.team.engine.Input;
-import com.team.rendering.Shader;
+import com.team.engine.rendering.Shader;
 
 import static org.lwjgl.glfw.GLFW.*;
 

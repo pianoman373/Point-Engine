@@ -22,13 +22,13 @@ import org.lwjgl.opengl.ARBSeamlessCubeMap;
 import org.lwjgl.opengl.GL;
 
 import com.team.engine.demos.GLDemo;
+import com.team.engine.rendering.Framebuffer;
+import com.team.engine.rendering.Mesh;
+import com.team.engine.rendering.Primitives;
+import com.team.engine.rendering.Shader;
+import com.team.engine.rendering.Texture;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec2i;
-import com.team.rendering.Framebuffer;
-import com.team.rendering.Mesh;
-import com.team.rendering.Primitives;
-import com.team.rendering.Shader;
-import com.team.rendering.Texture;
 
 import vr.IVRCompositor_FnTable;
 import vr.IVRSystem;

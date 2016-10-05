@@ -11,11 +11,11 @@ import com.bulletphysics.linearmath.Transform;
 import com.team.engine.Camera;
 import com.team.engine.Engine;
 import com.team.engine.Scene;
+import com.team.engine.rendering.Material;
+import com.team.engine.rendering.Mesh;
+import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
-import com.team.rendering.Material;
-import com.team.rendering.Mesh;
-import com.team.rendering.Shader;
 
 /**
  * MeshObject is a quick and easy to use implementation of GameObject. It handles simple physics and mesh rendering.

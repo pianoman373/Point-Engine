@@ -1,4 +1,4 @@
-package com.team.rendering;
+package com.team.engine.rendering;
 
 import com.team.engine.Engine;
 import com.team.engine.vecmath.Mat4;

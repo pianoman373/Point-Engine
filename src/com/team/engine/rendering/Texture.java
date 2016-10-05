@@ -1,4 +1,4 @@
-package com.team.rendering;
+package com.team.engine.rendering;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;

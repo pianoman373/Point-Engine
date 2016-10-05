@@ -1,4 +1,4 @@
-package com.team.rendering;
+package com.team.engine.rendering;
 
 import java.io.BufferedReader;
 import java.io.IOException;

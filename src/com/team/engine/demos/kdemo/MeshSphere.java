@@ -4,9 +4,9 @@ import javax.vecmath.Quat4f;
 
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.team.engine.gameobject.MeshObject;
+import com.team.engine.rendering.Material;
+import com.team.engine.rendering.Mesh;
 import com.team.engine.vecmath.Vec3;
-import com.team.rendering.Material;
-import com.team.rendering.Mesh;
 
 public class MeshSphere extends MeshObject {
 

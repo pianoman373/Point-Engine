@@ -1,6 +1,6 @@
 package com.team.engine;
 
-import com.team.rendering.Shader;
+import com.team.engine.rendering.Shader;
 
 /**
  * AbstractGame is the interface used to hook to the Engine's events.
