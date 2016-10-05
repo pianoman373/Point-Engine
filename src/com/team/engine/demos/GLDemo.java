@@ -67,6 +67,7 @@ public class GLDemo extends AbstractGame {
 		objMesh = ObjLoader.loadFile("capsule.obj");
 		
 		Engine.scene.skybox = new Cubemap("skybox-2");
+		Engine.scene.ambient = new Vec3(0.3, 0.3, 0.3);
 		
 		for (int i = 0; i < cubePositions.length; i++) {
 			float angle = 20.0f * i;
