@@ -67,7 +67,8 @@ public class GLDemo extends AbstractGame {
 		objMesh = ObjLoader.loadFile("capsule.obj");
 		
 		Engine.scene.skybox = new Cubemap("skybox-2");
-		Engine.scene.ambient = new Vec3(0.3, 0.3, 0.3);
+		Engine.scene.ambient = new Vec3(0.4, 0.4, 0.4);
+		Engine.scene.sun.color = new Vec3(4, 4, 4);
 		
 		for (int i = 0; i < cubePositions.length; i++) {
 			float angle = 20.0f * i;
@@ -101,11 +102,6 @@ public class GLDemo extends AbstractGame {
 	@Override
 	public void render() {	
 		
-		// Process SteamVR events
-        //VREvent_t event = new VREvent_t();
-        //while (hmd.PollNextEvent.apply(event, event.size()) != 0) {
-        	
-        //}
 	}
 
 	@Override
