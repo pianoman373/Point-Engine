@@ -157,8 +157,6 @@ public class Engine {
 		
 		//initialize the main game
 		game.init();
-		
-		glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 0.0f);
 			
 		//create values for calculating delta time
 		float time = 0;
@@ -171,6 +169,10 @@ public class Engine {
 			if ((float)glfwGetTime()-lastFrame <= 1.0f/Settings.MAX_FPS) {
 				continue;
 			}
+			
+			//clear the actual screen color
+			glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 1.0f);
+			clear();
 			
 			//calculate delta time
 			float currentFrame = (float)glfwGetTime();
@@ -219,6 +221,21 @@ public class Engine {
 				rEyeView = Engine.hmd.GetEyeToHeadTransform.apply(1);
 			}
 			
+			//first, render the skybox if there is one
+			if (!is2d) {
+				if (scene.skybox != null) {
+					//glDepthMask(false);
+					//glDepthFunc(GL_LEQUAL);
+					getShader("skybox").bind();
+					scene.skybox.bind();
+
+					skyboxMesh.draw();
+
+					//glDepthFunc(GL_LESS);
+					glDepthMask(true);
+				}
+			}
+			
 			if (!is2d && scene.sun.castShadow) {
 				//now we render the scene from the shadow-caster's point of view
 				scene.sun.shadowBuffer.bind();
@@ -236,28 +253,17 @@ public class Engine {
 				scene.renderShadow(s);
 				glCullFace(GL_BACK);
 			}
+			
 			//bind the main rendering buffer and now we're ready to render normally
 			fbuffer.bind();
 			glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+			
+			//clear the renderbuffer
+			glClearColor(0, 0, 0, 0.0f);
 			clear();
 
 			if (wireframe) {
 				glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			}
-			
-			//first, render the skybox if there is one
-			if (!is2d) {
-				if (scene.skybox != null) {
-					glDepthMask(false);
-					glDepthFunc(GL_LEQUAL);
-					getShader("skybox").bind();
-					scene.skybox.bind();
-
-					skyboxMesh.draw();
-
-					glDepthFunc(GL_LESS);
-					glDepthMask(true);
-				}
 			}
 			
 			scene.render(camera);
@@ -277,7 +283,7 @@ public class Engine {
 
 			//we unbind framebuffers which means the output of this render will go to the screen
 			Framebuffer.unbind();
-			clear();
+			
 			
 			//here we bind the post proccessing shader and render the framebuffer to the screen and apply bloom and hdr if using hdr shaders
 			framebufferShader.bind();

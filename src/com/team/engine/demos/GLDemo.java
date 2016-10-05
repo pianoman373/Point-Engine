@@ -41,7 +41,7 @@ public class GLDemo extends AbstractGame {
 
 	public static Material crateMaterial = new Material("container2.png", "container2_specular.png", null, 0.1f);
 	public static Material groundMaterial = new Material("brickwall.jpg", 0.8f, "brickwall_normal.jpg", 0.0f);
-	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.4f, 1.0f);
+	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.0f, 1.0f);
 	
 	
 	
@@ -69,6 +69,7 @@ public class GLDemo extends AbstractGame {
 		Engine.scene.skybox = new Cubemap("skybox-2");
 		Engine.scene.ambient = new Vec3(0.4, 0.4, 0.4);
 		Engine.scene.sun.color = new Vec3(4, 4, 4);
+		Engine.scene.skyColor = new Vec3(0, 0, 0.5);
 		
 		for (int i = 0; i < cubePositions.length; i++) {
 			float angle = 20.0f * i;
