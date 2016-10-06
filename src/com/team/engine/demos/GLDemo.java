@@ -85,15 +85,15 @@ public class GLDemo extends AbstractGame {
 	public void tick() {
 		accum += Engine.deltaTime;
 		
-		if (Input.isButtonDown(1) && accum > 0.1f) {
+		if (Input.isButtonDown(2) && accum > 0.1f) {
 			FPSCamera cam = (FPSCamera)Engine.camera;
 			MeshObject c = new MeshObject(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
 			Engine.scene.add(c);
 			c.rb.applyCentralForce(new Vector3f(0.0f, 100.0f, 0.0f));
 			accum = 0;
 		}
-		if (Input.isButtonDown(2) && accum > 1f) {
-			PointLight p = new PointLight(Engine.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 0.42f, 0.2f);
+		if (Input.isButtonDown(1) && accum > 1f) {
+			PointLight p = new PointLight(Engine.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 5f, 10f);
 			Engine.scene.add(p);
 
 			accum = 0;

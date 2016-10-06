@@ -53,7 +53,7 @@ public class KDemo extends AbstractGame {
 
 		Engine.scene.skybox = new Cubemap("skybox-k");
 		
-		Engine.scene.add(new PointLight(new Vec3(0.0f, 0.0f, 0.0f), new Vec3(1.0f, 1.0f, 1.0f), 0.42f, 0.2f));
+		Engine.scene.add(new PointLight(new Vec3(0.0f, 0.0f, 0.0f), new Vec3(1f, 1f, 1f), 10, 10));
 		
 		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new SphereShape(1.0f), 1f, sphereMesh, 1f, sphereMaterial));
 		Engine.scene.add(new MeshObject(new Vec3(0.0f, 5.0f, 0.0f), new Quat4f(), new BoxShape(new Vector3f(0.0f, 0.0f, 0.0f)), 0f, boxMesh, 1f, boxMaterial));

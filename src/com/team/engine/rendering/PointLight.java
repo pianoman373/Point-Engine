@@ -13,10 +13,16 @@ public class PointLight {
 	public float linear;
 	public float quadric;
 	
-	public PointLight(Vec3 position, Vec3 color, float linear, float quadric) {
+	public PointLight(Vec3 position, Vec3 color, float strength, float linear, float quadric) {
 		this.position = position;
-		this.color = color;
+		this.color = color.normalize().multiply(strength);
 		this.linear = linear;
 		this.quadric = quadric;
+	}
+	
+	public PointLight(Vec3 position, Vec3 color, float strength, float distance) {
+		this(position, color, strength, 4.5f/distance, 75f/(distance * distance));
+		
+		System.out.println("linear: " + this.linear + ", quadric: " + this.quadric);
 	}
 }
