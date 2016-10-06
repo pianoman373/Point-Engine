@@ -9,10 +9,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
 
 import com.team.engine.Settings;
 import com.team.engine.vecmath.Vec2i;
@@ -39,13 +42,39 @@ public class Texture {
 		id = glGenTextures();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, id);
-	
-		RawImage img = getRawImage(Settings.RESOURCE_PATH + path);
 		
-		dimensions = new Vec2i(img.width, img.height);
+		IntBuffer w = BufferUtils.createIntBuffer(1);
+		IntBuffer h = BufferUtils.createIntBuffer(1);
+		IntBuffer comp = BufferUtils.createIntBuffer(1);
+		
+		boolean hdr = STBImage.stbi_is_hdr(Settings.RESOURCE_PATH + path) != 0;
+		System.out.println(hdr);
+		System.out.println(path);
+		if (hdr) {
+			FloatBuffer buffer = STBImage.stbi_loadf(Settings.RESOURCE_PATH + path, w, h, comp, 0);
+			
+			int width = w.get(0);
+			int height = h.get(0);
+			System.out.println(buffer.remaining());
+			
+			dimensions = new Vec2i(width, height);
+			
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, buffer);
+			
+			STBImage.stbi_image_free(buffer);
+		}
+		else {
+			ByteBuffer buffer = STBImage.stbi_load(Settings.RESOURCE_PATH + path, w, h, comp, 4);
+			int width = w.get(0);
+			int height = w.get(0);
+		
+			dimensions = new Vec2i(width, height);
 	
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, img.width, img.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.data);
-	
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+			
+			STBImage.stbi_image_free(buffer);
+		}
+		
 		glGenerateMipmap(GL_TEXTURE_2D);
 		
 		if (pixelated) {
@@ -56,7 +85,7 @@ public class Texture {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		}
-		
+	
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
@@ -80,70 +109,5 @@ public class Texture {
 	public static void unBind(int num) {
 		glActiveTexture(GL_TEXTURE0 + num);
 		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	
-	/**
-	 * All the IO stuff here.
-	 */
-	public static RawImage getRawImage(String path) {
-		BufferedImage image;
-		try {
-			InputStream in = new FileInputStream(path);
-			image = ImageIO.read(in);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
-	
-		//AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);
-		//transform.translate(0, -image.getHeight());
-		//AffineTransformOp operation = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-		//image = operation.filter(image, null);
-	
-		int width = image.getWidth();
-		int height = image.getHeight();
-
-		int[] pixels = new int[width * height];
-		image.getRGB(0, 0, width, height, pixels, 0, width);
-	
-		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-
-		for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
-				/* Pixel as RGBA: 0xAARRGGBB */
-				int pixel = pixels[y * width + x];
-
-				/* Red component 0xAARRGGBB >> (4 * 4) = 0x0000AARR */
-				buffer.put((byte) ((pixel >> 16) & 0xFF));
-
-				/* Green component 0xAARRGGBB >> (2 * 4) = 0x00AARRGG */
-				buffer.put((byte) ((pixel >> 8) & 0xFF));
-
-				/* Blue component 0xAARRGGBB >> 0 = 0xAARRGGBB */
-				buffer.put((byte) (pixel & 0xFF));
-
-				/* Alpha component 0xAARRGGBB >> (6 * 4) = 0x000000AA */
-				buffer.put((byte) ((pixel >> 24) & 0xFF));
-			}
-		}
-		buffer.flip();
-		
-		return new RawImage(buffer, width, height);
-	}
-}
-
-/**
- * Don't you wish java had multiple return values? I do, that way this class wouldn't have to exist.
- */
-class RawImage {
-	public ByteBuffer data;
-	public int width;
-	public int height;
-	
-	public RawImage(ByteBuffer data, int width, int height) {
-		this.data = data;
-		this.width = width;
-		this.height = height;
 	}
 }

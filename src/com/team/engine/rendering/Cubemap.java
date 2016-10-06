@@ -5,6 +5,13 @@ import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBImage;
+
 import com.team.engine.Settings;
 
 /**
@@ -12,9 +19,11 @@ import com.team.engine.Settings;
  * a cubemap from an array of strings for the locations, or one string to use a single directory
  * containing the textures.
  */
-public class Cubemap extends Texture {	
+public class Cubemap {	
+	public int id;
+	
 	public Cubemap(String[] images) {
-		super(glGenTextures(), null);
+		id = glGenTextures();
 		glBindTexture(GL_TEXTURE_CUBE_MAP, this.id);
 		
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
@@ -22,8 +31,15 @@ public class Cubemap extends Texture {
 		
 		//iterate over all 6 textures and send their raw data to the cubemap
 		for (int i = 0; i < 6; i++) {
-			RawImage image = Texture.getRawImage(Settings.RESOURCE_PATH + "textures/" + images[i]);
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA8, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data);
+			IntBuffer w = BufferUtils.createIntBuffer(1);
+			IntBuffer h = BufferUtils.createIntBuffer(1);
+			IntBuffer comp = BufferUtils.createIntBuffer(1);
+			
+			FloatBuffer buffer = STBImage.stbi_loadf(Settings.RESOURCE_PATH + "textures/" + images[i], w, h, comp, 3);
+			int width = w.get(0);
+			int height = w.get(0);
+			
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, buffer);
 		}
 		
 		//interpolation settings and texture wrapping for the texture
@@ -40,12 +56,12 @@ public class Cubemap extends Texture {
 	 */
 	public Cubemap(String folder) {
 		this(new String[] {
-				folder + "/right.png",
-				folder + "/left.png",
-				folder + "/top.png",
-				folder + "/bottom.png",
-				folder + "/back.png",
-				folder + "/front.png"
+				folder + "/posx.hdr",
+				folder + "/negx.hdr",
+				folder + "/posy.hdr",
+				folder + "/negy.hdr",
+				folder + "/posz.hdr",
+				folder + "/negz.hdr"
 		});
 	}
 	

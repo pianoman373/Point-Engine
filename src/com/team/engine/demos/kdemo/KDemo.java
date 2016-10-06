@@ -51,7 +51,8 @@ public class KDemo extends AbstractGame {
 		boxMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		sphereMesh = ObjLoader.loadFile("sphere.obj");
 
-		Engine.scene.skybox = new Cubemap("skybox-k");
+		Engine.scene.skybox = new Cubemap("sunset");
+		Engine.scene.irradiance = new Cubemap("sunset-irradiance");
 		
 		Engine.scene.add(new PointLight(new Vec3(0.0f, 0.0f, 0.0f), new Vec3(1.0f, 1.0f, 1.0f), 0.42f, 0.2f));
 		

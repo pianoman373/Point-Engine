@@ -66,9 +66,11 @@ public class GLDemo extends AbstractGame {
 		//load our monkey from disk
 		objMesh = ObjLoader.loadFile("capsule.obj");
 		
-		Engine.scene.skybox = new Cubemap("skybox-2");
+		Engine.scene.skybox = new Cubemap("papermill");
+		Engine.scene.irradiance = new Cubemap("papermill-irradiance");
+		
 		Engine.scene.ambient = new Vec3(0.4, 0.4, 0.4);
-		Engine.scene.sun.color = new Vec3(4, 4, 4);
+		Engine.scene.sun.color = new Vec3(10, 10, 10);
 		Engine.scene.skyColor = new Vec3(0, 0, 0.5);
 		
 		for (int i = 0; i < cubePositions.length; i++) {
