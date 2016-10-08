@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import org.jbox2d.common.Vector2;
 import org.lwjgl.BufferUtils;
 
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 public class Vec3 {
@@ -44,6 +45,12 @@ public class Vec3 {
     	this.x = v.x;
         this.y = v.y;
         this.z = z;
+    }
+    
+    public Vec3(Vector3f v) {
+    	this.x = v.x;
+    	this.y = v.y;
+    	this.z = v.z;
     }
     
     public Vec3(double x, double y, double z) {

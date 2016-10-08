@@ -60,6 +60,9 @@ public class Scene implements ContactListener {
 	 * Can be null to use background color instead */
 	public Cubemap skybox = null;
 	public Cubemap irradiance = null;
+	
+	public boolean debug = false;
+	
 	/** Background color if skybox is null */
 	public Vec3 skyColor = new Vec3(0.0f, 0.0f, 0.0f);
 	

@@ -34,7 +34,7 @@ public class Grid2D extends PhysicsObject2D {
 	
 	public Grid2D(String tmxfile) {
 		super(false, false);
-		Engine.loadTexture("retro-terrain.png", true);
+		Engine.loadTexture("retro-terrain.png", true, false);
 		TMXMapReader reader = new TMXMapReader();
 		
 		width = 16;

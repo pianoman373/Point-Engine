@@ -19,12 +19,13 @@ public class FPSCamera extends Camera {
 	private static float lastX;
 	private static float lastY;
 	
+	
 	/**
 	 * Called by the game loop every frame. Get's keyboard and mouse input and moves the camera accordingly
 	 */
 	public void update() {
 		Vec3 right = front.cross(up);
-		
+					
 		if (Input.scrollingAmount <= 1) Input.scrollingAmount = 1;
 		
 		if (Input.mouseGrabbed == true) {
@@ -89,6 +90,7 @@ public class FPSCamera extends Camera {
 	    if(Input.isKeyDown(GLFW_KEY_F)) {
 	    	position = position.subtract(up.multiply(cameraSpeed));
 	    }
+	    //System.out.println(acc);
 	}
 
 	@Override
@@ -123,7 +125,7 @@ public class FPSCamera extends Camera {
 					new Vec4(mat.m[3], mat.m[7], mat.m[11], mat.m[15]));
 		}
 		else {
-			return Mat4.perspective(90.0f, 1, 0.1f, 10000000.0f);
+			return Mat4.perspective(60.0f, (float)Settings.WINDOW_WIDTH/(float)Settings.WINDOW_HEIGHT, 0.1f, 10000000.0f);
 		}
 	}
 
@@ -140,5 +142,10 @@ public class FPSCamera extends Camera {
 	@Override
 	public void setPosition(Vec3 pos) {
 		this.position = pos;
+	}
+
+	@Override
+	public void setDirection(Vec3 dir) {
+		this.front = dir;
 	}
 }

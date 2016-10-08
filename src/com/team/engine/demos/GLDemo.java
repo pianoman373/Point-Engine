@@ -6,6 +6,7 @@ import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CapsuleShape;
+import com.bulletphysics.collision.shapes.SphereShape;
 import com.team.engine.*;
 import com.team.engine.gameobject.MeshObject;
 import com.team.engine.rendering.Cubemap;
@@ -36,12 +37,20 @@ public class GLDemo extends AbstractGame {
 	public static Mesh cubeMesh;
 	public static Mesh groundMesh;
 	
+	public static Mesh mat1;
+	public static Mesh mat2;
+	
 	private Mesh objMesh;
 	
 
-	public static Material crateMaterial = new Material("container2.png", "container2_specular.png", null, 0.1f);
-	public static Material groundMaterial = new Material("brickwall.jpg", 0.8f, "brickwall_normal.jpg", 0.0f);
-	public static Material monkeyMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0.0f, 1.0f);
+	public static Material crateMaterial = new Material("container2.png", 0.8f, null, "container2_specular.png");
+	public static Material groundMaterial = new Material("brickwall.jpg", 0.6f, "brickwall_normal.jpg", 0.3f);
+	public static Material monkeyMaterial = new Material(new Vec3(1, 1, 1), 0.0f, 1.0f);
+	
+	public static Material outsideMaterial = new Material("metal/albedo.png", "metal/roughness.png", "metal/normal.png", "metal/metallic.png");
+	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
+	
+	public static Material gravelMaterial = new Material("gravel/albedo.png", 0.9f, 0f);
 	
 	
 	
@@ -51,10 +60,25 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void init() {
-		Engine.loadTexture("container2.png");
+		Engine.loadTexture("container2.png", false, true);
 		Engine.loadTexture("container2_specular.png");
-		Engine.loadTexture("brickwall.jpg");
+		Engine.loadTexture("brickwall.jpg", false, true);
 		Engine.loadTexture("brickwall_normal.jpg");
+		
+		Engine.loadTexture("metal/albedo.png", false, true);
+		Engine.loadTexture("metal/normal.png");
+		Engine.loadTexture("metal/metallic.png");
+		Engine.loadTexture("metal/roughness.png");
+		
+		Engine.loadTexture("plastic/albedo.png", false, true);
+		Engine.loadTexture("plastic/normal.png");
+		Engine.loadTexture("plastic/metallic.png");
+		Engine.loadTexture("plastic/roughness.png");
+		
+		Engine.loadTexture("gravel/albedo.png", false, true);
+		Engine.loadTexture("gravel/normal.png");
+		Engine.loadTexture("gravel/metallic.png");
+		Engine.loadTexture("gravel/roughness.png");
 		
 		Engine.loadShader("standard");
 		Engine.loadShader("pbr");
@@ -64,21 +88,30 @@ public class GLDemo extends AbstractGame {
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
 		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		//load our monkey from disk
-		objMesh = ObjLoader.loadFile("capsule.obj");
+		objMesh = ObjLoader.loadFile("sphere.obj");
+		mat1 = ObjLoader.loadFile("matmodel-1.obj");
+		mat2 = ObjLoader.loadFile("matmodel-2.obj");
 		
 		Engine.scene.skybox = new Cubemap("papermill");
 		Engine.scene.irradiance = new Cubemap("papermill-irradiance");
 		
+		Engine.camera.setPosition(new Vec3(0, 0, 5));
+		
 		Engine.scene.ambient = new Vec3(0.4, 0.4, 0.4);
-		Engine.scene.sun.color = new Vec3(10, 10, 10);
+		Engine.scene.sun.color = new Vec3(0, 0, 0);
+		Engine.scene.sun.direction = new Vec3(-1, -0.8, 0.7f);
 		Engine.scene.skyColor = new Vec3(0, 0, 0.5);
 		
 		for (int i = 0; i < cubePositions.length; i++) {
 			float angle = 20.0f * i;
-			Engine.scene.add(new MeshObject(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial));
+			//Engine.scene.add(new MeshObject(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial));
 		}
-		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new CapsuleShape(1, 2), 0f, objMesh,1f,  monkeyMaterial));
-		Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f,  groundMaterial));
+		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
+		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
+		
+		//Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
+		
+		//Engine.scene.add(new PointLight(new Vec3(20, 0, 0), new Vec3(1, 1, 1), 100f, 100f));
 	}
 
 	private static float accum;
@@ -87,14 +120,14 @@ public class GLDemo extends AbstractGame {
 	public void tick() {
 		accum += Engine.deltaTime;
 		
-		if (Input.isButtonDown(2) && accum > 0.1f) {
+		if (Input.isButtonDown(1) && accum > 0.1f) {
 			FPSCamera cam = (FPSCamera)Engine.camera;
 			MeshObject c = new MeshObject(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
 			Engine.scene.add(c);
 			c.rb.applyCentralForce(new Vector3f(0.0f, 100.0f, 0.0f));
 			accum = 0;
 		}
-		if (Input.isButtonDown(1) && accum > 1f) {
+		if (Input.isButtonDown(2) && accum > 1f) {
 			PointLight p = new PointLight(Engine.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 5f, 10f);
 			Engine.scene.add(p);
 

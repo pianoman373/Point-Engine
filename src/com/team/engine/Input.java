@@ -83,13 +83,11 @@ public class Input {
 		if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 			glfwSetWindowShouldClose(window, true);
 		
-		if(key == GLFW_KEY_M && action == GLFW_PRESS) {
-			if (!Engine.wireframe) {
-				Engine.wireframe = true;
-			}
-			else {
-				Engine.wireframe = false;
-			}
+		if(key == GLFW_KEY_F1 && action == GLFW_PRESS) {
+			Engine.wireframe = !Engine.wireframe;
+		}
+		if(key == GLFW_KEY_F2 && action == GLFW_PRESS) {
+			Engine.scene.debug = !Engine.scene.debug;
 		}
 	}
 	

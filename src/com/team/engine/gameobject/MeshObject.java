@@ -1,10 +1,15 @@
 package com.team.engine.gameobject;
 
+import static org.lwjgl.opengl.GL11.*;
+
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+import com.bulletphysics.collision.broadphase.BroadphaseNativeType;
+import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
+import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.linearmath.DefaultMotionState;
 import com.bulletphysics.linearmath.Transform;
@@ -79,6 +84,31 @@ public class MeshObject implements GameObject {
 		trans.getMatrix(mat);
 		s.uniformMat4("model", new Mat4(mat).scale(this.scale));
 		mesh.draw();
+		
+		
+		if (scene.debug) {
+			CollisionShape shape = rb.getCollisionShape();
+			
+			Shader s2 = Engine.getShader("debug");
+			s2.bind();
+			s2.uniformVec3("color", new Vec3(5, 1, 1));
+			s2.uniformMat4("model", new Mat4(mat).scale(this.scale * 1.0001f));
+			glDisable(GL_CULL_FACE);
+			
+			if (shape instanceof BoxShape) {
+				BoxShape bshape = (BoxShape)shape;
+				
+				Vec3 extents = new Vec3(bshape.getHalfExtentsWithMargin(new Vector3f()));
+				System.out.println(extents);
+				s2.uniformMat4("model", new Mat4(mat).scale(new Vec3(extents.x * 2, extents.y * 2, extents.z * 2)));
+				Engine.debugCubeMesh.draw(GL_LINES);
+			}
+			if (shape instanceof SphereShape) {
+				Engine.debugSphereMesh.draw(GL_LINES);
+			}
+			
+			glEnable(GL_CULL_FACE);
+		}
 	}
 
 	@Override

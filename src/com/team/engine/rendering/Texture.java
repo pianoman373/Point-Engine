@@ -1,6 +1,7 @@
 package com.team.engine.rendering;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL21.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
@@ -25,7 +26,7 @@ public class Texture {
 	public Vec2i dimensions;
 	
 	public Texture(String path) {
-		this(path, false);
+		this(path, false, false);
 	}
 	
 	public Texture(int id, Vec2i dimensions) {
@@ -38,7 +39,7 @@ public class Texture {
 	 * 
 	 * It is advised to use the texture management system in Engine rather than handle texture objects yourself.
 	 */
-	public Texture(String path, boolean pixelated) {
+	public Texture(String path, boolean pixelated, boolean srgb) {
 		id = glGenTextures();
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, id);
@@ -61,7 +62,7 @@ public class Texture {
 			
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, buffer);
 			
-			STBImage.stbi_image_free(buffer);
+			//STBImage.stbi_image_free(buffer);
 		}
 		else {
 			ByteBuffer buffer = STBImage.stbi_load(Settings.RESOURCE_PATH + path, w, h, comp, 4);
@@ -70,9 +71,9 @@ public class Texture {
 		
 			dimensions = new Vec2i(width, height);
 	
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+			glTexImage2D(GL_TEXTURE_2D, 0, srgb ? GL_SRGB_ALPHA : GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 			
-			STBImage.stbi_image_free(buffer);
+			//STBImage.stbi_image_free(buffer);
 		}
 		
 		glGenerateMipmap(GL_TEXTURE_2D);

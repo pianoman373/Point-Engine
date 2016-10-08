@@ -32,12 +32,12 @@ public class MaterialDemo extends AbstractGame {
 		
 		Engine.loadShader("pbr");
 		
-		Engine.loadTexture("Cerberus_A.png");
+		Engine.loadTexture("Cerberus_A.png", false, true);
 		Engine.loadTexture("Cerberus_M.png");
 		Engine.loadTexture("Cerberus_N.png");
 		Engine.loadTexture("Cerberus_R.png");
 		
-		Engine.loadTexture("stone_tile.png");
+		Engine.loadTexture("stone_tile.png", false, true);
 		Engine.loadTexture("stone_tile_normal.png");
 		Engine.loadTexture("stone_tile_specular.png");
 		

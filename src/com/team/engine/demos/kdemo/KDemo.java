@@ -40,10 +40,10 @@ public class KDemo extends AbstractGame {
 		Engine.scene.sun.direction = new Vec3(0.0f, -1.0f, 0.0f);
 		Engine.scene.sun.color = new Vec3(1.2f, 1.2f, 1.2f);
 		
-		Engine.loadTexture("stone_tile.png");
+		Engine.loadTexture("stone_tile.png", false, true);
 		Engine.loadTexture("stone_tile_normal.png");
 		Engine.loadTexture("stone_tile_specular.png");
-		Engine.loadTexture("planks.jpg");
+		Engine.loadTexture("planks.jpg", false, true);
 		Engine.loadTexture("planks_specular.jpg");
 		
 		Engine.loadShader("pbr");

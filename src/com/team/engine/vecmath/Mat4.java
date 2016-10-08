@@ -338,16 +338,22 @@ public class Mat4 {
      * positive
      * positive
      */
-    public static Mat4 perspective(float fovy, float aspect, float near, float far) {
+    public static Mat4 perspective(float fov, float aspect, float near, float far) {
         Mat4 perspective = new Mat4();
+        
+        float sine, cotangent, deltaZ;
+        float radians = fov / 2 * (float)Math.PI / 180;
+        
+        deltaZ = far - near;
+		sine = (float) Math.sin(radians);
 
-        float f = (float) (1f / Math.tan(Math.toRadians(fovy) / 2f));
+        cotangent = (float) Math.cos(radians) / sine;
 
-        perspective.m00 = f / aspect;
-        perspective.m11 = f;
-        perspective.m22 = (far + near) / (near - far);
+        perspective.m00 = cotangent / aspect;
+        perspective.m11 = cotangent;
+        perspective.m22 = -(far + near) / deltaZ;
         perspective.m32 = -1f;
-        perspective.m23 = (2f * far * near) / (near - far);
+        perspective.m23 = -2 * near * far / deltaZ;
         perspective.m33 = 0f;
 
         return perspective;

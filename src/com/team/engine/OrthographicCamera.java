@@ -50,6 +50,11 @@ public class OrthographicCamera extends Camera {
 	public Vec3 getDirection() {
 		return new Vec3(0.0f, 0.0f, 1.0f);
 	}
+	
+	@Override
+	public void setDirection(Vec3 dir) {
+		
+	}
 
 	@Override
 	public void setPosition(Vec3 pos) {

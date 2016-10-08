@@ -16,5 +16,7 @@ public abstract class Camera {
 	
 	public abstract void setPosition(Vec3 pos);
 	
+	public abstract void setDirection(Vec3 dir);
+	
 	public abstract void update();
 }

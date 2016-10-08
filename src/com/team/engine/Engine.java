@@ -44,6 +44,8 @@ import vr.VREvent_t;
 public class Engine {
 	public static Camera camera;
 	public static Mesh cubeMesh;
+	public static Mesh debugCubeMesh;
+	public static Mesh debugSphereMesh;
 	public static Mesh spriteMesh;
 	/** This is constantly updated every frame. It represents the time elapsed in seconds since the last frame.
 	 * It is usually less than 0 (unless you have serious lag). It should be used for any physics and movement
@@ -120,13 +122,16 @@ public class Engine {
 		loadShader("light");
 		loadShader("shadow");
 		loadShader("sprite");
+		loadShader("debug");
 		
-		loadTexture("ascii.png", true);
+		loadTexture("ascii.png", true, false);
 
 		//vital meshes
 		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);
 		skyboxMesh = Mesh.raw(Primitives.skybox(), false);
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), true);
+		debugCubeMesh = Primitives.debugCube();
+		debugSphereMesh = Primitives.debugSphere(16);
 		spriteMesh = Mesh.raw(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)), true);
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 2 ping pong shaders for bloom
@@ -140,6 +145,7 @@ public class Engine {
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		
 		//setup the scene and it's physics
 		scene = new Scene();
@@ -152,6 +158,7 @@ public class Engine {
 		else {
 			camera = new FPSCamera();
 			framebufferShader = getShader("hdr");
+			glEnable(GL_FRAMEBUFFER_SRGB); 
 		}
 		scene.setupPhysics();
 		
@@ -522,13 +529,13 @@ public class Engine {
 	 * This will load a texture from the specified path on disk into memory.
 	 * This does NOT bind the texture or even return the texture. Use getTexture for that.
 	 */
-	public static void loadTexture(String path, boolean pixelated) {
-		Texture s = new Texture("textures/" + path, pixelated);
+	public static void loadTexture(String path, boolean pixelated, boolean srgb) {
+		Texture s = new Texture("textures/" + path, pixelated, srgb);
 		textures.put(path, s);
 	}
 	
 	public static void loadTexture(String path) {
-		loadTexture(path, false);
+		loadTexture(path, false, false);
 	}
 	
 	/**
