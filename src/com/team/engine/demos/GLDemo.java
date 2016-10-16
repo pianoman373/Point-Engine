@@ -80,7 +80,6 @@ public class GLDemo extends AbstractGame {
 		Engine.loadTexture("gravel/metallic.png");
 		Engine.loadTexture("gravel/roughness.png");
 		
-		Engine.loadShader("standard");
 		Engine.loadShader("pbr");
 
 		

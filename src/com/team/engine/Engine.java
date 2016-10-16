@@ -27,8 +27,10 @@ import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
 import com.team.engine.rendering.Texture;
+import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec2i;
+import com.team.engine.vecmath.Vec3;
 
 import vr.IVRCompositor_FnTable;
 import vr.IVRSystem;
@@ -280,6 +282,8 @@ public class Engine {
 			
 			framebufferMesh.draw();
 			
+			renderGui();
+			
 			if (isVR) {
 				compositor.Submit.apply(0, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
 			
@@ -299,6 +303,21 @@ public class Engine {
 		
 		//if the loop ends, die peacefully
 		end();
+	}
+	
+	public static void renderGui() {
+		glDepthFunc(GL_ALWAYS);
+		Shader s = Engine.getShader("sprite");
+		s.bind();
+		
+		s.uniformMat4("model", new Mat4().translate(new Vec3(250, 250, 0)).scale(500));
+		s.uniformMat4("view", new Mat4().scale(new Vec3(1f/(Settings.WINDOW_WIDTH/2f), 1f/(Settings.WINDOW_HEIGHT/2f), 0f)).translate(new Vec3(-Settings.WINDOW_WIDTH/2f, -Settings.WINDOW_HEIGHT/2f, 0f)));
+		s.uniformMat4("projection", new Mat4());
+		
+		fbuffer.tex[1].bind();
+		spriteMesh.draw();
+		
+		glDepthFunc(GL_LESS);
 	}
 	
 	public static void renderWorld(Framebuffer target, Camera cam) {

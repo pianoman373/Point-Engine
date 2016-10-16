@@ -56,8 +56,6 @@ public class Framebuffer {
 			glBindTexture(GL_TEXTURE_2D, 0);
 			
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textures[i], 0);
-			
-			
 		}
 		
 		int rbo = 0;
@@ -91,6 +89,10 @@ public class Framebuffer {
 		int depthMap;
 		depthMap = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, depthMap);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 10);
+		
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, dimensions.x, dimensions.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, (ByteBuffer)null);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -102,14 +104,15 @@ public class Framebuffer {
 		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		
+		glGenerateMipmap(GL_TEXTURE_2D);
 		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, null); 
 		float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, GLBuffers.StaticBuffer(borderColor));
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
+		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); 
 		
 		return new Framebuffer(dimensions, fbo, 0, new int[] {depthMap});

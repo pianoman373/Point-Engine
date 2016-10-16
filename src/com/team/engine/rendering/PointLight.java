@@ -21,7 +21,7 @@ public class PointLight {
 	}
 	
 	public PointLight(Vec3 position, Vec3 color, float strength, float distance) {
-		this(position, color, strength, 4.5f/distance, 75f/(distance * distance));
+		this(position, color, strength, 4.5f/distance, 1275f/(distance * distance));
 		
 		System.out.println("linear: " + this.linear + ", quadric: " + this.quadric);
 	}

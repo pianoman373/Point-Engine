@@ -31,15 +31,15 @@ public class ModelLoaderDemo extends AbstractGame {
 
 	@Override
 	public void init() {
-		Engine.loadTexture("HallwayFloorAlbedo.png");
+		Engine.loadTexture("HallwayFloorAlbedo.png", false, true);
 		Engine.loadTexture("HallwayFloorRoughness.png");
 		Engine.loadTexture("HallwayFloorNormals.png");
 
-		Engine.loadTexture("HallwayWallsAlbedo.png");
+		Engine.loadTexture("HallwayWallsAlbedo.png", false, true);
 		Engine.loadTexture("HallwayWallsRoughness.png");
 		Engine.loadTexture("HallwayWallsNormals.png");
 
-		Engine.loadTexture("HallwayRoofAlbedo.png");
+		Engine.loadTexture("HallwayRoofAlbedo.png", false, true);
 		Engine.loadTexture("HallwayRoofRoughness.png");
 		Engine.loadTexture("HallwayRoofNormals.png");
 
@@ -55,14 +55,16 @@ public class ModelLoaderDemo extends AbstractGame {
 		Engine.scene.ambient = new Vec3(0, 0, 0);
 		
 		Engine.scene.sun.color = new Vec3(0, 0, 0);
+		
+		//Engine.scene.add(new PointLight(new Vec3(-1, 4.7, -3), new Vec3(0.7f, 0.7f, 0.2f), 10f, 3f));
+		Engine.scene.add(new PointLight(new Vec3(1, 4.7, -3), new Vec3(1f, 0.8f, 0.9f), 10f, 3f));
 
 		for (int i = 0; i < 10; i++) {
 			Engine.scene.add(new MeshObject(new Vec3(0, 0, i * 8), new Quat4f(), null, 0, objMesh1, 1, mat1));
 			Engine.scene.add(new MeshObject(new Vec3(0, 0, i * 8), new Quat4f(), null, 0, objMesh2, 1, mat2));
 			Engine.scene.add(new MeshObject(new Vec3(0, 0, i * 8), new Quat4f(), null, 0, objMesh3, 1, mat3));
 			
-			Engine.scene.add(new PointLight(new Vec3(-1, 4.7, -3 + (i * 8)), new Vec3(0.7f, 0.7f, 0.2f), 10f, 3f));
-			Engine.scene.add(new PointLight(new Vec3(1, 4.7, -3 + (i * 8)), new Vec3(1f, 0.8f, 0.9f), 10f, 3f));
+			
 		}
 	}
 
