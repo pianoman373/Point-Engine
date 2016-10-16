@@ -49,6 +49,7 @@ public class Engine {
 	public static Mesh debugCubeMesh;
 	public static Mesh debugSphereMesh;
 	public static Mesh spriteMesh;
+	public static Mesh framebufferMesh;
 	/** This is constantly updated every frame. It represents the time elapsed in seconds since the last frame.
 	 * It is usually less than 0 (unless you have serious lag). It should be used for any physics and movement
 	 * related functions. Multiply the distance traveled by the delta time every second, and you will always travel
@@ -66,7 +67,6 @@ public class Engine {
 	public static Framebuffer fbuffer;
 	private static Framebuffer pingPong1;
 	private static Framebuffer pingPong2;
-	private static Mesh framebufferMesh;
 	private static Mesh skyboxMesh;
 	private static KeyCallback keyCallback;
 	private static CursorCallback cursorCallback;
@@ -449,6 +449,7 @@ public class Engine {
 		glfwSetCursorPosCallback(window, cursorCallback);
 		glfwSetMouseButtonCallback(window, mouseCallback);
 		glfwSetScrollCallback(window, scrollCallback);
+		
 		
 		//and finally create the opengl context and we're ready to go
 		GL.createCapabilities();

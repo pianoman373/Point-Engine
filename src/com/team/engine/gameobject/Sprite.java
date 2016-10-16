@@ -19,6 +19,7 @@ import com.team.engine.vecmath.Vec4;
 public class Sprite extends PhysicsObject2D {
 	private String image;
 	private Vec2 halfExtents;
+	public Vec3 overlayColor = new Vec3(1, 1, 1);
 	
 	/**
 	 * If you're extending this class, then call super to this.
@@ -49,6 +50,7 @@ public class Sprite extends PhysicsObject2D {
 			Shader s = Engine.getShader("sprite");
 			s.bind();
 			s.uniformMat4("model", new Mat4().translate(new Vec3(body.getPosition().x, body.getPosition().y, 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(new Vec3(halfExtents.x * 2, halfExtents.y * 2, 1.0f)));
+			s.uniformVec3("overlayColor", overlayColor);
 			Engine.getTexture(image).bind();
 			Engine.spriteMesh.draw();
 		}

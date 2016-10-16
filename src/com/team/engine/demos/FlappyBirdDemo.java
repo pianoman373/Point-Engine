@@ -37,6 +37,7 @@ public class FlappyBirdDemo extends AbstractGame {
 
 		Engine.loadShader("sprite");
 		Engine.loadTexture("crate.png");
+		Engine.loadTexture("awesomeface.png");
 		
 		Engine.loadAudio("breakout.wav");
 		Engine.loadAudio("powerup.wav");
@@ -101,7 +102,7 @@ class Bird extends Sprite {
 	public int deaths = 0;
 	
 	public Bird() {
-		super(null, new Vec2(0.5f, 0.5f), true, true);
+		super("awesomeface.png", new Vec2(0.5f, 0.5f), true, true);
 	}
 
 	@Override

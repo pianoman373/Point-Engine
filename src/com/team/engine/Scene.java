@@ -16,7 +16,9 @@ import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.ModelBuilder;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Shader;
+import com.team.engine.rendering.Texture;
 import com.team.engine.vecmath.Mat4;
+import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -65,6 +67,7 @@ public class Scene implements ContactListener {
 	
 	/** Background color if skybox is null */
 	public Vec3 skyColor = new Vec3(0.0f, 0.0f, 0.0f);
+	public Texture backgroundImage;
 	
 	private Mesh squareOutline;
 	
@@ -111,7 +114,17 @@ public class Scene implements ContactListener {
 		world2D.setContactListener(this);
 	}
 	
+	public void setGravity(Vec2 grav) {
+		world2D.setGravity(new Vector2(grav.x, grav.y));
+	}
+	
 	public void render(Camera cam) {
+		if (backgroundImage != null) {
+			Engine.getShader("framebuffer").bind();
+			backgroundImage.bind();
+			Engine.framebufferMesh.draw();
+		}
+		
 		for (GameObject obj: objects) {
 			obj.render(this, cam);
 		}

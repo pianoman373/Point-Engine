@@ -51,6 +51,7 @@ public class MaterialDemo extends AbstractGame {
 		Engine.scene.irradiance = new Cubemap("sunset-irradiance");
 		
 		Engine.scene.sun.color = new Vec3(0.6, 0.5, 0.5);
+
 		Engine.scene.sun.direction = new Vec3(-0.3, -1.0, -1.0);
 		Engine.scene.add(new PointLight(new Vec3(-1, 4.7, -3), new Vec3(0.3, 0.3f, 0.7f), 20f, 5));
 		

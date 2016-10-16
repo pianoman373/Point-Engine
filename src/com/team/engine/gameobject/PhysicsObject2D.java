@@ -68,11 +68,16 @@ public abstract class PhysicsObject2D extends GameObject2D {
 		this.body.setTransform(new Vector2(pos.x, pos.y), this.body.getAngle());
 	}
 	
-	/**
-	 * Sets the velocity of this object. Pretty self-explanatory.
-	 */
+	public Vec2 getPosition() {
+		return new Vec2(this.body.getPosition());
+	}
+	
 	public void setVelocity(Vec2 vec) {
 		this.body.setLinearVelocity(new Vector2(vec.x, vec.y));
+	}
+	
+	public Vec2 getVelocity() {
+		return new Vec2(this.body.getLinearVelocity());
 	}
 	
 	/**
@@ -104,13 +109,18 @@ public abstract class PhysicsObject2D extends GameObject2D {
 	 * halfExtents is the dimensions of this cube starting from the center of the object,
 	 * NOT the width and height (width = halfExtents.x * 2, height = halfExtents.y * 2).
 	 */
-	public Fixture addCube(Vec2 pos, Vec2 halfExtents, float friction, boolean sensor) {
+	public Fixture addCube(Vec2 pos, Vec2 halfExtents, float friction, float restitution, boolean sensor) {
 		PolygonShape poly = new PolygonShape();		
 		poly.setAsBox(halfExtents.x, halfExtents.y, new Vector2(pos.x, pos.y), 0f);
 		Fixture fix = body.createFixture(poly, 1);
 		fix.setFriction(friction);
+		fix.setRestitution(restitution);
 		fix.setSensor(sensor);
 		
 		return fix;
+	}
+	
+	public Fixture addCube(Vec2 pos, Vec2 halfExtents, float friction, boolean sensor) {
+		return this.addCube(pos, halfExtents, friction, 0, sensor);
 	}
 }
