@@ -67,6 +67,7 @@ public class Engine {
 	public static Framebuffer fbuffer;
 	private static Framebuffer pingPong1;
 	private static Framebuffer pingPong2;
+	private static Framebuffer pingPong3;
 	private static Mesh skyboxMesh;
 	private static KeyCallback keyCallback;
 	private static CursorCallback cursorCallback;
@@ -138,8 +139,11 @@ public class Engine {
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 2 ping pong shaders for bloom
 		fbuffer = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 2, true);
-		pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 1, false);
-		pingPong2 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 1, false);
+		if (Settings.ENABLE_BLOOM) {
+			pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2), 1, false);
+			pingPong2 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 4, Settings.WINDOW_HEIGHT / 4), 1, false);
+			pingPong3 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 8, Settings.WINDOW_HEIGHT / 8), 1, false);
+		}
 
 		//setup our opengl states
 		glEnable(GL_DEPTH_TEST);
@@ -248,10 +252,9 @@ public class Engine {
 			//do actual rendering to the fbuffer
 			renderWorld(fbuffer, camera);
 			
-			Texture blurredTex;
-			//take the output of our render and blur it
+			
 			if (Settings.ENABLE_BLOOM) {	
-				blurredTex = gaussianBlur(fbuffer.tex[1]);
+				doBloom();
 			}
 
 			//we unbind framebuffers which means the output of this next render will go to the screen
@@ -264,17 +267,19 @@ public class Engine {
 			game.postRenderUniforms(framebufferShader);
 			
 			framebufferShader.uniformInt("screenTexture", 0);
-			framebufferShader.uniformInt("bloomTexture", 1);
 			
 			fbuffer.tex[0].bind(0);
 			framebufferShader.uniformInt("screenTexture", 0);
 			
 			if (Settings.ENABLE_BLOOM) {
-				
-				
-				blurredTex.bind(1);
-				framebufferShader.uniformInt("bloomTexture", 1);
 				framebufferShader.uniformBool("doBloom", true);
+				pingPong1.tex[0].bind(1);
+				pingPong2.tex[0].bind(2);
+				pingPong3.tex[0].bind(3);
+				
+				framebufferShader.uniformInt("bloomTexture1", 1);
+				framebufferShader.uniformInt("bloomTexture2", 2);
+				framebufferShader.uniformInt("bloomTexture3", 3);
 			}
 			else {
 				framebufferShader.uniformBool("doBloom", false);
@@ -305,17 +310,72 @@ public class Engine {
 		end();
 	}
 	
+	public static void doBloom() {
+		Shader s = getShader("blur");
+		s.bind();
+		
+		//level 1
+		glViewport(0, 0, Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2);
+		pingPong1.bind();
+		
+		glClearColor(0, 0, 0, 1.0f);
+		clear();
+		
+		s.uniformVec2("offset", new Vec2(1.2f / (Settings.WINDOW_WIDTH / 2), 0));
+		fbuffer.tex[1].bind();
+		framebufferMesh.draw();
+		
+		pingPong1.tex[0].bind();
+		s.uniformVec2("offset", new Vec2(0f, 1.2f / (Settings.WINDOW_WIDTH / 2)));
+		framebufferMesh.draw();
+		
+		//level 2
+		glViewport(0, 0, Settings.WINDOW_WIDTH / 4, Settings.WINDOW_HEIGHT / 4);
+		pingPong2.bind();
+		
+		glClearColor(0, 0, 0, 1.0f);
+		clear();
+		
+		s.uniformVec2("offset", new Vec2(1.2f / (Settings.WINDOW_WIDTH / 4), 0));
+		pingPong1.tex[0].bind();
+		framebufferMesh.draw();
+		
+		pingPong2.tex[0].bind();
+		s.uniformVec2("offset", new Vec2(0f, 1.2f / (Settings.WINDOW_WIDTH / 4)));
+		framebufferMesh.draw();
+		
+		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+		
+		//level 2
+		glViewport(0, 0, Settings.WINDOW_WIDTH / 8, Settings.WINDOW_HEIGHT / 8);
+		pingPong3.bind();
+		
+		glClearColor(0, 0, 0, 1.0f);
+		clear();
+		
+		s.uniformVec2("offset", new Vec2(1.2f / (Settings.WINDOW_WIDTH / 8), 0));
+		pingPong2.tex[0].bind();
+		framebufferMesh.draw();
+		
+		pingPong3.tex[0].bind();
+		s.uniformVec2("offset", new Vec2(0f, 1.2f / (Settings.WINDOW_WIDTH / 8)));
+		framebufferMesh.draw();
+		
+		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
+	}
+	
 	public static void renderGui() {
 		glDepthFunc(GL_ALWAYS);
 		Shader s = Engine.getShader("sprite");
 		s.bind();
 		
-		s.uniformMat4("model", new Mat4().translate(new Vec3(250, 250, 0)).scale(500));
+		s.uniformMat4("model", new Mat4().translate(new Vec3(1800/2, 1000/2, 0)).scale(new Vec3(1800, 1000, 0)));
 		s.uniformMat4("view", new Mat4().scale(new Vec3(1f/(Settings.WINDOW_WIDTH/2f), 1f/(Settings.WINDOW_HEIGHT/2f), 0f)).translate(new Vec3(-Settings.WINDOW_WIDTH/2f, -Settings.WINDOW_HEIGHT/2f, 0f)));
 		s.uniformMat4("projection", new Mat4());
+		s.uniformVec3("overlayColor", new Vec3(1, 1, 1));
 		
-		fbuffer.tex[1].bind();
-		spriteMesh.draw();
+		//pingPong3.tex[0].bind();
+		//spriteMesh.draw();
 		
 		glDepthFunc(GL_LESS);
 	}
@@ -356,51 +416,6 @@ public class Engine {
 		if (wireframe) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
-	}
-	
-	/**
-	 * Takes a texture input, blurs it, and returns the output
-	 */
-	public static Texture gaussianBlur(Texture tex) {
-		boolean horizontal = true;
-		boolean first = true;
-		int amount = 10;
-
-		for (int i = 0; i < amount; i++) {
-			if (horizontal) {
-				pingPong1.bind();
-			}
-			else {
-				pingPong2.bind();
-			}
-			Shader s = getShader("blur");
-			s.bind();
-			s.uniformBool("horizontal", horizontal);
-
-			if (first) {
-				tex.bind();
-			}
-			else {
-				if (horizontal) {
-					pingPong2.tex[0].bind();
-				}
-				else {
-					pingPong1.tex[0].bind();
-				}
-			}
-
-			framebufferMesh.draw();
-
-			horizontal = !horizontal;
-
-			if (first) {
-				first = false;
-			}
-		}
-
-		Framebuffer.unbind();
-		
-		return pingPong2.tex[0];
 	}
 
 	/**

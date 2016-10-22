@@ -29,6 +29,8 @@ public class Cubemap {
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 0);
 		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAX_LEVEL, 10);
 		
+		STBImage.stbi_set_flip_vertically_on_load(0);
+		
 		//iterate over all 6 textures and send their raw data to the cubemap
 		for (int i = 0; i < 6; i++) {
 			IntBuffer w = BufferUtils.createIntBuffer(1);

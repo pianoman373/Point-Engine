@@ -170,12 +170,12 @@ public class Primitives {
 
 	public static float[] sprite(Vec2 start, Vec2 end) {
 		return new float[] {
-			-0.5f, -0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  start.x, end.y,
-		     0.5f, -0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  end.x, end.y,
-		     0.5f,  0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  end.x, start.y,
-		     0.5f,  0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  end.x, start.y,
-		    -0.5f,  0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  start.x, start.y,
-		    -0.5f, -0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  start.x, end.y
+			-0.5f, -0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  start.x, start.y,
+		     0.5f, -0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  end.x, start.y,
+		     0.5f,  0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  end.x, end.y,
+		     0.5f,  0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  end.x, end.y,
+		    -0.5f,  0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  start.x, end.y,
+		    -0.5f, -0.5f, 0.0f,  0.0f,  0.0f, -1.0f,  start.x, start.y
 		};
 	}
 

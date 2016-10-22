@@ -48,6 +48,7 @@ public class Texture {
 		IntBuffer h = BufferUtils.createIntBuffer(1);
 		IntBuffer comp = BufferUtils.createIntBuffer(1);
 		
+		STBImage.stbi_set_flip_vertically_on_load(1);
 		boolean hdr = STBImage.stbi_is_hdr(Settings.RESOURCE_PATH + path) != 0;
 		System.out.println(hdr);
 		System.out.println(path);
@@ -67,7 +68,7 @@ public class Texture {
 		else {
 			ByteBuffer buffer = STBImage.stbi_load(Settings.RESOURCE_PATH + path, w, h, comp, 4);
 			int width = w.get(0);
-			int height = w.get(0);
+			int height = h.get(0);
 		
 			dimensions = new Vec2i(width, height);
 	
