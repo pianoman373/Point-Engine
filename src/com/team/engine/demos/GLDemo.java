@@ -55,7 +55,7 @@ public class GLDemo extends AbstractGame {
 	
 	
 	public static void main(String[] args) {
-		Engine.start(false, false, new GLDemo());
+		Engine.start(false, true, new GLDemo());
 	}
 
 	@Override
