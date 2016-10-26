@@ -2,6 +2,7 @@ package com.team.engine;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL32.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -134,10 +135,10 @@ public class Engine {
 		skyboxMesh = Mesh.raw(Primitives.skybox(), false);
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), true);
 		debugCubeMesh = Primitives.debugCube();
-		debugSphereMesh = Primitives.debugSphere(16);
+		debugSphereMesh = Primitives.debugSphere(64);
 		spriteMesh = Mesh.raw(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)), true);
 
-		//all the framebuffers, one for shadows, one for normal rendering, and 2 ping pong shaders for bloom
+		//all the framebuffers, one for shadows, one for normal rendering, and 3 ping pong shaders for bloom
 		fbuffer = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 2, true);
 		if (Settings.ENABLE_BLOOM) {
 			pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2), 1, false);
@@ -314,6 +315,8 @@ public class Engine {
 		Shader s = getShader("blur");
 		s.bind();
 		
+		float bloomRange = 1.2f;
+		
 		//level 1
 		glViewport(0, 0, Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2);
 		pingPong1.bind();
@@ -321,12 +324,12 @@ public class Engine {
 		glClearColor(0, 0, 0, 1.0f);
 		clear();
 		
-		s.uniformVec2("offset", new Vec2(1.2f / (Settings.WINDOW_WIDTH / 2), 0));
+		s.uniformVec2("offset", new Vec2(bloomRange / (Settings.WINDOW_WIDTH / 2), 0));
 		fbuffer.tex[1].bind();
 		framebufferMesh.draw();
 		
 		pingPong1.tex[0].bind();
-		s.uniformVec2("offset", new Vec2(0f, 1.2f / (Settings.WINDOW_WIDTH / 2)));
+		s.uniformVec2("offset", new Vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 2)));
 		framebufferMesh.draw();
 		
 		//level 2
@@ -336,12 +339,12 @@ public class Engine {
 		glClearColor(0, 0, 0, 1.0f);
 		clear();
 		
-		s.uniformVec2("offset", new Vec2(1.2f / (Settings.WINDOW_WIDTH / 4), 0));
+		s.uniformVec2("offset", new Vec2(bloomRange / (Settings.WINDOW_WIDTH / 4), 0));
 		pingPong1.tex[0].bind();
 		framebufferMesh.draw();
 		
 		pingPong2.tex[0].bind();
-		s.uniformVec2("offset", new Vec2(0f, 1.2f / (Settings.WINDOW_WIDTH / 4)));
+		s.uniformVec2("offset", new Vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 4)));
 		framebufferMesh.draw();
 		
 		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
@@ -353,12 +356,12 @@ public class Engine {
 		glClearColor(0, 0, 0, 1.0f);
 		clear();
 		
-		s.uniformVec2("offset", new Vec2(1.2f / (Settings.WINDOW_WIDTH / 8), 0));
+		s.uniformVec2("offset", new Vec2(bloomRange / (Settings.WINDOW_WIDTH / 8), 0));
 		pingPong2.tex[0].bind();
 		framebufferMesh.draw();
 		
 		pingPong3.tex[0].bind();
-		s.uniformVec2("offset", new Vec2(0f, 1.2f / (Settings.WINDOW_WIDTH / 8)));
+		s.uniformVec2("offset", new Vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 8)));
 		framebufferMesh.draw();
 		
 		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
@@ -374,7 +377,7 @@ public class Engine {
 		s.uniformMat4("projection", new Mat4());
 		s.uniformVec3("overlayColor", new Vec3(1, 1, 1));
 		
-		//pingPong3.tex[0].bind();
+		pingPong3.tex[0].bind();
 		//spriteMesh.draw();
 		
 		glDepthFunc(GL_LESS);

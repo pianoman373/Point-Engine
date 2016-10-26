@@ -56,20 +56,33 @@ public class Primitives {
 	public static Mesh debugSphere(int segments) {
 		ModelBuilder mb = new ModelBuilder();
 		
+//		for (float i = 0; i < Math.PI*2; i += (Math.PI*2 / segments)) {
+//			for (float j = 0; j < Math.PI*2; j += (Math.PI*2 / segments)) {
+//				float lastj = (float)(j -(Math.PI*2 / segments));
+//				float lasti = (float)(i -(Math.PI*2 / segments));
+//				
+//				//mb.vertex(0, (float)Math.sin(lasti), (float)Math.cos(lasti));
+//				//mb.vertex(0, (float)Math.sin(lasti), (float)Math.cos(i));
+//				
+//				mb.vertex((float)(Math.sin(lastj)) * (float)Math.sin(i), (float)Math.cos(i), (float)Math.cos(lastj) * (float)Math.sin(i));
+//				mb.vertex((float)Math.sin(j) * (float)Math.sin(i), (float)Math.cos(i), (float)Math.cos(j) * (float)Math.sin(i));
+//				
+//				mb.vertex((float)Math.sin(j) * (float)Math.sin(lasti), (float)Math.cos(lasti), (float)Math.cos(j) * (float)Math.sin(lasti));
+//				mb.vertex((float)Math.sin(j) * (float)Math.sin(i), (float)Math.cos(i), (float)Math.cos(j) * (float)Math.sin(i));
+//			}
+//		}
+		
 		for (float i = 0; i < Math.PI*2; i += (Math.PI*2 / segments)) {
-			for (float j = 0; j < Math.PI*2; j += (Math.PI*2 / segments)) {
-				float lastj = (float)(j -(Math.PI*2 / segments));
-				float lasti = (float)(i -(Math.PI*2 / segments));
-				
-				//mb.vertex(0, (float)Math.sin(lasti), (float)Math.cos(lasti));
-				//mb.vertex(0, (float)Math.sin(lasti), (float)Math.cos(i));
-				
-				mb.vertex((float)(Math.sin(lastj)) * (float)Math.sin(i), (float)Math.cos(i), (float)Math.cos(lastj) * (float)Math.sin(i));
-				mb.vertex((float)Math.sin(j) * (float)Math.sin(i), (float)Math.cos(i), (float)Math.cos(j) * (float)Math.sin(i));
-				
-				mb.vertex((float)Math.sin(j) * (float)Math.sin(lasti), (float)Math.cos(lasti), (float)Math.cos(j) * (float)Math.sin(lasti));
-				mb.vertex((float)Math.sin(j) * (float)Math.sin(i), (float)Math.cos(i), (float)Math.cos(j) * (float)Math.sin(i));
-			}
+			float lasti = (float)(i -(Math.PI*2 / segments));
+			
+			mb.vertex(0, (float)Math.sin(lasti), (float)Math.cos(lasti));
+			mb.vertex(0, (float)Math.sin(i), (float)Math.cos(i));
+			
+			mb.vertex((float)Math.sin(lasti), (float)Math.cos(lasti), 0);
+			mb.vertex((float)Math.sin(i), (float)Math.cos(i), 0);
+			
+			mb.vertex((float)Math.sin(lasti), 0, (float)Math.cos(lasti));
+			mb.vertex((float)Math.sin(i), 0, (float)Math.cos(i));
 		}
 		
 		return mb.toMesh();

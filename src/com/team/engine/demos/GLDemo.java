@@ -55,7 +55,7 @@ public class GLDemo extends AbstractGame {
 	
 	
 	public static void main(String[] args) {
-		Engine.start(false, true, new GLDemo());
+		Engine.start(false, false, new GLDemo());
 	}
 
 	@Override
@@ -108,7 +108,7 @@ public class GLDemo extends AbstractGame {
 		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
 		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
 		
-		//Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
+		Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
 		
 		//Engine.scene.add(new PointLight(new Vec3(20, 0, 0), new Vec3(1, 1, 1), 100f, 100f));
 	}
