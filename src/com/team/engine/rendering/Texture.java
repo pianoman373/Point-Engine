@@ -5,15 +5,9 @@ import static org.lwjgl.opengl.GL21.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-
-import javax.imageio.ImageIO;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
@@ -50,8 +44,7 @@ public class Texture {
 		
 		STBImage.stbi_set_flip_vertically_on_load(1);
 		boolean hdr = STBImage.stbi_is_hdr(Settings.RESOURCE_PATH + path) != 0;
-		System.out.println(hdr);
-		System.out.println(path);
+		System.out.println("loading texture: " + path);
 		if (hdr) {
 			FloatBuffer buffer = STBImage.stbi_loadf(Settings.RESOURCE_PATH + path, w, h, comp, 0);
 			

@@ -113,8 +113,8 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 		glBindVertexArray(0);
 		
 		scene = new Scene();
-		scene.add(new PointLight(new Vec3(0, 0, 0), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
-		//scene.add(new PointLight(new Vec3(5, 5, 20), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
+		scene.add(new PointLight(new Vec3(0, 0, 0), new Vec3(0.5f, 0.5f, 1f), 1f, 0.032f));
+		scene.add(new PointLight(new Vec3(5, 5, 20), new Vec3(1f, 0.5f, 0.5f), 1f, 0.032f));
 		//scene.add(new PointLight(new Vec3(30, 3, 3), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 		//scene.add(new PointLight(new Vec3(20, 5, 30), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 		

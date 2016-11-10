@@ -402,6 +402,17 @@ public class Mat4 {
 
         return this.multiply(rotation);
     }
+    
+    public Mat4 rotateX(float rot) {
+    	return this.rotate(new Vec4(1, 0, 0, rot));
+    }
+    
+    public Mat4 rotateY(float rot) {
+    	return this.rotate(new Vec4(0, 1, 0, rot));
+    }
+    public Mat4 rotateZ(float rot) {
+    	return this.rotate(new Vec4(0, 0, 1, rot));
+    }
 
     /**
      * Creates a scaling matrix. Similar to <code>glScale(x, y, z)</code>.

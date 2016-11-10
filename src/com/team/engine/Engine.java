@@ -2,7 +2,6 @@ package com.team.engine;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.opengl.GL32.*;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -127,6 +126,8 @@ public class Engine {
 		loadShader("shadow");
 		loadShader("sprite");
 		loadShader("debug");
+		loadShader("pbr");
+		loadShader("pbr-specular");
 		
 		loadTexture("ascii.png", true, false);
 
@@ -139,11 +140,11 @@ public class Engine {
 		spriteMesh = Mesh.raw(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)), true);
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 3 ping pong shaders for bloom
-		fbuffer = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT), 2, true);
+		fbuffer = Framebuffer.HdrWithBloom(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT));
 		if (Settings.ENABLE_BLOOM) {
-			pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2), 1, false);
-			pingPong2 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 4, Settings.WINDOW_HEIGHT / 4), 1, false);
-			pingPong3 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 8, Settings.WINDOW_HEIGHT / 8), 1, false);
+			pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2), false);
+			pingPong2 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 4, Settings.WINDOW_HEIGHT / 4), false);
+			pingPong3 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 8, Settings.WINDOW_HEIGHT / 8), false);
 		}
 
 		//setup our opengl states
@@ -288,7 +289,7 @@ public class Engine {
 			
 			framebufferMesh.draw();
 			
-			renderGui();
+			//renderGui();
 			
 			if (isVR) {
 				compositor.Submit.apply(0, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
@@ -315,7 +316,7 @@ public class Engine {
 		Shader s = getShader("blur");
 		s.bind();
 		
-		float bloomRange = 1.2f;
+		float bloomRange = 1f;
 		
 		//level 1
 		glViewport(0, 0, Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2);
@@ -427,6 +428,7 @@ public class Engine {
 	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		System.out.println(System.getProperty("java.library.path"));
+		System.load(Paths.get("native/libassimp.so").toAbsolutePath().toString());
 
 		//set up our window options
 		glfwInit();

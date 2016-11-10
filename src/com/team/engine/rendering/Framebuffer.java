@@ -33,35 +33,30 @@ public class Framebuffer {
 	 * 
 	 * doRbo should only be enabled if this framebuffer will be rendered to the final screen image.
 	 */
-	public static Framebuffer standard(Vec2i dimensions, int count, boolean depth) {
+	public static Framebuffer standard(Vec2i dimensions, boolean depth) {
 		int fbo = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		
-		int[] textures = new int[count];
+		int[] textures = new int[1];
 		
+		textures[0] = glGenTextures();
 		
-		for (int i = 0; i < count; i++) {
-			textures[i] = glGenTextures();
-		}
+		//texture
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, dimensions.x, dimensions.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	    glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		
-		for (int i = 0; i < count; i++) {
-			glBindTexture(GL_TEXTURE_2D, textures[i]);
-			  
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, dimensions.x, dimensions.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
-	
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glBindTexture(GL_TEXTURE_2D, 0);
-			
-			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, textures[i], 0);
-			
-			glGenerateMipmap(GL_TEXTURE_2D);
-		}
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
 		
 		int rbo = 0;
 		if (depth) {
+			//depth
 			rbo = glGenRenderbuffers();
 			glBindRenderbuffer(GL_RENDERBUFFER, rbo); 
 			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, dimensions.x, dimensions.y);  
@@ -70,6 +65,75 @@ public class Framebuffer {
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
 		}
 		
+		//check for errors
+		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+		}
+		
+		
+		int[] attachments = new int[] { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
+		glDrawBuffers(GLBuffers.StaticBuffer(attachments));
+		
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);  
+		
+		return new Framebuffer(dimensions, fbo, rbo, textures);
+	}
+	
+	
+	/**
+	 * Creates a standard framebuffer.
+	 * 
+	 * doRbo should only be enabled if this framebuffer will be rendered to the final screen image.
+	 */
+	public static Framebuffer HdrWithBloom(Vec2i dimensions) {
+		int fbo = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+		
+		int[] textures = new int[2];
+		
+		textures[0] = glGenTextures();
+		textures[1] = glGenTextures();
+		
+		
+		//main HDR texture
+		glBindTexture(GL_TEXTURE_2D, textures[0]);
+		  
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, dimensions.x, dimensions.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	    glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+		
+		glGenerateMipmap(GL_TEXTURE_2D);
+		
+		//bloom texture
+		glBindTexture(GL_TEXTURE_2D, textures[1]);
+		  
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, dimensions.x, dimensions.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer)null);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	    glGenerateMipmap(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, textures[1], 0);
+		
+		//depth map
+		int rbo = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, rbo); 
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, dimensions.x, dimensions.y);  
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+		
+		//check for errors
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
 			System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
 		}

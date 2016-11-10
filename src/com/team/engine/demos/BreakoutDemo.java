@@ -1,21 +1,8 @@
 package com.team.engine.demos;
 
 import org.jbox2d.dynamics.Fixture;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.jse.JsePlatform;
 
 import static org.lwjgl.glfw.GLFW.*;
-
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.Arrays;
-
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
 
 import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
@@ -31,8 +18,6 @@ import com.team.engine.vecmath.Vec3;
  * A demo utilizing sprite rendering, Grid2D's and box2D physics.
  */
 public class BreakoutDemo extends AbstractGame {
-	private Globals globals;
-
 	public Player player;
 	public Paddle paddle;
 

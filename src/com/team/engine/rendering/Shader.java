@@ -2,6 +2,7 @@ package com.team.engine.rendering;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
+import static org.lwjgl.opengl.GL32.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.nio.file.Paths;
 
 import com.team.engine.Engine;
 import com.team.engine.Settings;
+import com.team.engine.Util;
 import com.team.engine.Scene;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
@@ -44,6 +46,15 @@ public class Shader {
 		id = glCreateProgram();
 		glAttachShader(id, vertexShader);
 		glAttachShader(id, fragmentShader);
+		
+		boolean geometry = Util.fileExists(Settings.RESOURCE_PATH + filename + ".gsh");
+		
+		if (geometry) {
+			int geometryShader = glCreateShader(GL_GEOMETRY_SHADER);
+			glShaderSource(geometryShader, read(Settings.RESOURCE_PATH + filename + ".gsh"));
+			glCompileShader(geometryShader);
+			glAttachShader(id, geometryShader);
+		}
 		glLinkProgram(id);
 
 		glDeleteShader(vertexShader);

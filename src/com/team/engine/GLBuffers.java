@@ -39,4 +39,24 @@ public class GLBuffers {
 		
 		return buffer;
 	}
+	
+	public static float[] toArray(FloatBuffer array) {
+		float[] ret = new float[array.capacity()];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = array.get(i);
+		}
+		
+		return ret;
+	}
+	
+	public static int[] toArray(IntBuffer array) {
+		int[] ret = new int[array.capacity()];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = array.get(i);
+		}
+		
+		return ret;
+	}
 }

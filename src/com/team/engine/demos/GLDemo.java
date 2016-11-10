@@ -5,7 +5,6 @@ import javax.vecmath.Vector3f;
 
 
 import com.bulletphysics.collision.shapes.BoxShape;
-import com.bulletphysics.collision.shapes.CapsuleShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.team.engine.*;
 import com.team.engine.gameobject.MeshObject;
@@ -16,43 +15,28 @@ import com.team.engine.rendering.ObjLoader;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
+import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
  */
 public class GLDemo extends AbstractGame {
-	private static Vec3 cubePositions[] = {
-		new Vec3( 2.0f,  5.0f, -15.0f), 
-		new Vec3(-1.5f, -2.2f, -2.5f),  
-		new Vec3(-3.8f, -2.0f, -12.3f),  
-		new Vec3( 2.4f, -0.4f, -3.5f),  
-		new Vec3(-1.7f,  3.0f, -7.5f),  
-		new Vec3( 1.3f, -2.0f, -2.5f),  
-		new Vec3( 1.5f,  2.0f, -2.5f), 
-		new Vec3( 1.5f,  0.2f, -1.5f), 
-		new Vec3(-1.3f,  1.0f, -1.2f)  
-	};
-
 	public static Mesh cubeMesh;
 	public static Mesh groundMesh;
 	
 	public static Mesh mat1;
 	public static Mesh mat2;
 	
-	private Mesh objMesh;
+	private Mesh sphere;
 	
+	private Model model;
 
 	public static Material crateMaterial = new Material("container2.png", 0.8f, null, "container2_specular.png");
 	public static Material groundMaterial = new Material("brickwall.jpg", 0.6f, "brickwall_normal.jpg", 0.3f);
-	public static Material monkeyMaterial = new Material(new Vec3(1, 1, 1), 0.0f, 1.0f);
 	
 	public static Material outsideMaterial = new Material("metal/albedo.png", "metal/roughness.png", "metal/normal.png", "metal/metallic.png");
 	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
-	
-	public static Material gravelMaterial = new Material("gravel/albedo.png", 0.9f, 0f);
-	
-	
 	
 	public static void main(String[] args) {
 		Engine.start(false, false, new GLDemo());
@@ -80,37 +64,38 @@ public class GLDemo extends AbstractGame {
 		Engine.loadTexture("gravel/metallic.png");
 		Engine.loadTexture("gravel/roughness.png");
 		
-		Engine.loadShader("pbr");
-
+		Engine.loadTexture("stone_tile.png", false, true);
+		Engine.loadTexture("stone_tile_normal.png");
+		Engine.loadTexture("stone_tile_specular.png");
 		
-		//Create the cube mesh object from the primitive.
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
 		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);
-		//load our monkey from disk
-		objMesh = ObjLoader.loadFile("sphere.obj");
+		sphere = ObjLoader.loadFile("sphere.obj");
 		mat1 = ObjLoader.loadFile("matmodel-1.obj");
 		mat2 = ObjLoader.loadFile("matmodel-2.obj");
 		
-		Engine.scene.skybox = new Cubemap("papermill");
-		Engine.scene.irradiance = new Cubemap("papermill-irradiance");
+		model = new Model("adam.fbx", new Mat4().translate(new Vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
+		
+		
+		Engine.scene.skybox = new Cubemap("sunset");
+		Engine.scene.irradiance = new Cubemap("sunset-irradiance");
 		
 		Engine.camera.setPosition(new Vec3(0, 0, 5));
 		
-		Engine.scene.ambient = new Vec3(0.4, 0.4, 0.4);
-		Engine.scene.sun.color = new Vec3(0, 0, 0);
-		Engine.scene.sun.direction = new Vec3(-1, -0.8, 0.7f);
-		Engine.scene.skyColor = new Vec3(0, 0, 0.5);
+		Engine.scene.sun.color = new Vec3(5, 5, 5);
+		Engine.scene.sun.direction = new Vec3(-1, -0.8, -0.7f);
 		
-		for (int i = 0; i < cubePositions.length; i++) {
-			float angle = 20.0f * i;
-			//Engine.scene.add(new MeshObject(cubePositions[i], new Quat4f(1.0f, 0.3f, 0.5f, (float)Math.toRadians(angle)), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial));
-		}
 		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
 		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
 		
 		Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
 		
-		//Engine.scene.add(new PointLight(new Vec3(20, 0, 0), new Vec3(1, 1, 1), 100f, 100f));
+		for (int x = 0; x < 7; x++) {
+			for (int y = 0; y < 7; y++) {
+				Material mat = new Material("stone_tile.png", y / 7f, "stone_tile_normal.png", x / 7f);
+				Engine.scene.add(new MeshObject(new Vec3(x * 3, y * 3, 0).add(new Vec3(0, -9, -15)), new Quat4f(), null, 0f, sphere, 1f, mat));
+			}
+		}
 	}
 
 	private static float accum;
@@ -136,7 +121,7 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void render() {	
-		
+		model.render();
 	}
 
 	@Override
@@ -151,6 +136,6 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void renderShadow(Shader s) {
-		
+		model.renderShadow(s);
 	}
 }

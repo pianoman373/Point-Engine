@@ -5,7 +5,6 @@ import java.nio.FloatBuffer;
 import org.jbox2d.common.Vector2;
 import org.lwjgl.BufferUtils;
 
-import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 public class Vec3 {

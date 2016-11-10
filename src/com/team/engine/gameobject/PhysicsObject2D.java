@@ -7,10 +7,7 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.Fixture;
 
-import com.team.engine.Camera;
-import com.team.engine.Engine;
 import com.team.engine.Scene;
-import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Vec2;
 
 /**
