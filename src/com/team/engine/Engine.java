@@ -294,7 +294,7 @@ public class Engine {
 			if (isVR) {
 				compositor.Submit.apply(0, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
 			
-				compositor.Submit.apply(1, new Texture_t(Engine.fbuffer.tex[0].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
+				compositor.Submit.apply(1, new Texture_t(Engine.fbuffer.tex[1].id, VR.EGraphicsAPIConvention.API_OpenGL, VR.EColorSpace.ColorSpace_Gamma), null, VR.EVRSubmitFlags.Submit_Default);
 				
 				compositor.WaitGetPoses.apply(trackedDevicePosesReference, VR.k_unMaxTrackedDeviceCount, null, 0);
 				
@@ -497,11 +497,11 @@ public class Engine {
             throw new Error("VR_Init Failed, " + s);
         }
         
-//        IntBuffer width = BufferUtils.createIntBuffer(1), height = BufferUtils.createIntBuffer(1);
-//        
-//        hmd.GetRecommendedRenderTargetSize.apply(width, height);
-//        
-//        System.out.println("width: " + width.get(0) + ", height: " + height.get(0));
+        IntBuffer width = BufferUtils.createIntBuffer(1), height = BufferUtils.createIntBuffer(1);
+        
+        hmd.GetRecommendedRenderTargetSize.apply(width, height);
+        
+        System.out.println("width: " + width.get(0) + ", height: " + height.get(0));
         
         
         compositor = new IVRCompositor_FnTable(VR.VR_GetGenericInterface(VR.IVRCompositor_Version, errorBuffer));
