@@ -1,5 +1,6 @@
 package com.team.engine;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import java.nio.ByteBuffer;
@@ -19,7 +20,7 @@ public class Input {
 	private static boolean[] keys = new boolean[1024];
 	private static boolean[] mouse = new boolean[10];
 	
-	public static Vec2 mousePos = new Vec2(0, 0);
+	public static Vec2 mousePos = vec2(0, 0);
 	public static boolean firstMouse = true;
 	public static boolean mouseGrabbed = false;
 	public static double scrollingAmount = 0;
@@ -92,7 +93,7 @@ public class Input {
 	}
 	
 	protected static void cursorEvent(long window, double xpos, double ypos) {
-		mousePos = new Vec2((float)xpos, (float)ypos);
+		mousePos = vec2((float)xpos, (float)ypos);
 	}
 	
 	protected static void mouseEvent(long window, int button, int action, int mods) {

@@ -31,6 +31,8 @@
  */
 package com.team.engine;
 
+import static com.team.engine.Globals.*;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -102,7 +104,7 @@ public class WaveData {
 			WaveFileReader wfr = new WaveFileReader();
 			return create(wfr.getAudioInputStream(new BufferedInputStream(path.openStream())));
 		} catch (Exception e) {
-			System.out.println("Unable to create from: " + path + ", " + e.getMessage());
+			print("Unable to create from: " + path + ", " + e.getMessage());
 			return null;
 		}		
 	}
@@ -135,7 +137,7 @@ public class WaveData {
 			return create(
 				AudioSystem.getAudioInputStream(is));
 		} catch (Exception e) {
-			System.out.println("Unable to create from inputstream, " + e.getMessage());
+			print("Unable to create from inputstream, " + e.getMessage());
 			return null;
 		}		
 	}	
@@ -152,7 +154,7 @@ public class WaveData {
 				AudioSystem.getAudioInputStream(
 					new BufferedInputStream(new ByteArrayInputStream(buffer))));
 		} catch (Exception e) {
-			System.out.println("Unable to create from byte array, " + e.getMessage());
+			print("Unable to create from byte array, " + e.getMessage());
 			return null;
 		}
 	}
@@ -177,7 +179,7 @@ public class WaveData {
 			}
 			return create(bytes);
 		} catch (Exception e) {
-			System.out.println("Unable to create from ByteBuffer, " + e.getMessage());
+			print("Unable to create from ByteBuffer, " + e.getMessage());
 			return null;
 		}
 	}	

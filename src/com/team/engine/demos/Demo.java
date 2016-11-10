@@ -6,6 +6,7 @@ import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.system.MemoryStack.*;
 
@@ -41,7 +42,7 @@ class Demo {
 			) ) {
 				nk_layout_row_static(ctx, 30, 80, 1);
 				if ( nk_button_label(ctx, "button") )
-					System.out.println("button pressed");
+					print("button pressed");
 
 				nk_layout_row_dynamic(ctx, 30, 2);
 				if ( nk_option_label(ctx, "easy", op == EASY) ) op = EASY;

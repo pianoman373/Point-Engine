@@ -1,5 +1,7 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -33,18 +35,18 @@ public class ObjLoader {
 					float x = Float.parseFloat(splitline[1]);
 					float y = Float.parseFloat(splitline[2]);
 					float z = Float.parseFloat(splitline[3]);
-					positions.add(new Vec3(x, y, z));
+					positions.add(vec3(x, y, z));
 				}
 				if (splitline[0].equals("vt") && splitline.length == 3) {
 					float u = Float.parseFloat(splitline[1]);
 					float v = Float.parseFloat(splitline[2]);
-					uvs.add(new Vec2(u, v));
+					uvs.add(vec2(u, v));
 				}
 				if (splitline[0].equals("vn") && splitline.length == 4) {
 					float x = Float.parseFloat(splitline[1]);
 					float y = Float.parseFloat(splitline[2]);
 					float z = Float.parseFloat(splitline[3]);
-					normals.add(new Vec3(x, y, z));
+					normals.add(vec3(x, y, z));
 				}
 				if (splitline[0].equals("f") && splitline.length == 4) {
 					for (int i = 1; i < 4; i++) {

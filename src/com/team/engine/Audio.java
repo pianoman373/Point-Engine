@@ -1,5 +1,7 @@
 package com.team.engine;
 
+import static com.team.engine.Globals.*;
+
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
  
@@ -30,7 +32,7 @@ public class Audio {
   
   public Audio(String file) {
     if(!loadALData(file)) {
-      System.out.println("Error loading data.");
+      print("Error loading data.");
       return;
     }
   }

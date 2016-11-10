@@ -1,5 +1,7 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
+
 import com.team.engine.vecmath.Vec3;
 
 /**
@@ -23,6 +25,6 @@ public class PointLight {
 	public PointLight(Vec3 position, Vec3 color, float strength, float distance) {
 		this(position, color, strength, 4.5f/distance, 1275f/(distance * distance));
 		
-		System.out.println("linear: " + this.linear + ", quadric: " + this.quadric);
+		print("linear: " + this.linear + ", quadric: " + this.quadric);
 	}
 }

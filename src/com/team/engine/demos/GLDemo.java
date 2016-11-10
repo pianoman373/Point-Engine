@@ -14,6 +14,7 @@ import static org.lwjgl.stb.STBTruetype.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
@@ -149,26 +150,26 @@ public class GLDemo extends AbstractGame {
 		mat1 = ObjLoader.loadFile("matmodel-1.obj");
 		mat2 = ObjLoader.loadFile("matmodel-2.obj");
 		
-		model = new Model("adam.fbx", new Mat4().translate(new Vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
+		model = new Model("adam.fbx", mat4().translate(vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
 		
 		
 		Engine.scene.skybox = new Cubemap("sunset");
 		Engine.scene.irradiance = new Cubemap("sunset-irradiance");
 		
-		Engine.camera.setPosition(new Vec3(0, 0, 5));
+		Engine.camera.setPosition(vec3(0, 0, 5));
 		
-		Engine.scene.sun.color = new Vec3(5, 5, 5);
-		Engine.scene.sun.direction = new Vec3(-1, -0.8, -0.7f);
+		Engine.scene.sun.color = vec3(5, 5, 5);
+		Engine.scene.sun.direction = vec3(-1, -0.8, -0.7f);
 		
-		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
-		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
+		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
+		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
 		
-		Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
+		Engine.scene.add(new MeshObject(vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
 		
 		for (int x = 0; x < 7; x++) {
 			for (int y = 0; y < 7; y++) {
 				Material mat = new Material("stone_tile.png", y / 7f, "stone_tile_normal.png", x / 7f);
-				Engine.scene.add(new MeshObject(new Vec3(x * 3, y * 3, 0).add(new Vec3(0, -9, -15)), new Quat4f(), null, 0f, sphere, 1f, mat));
+				Engine.scene.add(new MeshObject(vec3(x * 3, y * 3, 0).add(vec3(0, -9, -15)), new Quat4f(), null, 0f, sphere, 1f, mat));
 			}
 		}
 		
@@ -570,7 +571,7 @@ public class GLDemo extends AbstractGame {
 			accum = 0;
 		}
 		if (Input.isButtonDown(2) && accum > 1f) {
-			PointLight p = new PointLight(Engine.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 5f, 10f);
+			PointLight p = new PointLight(Engine.camera.getPosition(), vec3(1.0f, 1.0f, 2.0f), 5f, 10f);
 			Engine.scene.add(p);
 
 			accum = 0;

@@ -1,5 +1,7 @@
 package com.team.engine;
 
+import static com.team.engine.Globals.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +63,7 @@ public class Model {
 				meshes.add(finalMesh);
 				
 				if (diffuseTex.equals("../")) {
-					materials.add(new Material(new Vec3(0.5, 0.5, 0.5), 0.5f, 0.0f));
+					materials.add(new Material(vec3(0.5, 0.5, 0.5), 0.5f, 0.0f));
 				}
 				else {
 					materials.add(new Material(diffuseTex, 0.0f, normalTex, specularTex));

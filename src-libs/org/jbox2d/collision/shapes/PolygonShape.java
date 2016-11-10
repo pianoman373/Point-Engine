@@ -279,7 +279,7 @@ public class PolygonShape extends Shape {
       System.out.println("--testPoint debug--");
       System.out.println("Vertices: ");
       for (int i = 0; i < m_count; ++i) {
-        System.out.println(m_vertices[i]);
+    	  System.out.println(m_vertices[i]);
       }
       System.out.println("pLocal: " + pLocalx + ", " + pLocaly);
     }

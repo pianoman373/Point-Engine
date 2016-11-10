@@ -4,15 +4,16 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class FPSCamera extends Camera {
-	public Vec3 position = new Vec3(0.0f, 0.0f, 15.0f);
-	public Vec3 front = new Vec3(0.0f, 0.0f, -1.0f);
+	public Vec3 position = vec3(0.0f, 0.0f, 15.0f);
+	public Vec3 front = vec3(0.0f, 0.0f, -1.0f);
 	public float pitch = 0.0f;
 	public float yaw = -90.0f;
 	public float roll = 0;
-	public Vec3 up = new Vec3(0.0f, 1.0f, 0.0f);
+	public Vec3 up = vec3(0.0f, 1.0f, 0.0f);
 	public static float WASD_SENSITIVITY = 100f;
 	
 	private static final float MOUSE_SENSITIVITY = 7f;
@@ -45,30 +46,30 @@ public class FPSCamera extends Camera {
 			yoffset *= sensitivity;
 			
 			//vertical
-			Mat4 mat = new Mat4().rotate(new Vec4(right.x, right.y, right.z, yoffset));
-			Vec4 vec = mat.multiply(new Vec4(front.x, front.y, front.z, 1.0f));
-			front = new Vec3(vec.x, vec.y, vec.z);
-			Vec4 vec2 = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
-			up = new Vec3(vec2.x, vec2.y, vec2.z);
+			Mat4 mat = mat4().rotate(vec4(right.x, right.y, right.z, yoffset));
+			Vec4 vec = mat.multiply(vec4(front.x, front.y, front.z, 1.0f));
+			front = vec3(vec.x, vec.y, vec.z);
+			Vec4 vec2 = mat.multiply(vec4(up.x, up.y, up.z, 1.0f));
+			up = vec3(vec2.x, vec2.y, vec2.z);
 			
 			//horizontal
-			Mat4 mat2 = new Mat4().rotate(new Vec4(up.x, up.y, up.z, -xoffset));
-			Vec4 vec3 = mat2.multiply(new Vec4(front.x, front.y, front.z, 1.0f));
-			front = new Vec3(vec3.x, vec3.y, vec3.z);
+			Mat4 mat2 = mat4().rotate(vec4(up.x, up.y, up.z, -xoffset));
+			Vec4 vec3 = mat2.multiply(vec4(front.x, front.y, front.z, 1.0f));
+			front = vec3(vec3.x, vec3.y, vec3.z);
 		}
 		
 		lastX = (float)Input.mousePos.x;
 		lastY = (float)Input.mousePos.y;
 		
 		if (Input.isKeyDown(GLFW_KEY_E)) {
-			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, 20f * Engine.deltaTime));
-			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
-			up = new Vec3(vec.x, vec.y, vec.z);
+			Mat4 mat = mat4().rotate(vec4(front.x, front.y, front.z, 20f * Engine.deltaTime));
+			Vec4 vec = mat.multiply(vec4(up.x, up.y, up.z, 1.0f));
+			up = vec3(vec.x, vec.y, vec.z);
 		}
 		if (Input.isKeyDown(GLFW_KEY_Q)) {
-			Mat4 mat = new Mat4().rotate(new Vec4(front.x, front.y, front.z, -20f * Engine.deltaTime));
-			Vec4 vec = mat.multiply(new Vec4(up.x, up.y, up.z, 1.0f));
-			up = new Vec3(vec.x, vec.y, vec.z);
+			Mat4 mat = mat4().rotate(vec4(front.x, front.y, front.z, -20f * Engine.deltaTime));
+			Vec4 vec = mat.multiply(vec4(up.x, up.y, up.z, 1.0f));
+			up = vec3(vec.x, vec.y, vec.z);
 		}
 		
 		float cameraSpeed = WASD_SENSITIVITY * Engine.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
@@ -90,7 +91,7 @@ public class FPSCamera extends Camera {
 	    if(Input.isKeyDown(GLFW_KEY_F)) {
 	    	position = position.subtract(up.multiply(cameraSpeed));
 	    }
-	    //System.out.println(acc);
+	    //print(acc);
 	}
 
 	@Override
@@ -99,11 +100,11 @@ public class FPSCamera extends Camera {
 			vr.HmdMatrix34_t mat = Engine.lEyeView;
 			
 			
-			return new Mat4(
-					new Vec4(mat.m[0], mat.m[4], mat.m[8], 0f),
-					new Vec4(mat.m[1], mat.m[5], mat.m[9], 0f),
-					new Vec4(mat.m[2], mat.m[6], mat.m[10], 0f),
-					new Vec4(mat.m[3], mat.m[7], mat.m[11], 1f)).inverse().translate(new Vec3(1, 1, 1));
+			return mat4(
+					vec4(mat.m[0], mat.m[4], mat.m[8], 0f),
+					vec4(mat.m[1], mat.m[5], mat.m[9], 0f),
+					vec4(mat.m[2], mat.m[6], mat.m[10], 0f),
+					vec4(mat.m[3], mat.m[7], mat.m[11], 1f)).inverse().translate(vec3(1, 1, 1));
 		}
 		else {
 			return Mat4.LookAt(this.position, this.position.add(this.front), this.up);
@@ -118,11 +119,11 @@ public class FPSCamera extends Camera {
 			vr.HmdMatrix44_t mat = Engine.lEyeProj;
 			
 			
-			return new Mat4(
-					new Vec4(mat.m[0], mat.m[4], mat.m[8], mat.m[12]),
-					new Vec4(mat.m[1], mat.m[5], mat.m[9], mat.m[13]),
-					new Vec4(mat.m[2], mat.m[6], mat.m[10], mat.m[14]),
-					new Vec4(mat.m[3], mat.m[7], mat.m[11], mat.m[15]));
+			return mat4(
+					vec4(mat.m[0], mat.m[4], mat.m[8], mat.m[12]),
+					vec4(mat.m[1], mat.m[5], mat.m[9], mat.m[13]),
+					vec4(mat.m[2], mat.m[6], mat.m[10], mat.m[14]),
+					vec4(mat.m[3], mat.m[7], mat.m[11], mat.m[15]));
 		}
 		else {
 			return Mat4.perspective(60.0f, (float)Settings.WINDOW_WIDTH/(float)Settings.WINDOW_HEIGHT, 0.1f, 10000000.0f);

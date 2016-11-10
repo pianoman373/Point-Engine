@@ -1,5 +1,7 @@
 package com.team.engine.vecmath;
 
+import static com.team.engine.Globals.*;
+
 import java.nio.FloatBuffer;
 
 import javax.vecmath.Matrix4f;
@@ -30,17 +32,17 @@ public class Mat4 {
       this.m10 = mat.m10;
       this.m20 = mat.m20;
       this.m30 = mat.m30;
-      
+
       this.m01 = mat.m01;
       this.m11 = mat.m11;
       this.m21 = mat.m21;
       this.m31 = mat.m31;
-      
+
       this.m02 = mat.m02;
       this.m12 = mat.m12;
       this.m22 = mat.m22;
       this.m32 = mat.m32;
-      
+
       this.m03 = mat.m03;
       this.m13 = mat.m13;
       this.m23 = mat.m23;
@@ -175,7 +177,7 @@ public class Mat4 {
         float y = this.m10 * vector.x + this.m11 * vector.y + this.m12 * vector.z + this.m13 * vector.w;
         float z = this.m20 * vector.x + this.m21 * vector.y + this.m22 * vector.z + this.m23 * vector.w;
         float w = this.m30 * vector.x + this.m31 * vector.y + this.m32 * vector.z + this.m33 * vector.w;
-        return new Vec4(x, y, z, w);
+        return vec4(x, y, z, w);
     }
 
     /**
@@ -237,9 +239,9 @@ public class Mat4 {
     }
 
     public static Mat4 LookAt(Vec3 eye, Vec3 center, Vec3 up) {
-    		Vec3 forward = new Vec3(0, 0, -1);
-    		Vec3 upVec = new Vec3(0, 1, 0);
-    		Vec3 side = new Vec3(1, 0, 0);
+    		Vec3 forward = vec3(0, 0, -1);
+    		Vec3 upVec = vec3(0, 1, 0);
+    		Vec3 side = vec3(1, 0, 0);
 
     		forward.x = center.x - eye.x;
     		forward.y = center.y - eye.y;
@@ -271,7 +273,7 @@ public class Mat4 {
     		mat.m21 = -forward.y;
     		mat.m22 = -forward.z;
 
-    		return mat.translate(new Vec3(-eye.x, -eye.y, -eye.z));
+    		return mat.translate(vec3(-eye.x, -eye.y, -eye.z));
     }
 
     /**
@@ -340,10 +342,10 @@ public class Mat4 {
      */
     public static Mat4 perspective(float fov, float aspect, float near, float far) {
         Mat4 perspective = new Mat4();
-        
+
         float sine, cotangent, deltaZ;
         float radians = fov / 2 * (float)Math.PI / 180;
-        
+
         deltaZ = far - near;
 		sine = (float) Math.sin(radians);
 
@@ -382,7 +384,7 @@ public class Mat4 {
 
         float c = (float) Math.cos(Math.toRadians(rot.w));
         float s = (float) Math.sin(Math.toRadians(rot.w));
-        Vec3 vec = new Vec3(rot.x, rot.y, rot.z);
+        Vec3 vec = vec3(rot.x, rot.y, rot.z);
         if (vec.length() != 1f) {
             vec = vec.normalize();
             rot.x = vec.x;
@@ -402,16 +404,16 @@ public class Mat4 {
 
         return this.multiply(rotation);
     }
-    
+
     public Mat4 rotateX(float rot) {
-    	return this.rotate(new Vec4(1, 0, 0, rot));
+    	return this.rotate(vec4(1, 0, 0, rot));
     }
-    
+
     public Mat4 rotateY(float rot) {
-    	return this.rotate(new Vec4(0, 1, 0, rot));
+    	return this.rotate(vec4(0, 1, 0, rot));
     }
     public Mat4 rotateZ(float rot) {
-    	return this.rotate(new Vec4(0, 0, 1, rot));
+    	return this.rotate(vec4(0, 0, 1, rot));
     }
 
     /**

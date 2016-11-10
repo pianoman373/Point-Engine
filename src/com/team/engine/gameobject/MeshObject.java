@@ -1,5 +1,6 @@
 package com.team.engine.gameobject;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.vecmath.Matrix4f;
@@ -81,7 +82,7 @@ public class MeshObject implements GameObject {
 		
 		Matrix4f mat = new Matrix4f();
 		trans.getMatrix(mat);
-		s.uniformMat4("model", new Mat4(mat).scale(this.scale));
+		s.uniformMat4("model", mat4(mat).scale(this.scale));
 		mesh.draw();
 		
 		
@@ -90,16 +91,16 @@ public class MeshObject implements GameObject {
 			
 			Shader s2 = Engine.getShader("debug");
 			s2.bind();
-			s2.uniformVec3("color", new Vec3(5, 1, 1));
-			s2.uniformMat4("model", new Mat4(mat).scale(this.scale * 1.0001f));
+			s2.uniformVec3("color", vec3(5, 1, 1));
+			s2.uniformMat4("model", mat4(mat).scale(this.scale * 1.0001f));
 			glDisable(GL_CULL_FACE);
 			
 			if (shape instanceof BoxShape) {
 				BoxShape bshape = (BoxShape)shape;
 				
-				Vec3 extents = new Vec3(bshape.getHalfExtentsWithMargin(new Vector3f()));
-				System.out.println(extents);
-				s2.uniformMat4("model", new Mat4(mat).scale(new Vec3(extents.x * 2, extents.y * 2, extents.z * 2)));
+				Vec3 extents = vec3(bshape.getHalfExtentsWithMargin(new Vector3f()));
+				print(extents);
+				s2.uniformMat4("model", mat4(mat).scale(vec3(extents.x * 2, extents.y * 2, extents.z * 2)));
 				Engine.debugCubeMesh.draw(GL_LINES);
 			}
 			if (shape instanceof SphereShape) {
@@ -120,7 +121,7 @@ public class MeshObject implements GameObject {
 		Matrix4f mat = new Matrix4f();
 		trans.getMatrix(mat);
 		
-		s.uniformMat4("model", new Mat4(mat).scale(this.scale));
+		s.uniformMat4("model", mat4(mat).scale(this.scale));
 		mesh.draw();
 	}
 }

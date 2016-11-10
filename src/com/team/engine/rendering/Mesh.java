@@ -1,5 +1,6 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -67,17 +68,17 @@ public class Mesh {
 		for (int i = 0; i < vertices.length; i += 8 * 3) {
 			
 			//make vectors out of the 3 vertices
-			Vec3 pos1 = new Vec3(vertices[i], vertices[i+1], vertices[i+2]);
-			Vec3 norm1 = new Vec3(vertices[i+3], vertices[i+4], vertices[i+5]);
-			Vec2 uv1 = new Vec2(vertices[i+6], vertices[i+7]);
+			Vec3 pos1 = vec3(vertices[i], vertices[i+1], vertices[i+2]);
+			Vec3 norm1 = vec3(vertices[i+3], vertices[i+4], vertices[i+5]);
+			Vec2 uv1 = vec2(vertices[i+6], vertices[i+7]);
 			
-			Vec3 pos2 = new Vec3(vertices[i+8], vertices[i+9], vertices[i+10]);
-			Vec3 norm2 = new Vec3(vertices[i+11], vertices[i+12], vertices[i+13]);
-			Vec2 uv2 = new Vec2(vertices[i+14], vertices[i+15]);
+			Vec3 pos2 = vec3(vertices[i+8], vertices[i+9], vertices[i+10]);
+			Vec3 norm2 = vec3(vertices[i+11], vertices[i+12], vertices[i+13]);
+			Vec2 uv2 = vec2(vertices[i+14], vertices[i+15]);
 			
-			Vec3 pos3 = new Vec3(vertices[i+16], vertices[i+17], vertices[i+18]);
-			Vec3 norm3 = new Vec3(vertices[i+19], vertices[i+20], vertices[i+21]);
-			Vec2 uv3 = new Vec2(vertices[i+22], vertices[i+23]);
+			Vec3 pos3 = vec3(vertices[i+16], vertices[i+17], vertices[i+18]);
+			Vec3 norm3 = vec3(vertices[i+19], vertices[i+20], vertices[i+21]);
+			Vec2 uv3 = vec2(vertices[i+22], vertices[i+23]);
 
 			//calculate tangent
 			Vec3 edge1 = pos2.subtract(pos1);
@@ -87,7 +88,7 @@ public class Mesh {
 
 			float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
 			
-			Vec3 tangent = new Vec3();
+			Vec3 tangent = vec3();
 			tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
 			if (tangent.x == -0) tangent.x = 0;
 			tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);

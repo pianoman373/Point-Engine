@@ -11,6 +11,8 @@ import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Vec3;
 
+import static com.team.engine.Globals.*;
+
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
@@ -23,7 +25,7 @@ import com.team.engine.AbstractGame;
  */
 public class KDemo extends AbstractGame {
 	public static Material groundMaterial = new Material("stone_tile.png", 0.8f, "stone_tile_normal.png", "stone_tile_specular.png");
-	public static Material sphereMaterial = new Material(new Vec3(0.8f, 0.8f, 0.8f), 0f, 1.0f);
+	public static Material sphereMaterial = new Material(vec3(0.8f, 0.8f, 0.8f), 0f, 1.0f);
 	public static Material boxMaterial = new Material("planks.jpg", 0.9f, null, 0.0f);
 	
 	private Mesh planeMesh;
@@ -37,8 +39,8 @@ public class KDemo extends AbstractGame {
 	@Override
 	public void init() {
 		
-		Engine.scene.sun.direction = new Vec3(1.0f, -1.0f, 0.0f);
-		Engine.scene.sun.color = new Vec3(1.0f, 1.0f, 1.0f);
+		Engine.scene.sun.direction = vec3(1.0f, -1.0f, 0.0f);
+		Engine.scene.sun.color = vec3(1.0f, 1.0f, 1.0f);
 		
 		Engine.loadTexture("stone_tile.png");
 		Engine.loadTexture("stone_tile_normal.png");
@@ -53,11 +55,11 @@ public class KDemo extends AbstractGame {
 
 		Engine.scene.skybox = new Cubemap("skybox-k");
 		
-		Engine.scene.add(new PointLight(new Vec3(0.0f, 0.0f, 0.0f), new Vec3(1f, 1f, 1f), 10, 10));
+		Engine.scene.add(new PointLight(vec3(0.0f, 0.0f, 0.0f), vec3(1f, 1f, 1f), 10, 10));
 		
-		Engine.scene.add(new MeshObject(new Vec3(), new Quat4f(), new SphereShape(1.0f), 1f, sphereMesh, 1f, sphereMaterial));
-		Engine.scene.add(new MeshObject(new Vec3(0.0f, 5.0f, 0.0f), new Quat4f(), new BoxShape(new Vector3f(0.0f, 0.0f, 0.0f)), 0f, boxMesh, 1f, boxMaterial));
-		Engine.scene.add(new MeshObject(new Vec3(0.0f, -10f, 0.0f), new Quat4f(1.0f, 0.0f, 0.0f, 60.0f), new BoxShape(new Vector3f(50f, 0f, 50f)), 0f, planeMesh, 100f,  groundMaterial));
+		Engine.scene.add(new MeshObject(vec3(), new Quat4f(), new SphereShape(1.0f), 1f, sphereMesh, 1f, sphereMaterial));
+		Engine.scene.add(new MeshObject(vec3(0.0f, 5.0f, 0.0f), new Quat4f(), new BoxShape(new Vector3f(0.0f, 0.0f, 0.0f)), 0f, boxMesh, 1f, boxMaterial));
+		Engine.scene.add(new MeshObject(vec3(0.0f, -10f, 0.0f), new Quat4f(1.0f, 0.0f, 0.0f, 60.0f), new BoxShape(new Vector3f(50f, 0f, 50f)), 0f, planeMesh, 100f,  groundMaterial));
 
 	}
 	

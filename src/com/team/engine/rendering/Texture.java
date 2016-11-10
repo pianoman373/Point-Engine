@@ -1,5 +1,6 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL21.*;
 import static org.lwjgl.opengl.GL13.*;
@@ -44,13 +45,13 @@ public class Texture {
 		
 		STBImage.stbi_set_flip_vertically_on_load(true);
 		boolean hdr = STBImage.stbi_is_hdr(Settings.RESOURCE_PATH + path);
-		System.out.println("loading texture: " + path);
+		print("loading texture: " + path);
 		if (hdr) {
 			FloatBuffer buffer = STBImage.stbi_loadf(Settings.RESOURCE_PATH + path, w, h, comp, 0);
 			
 			int width = w.get(0);
 			int height = h.get(0);
-			System.out.println(buffer.remaining());
+			print(buffer.remaining());
 			
 			dimensions = new Vec2i(width, height);
 			

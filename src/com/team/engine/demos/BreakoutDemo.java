@@ -2,6 +2,7 @@ package com.team.engine.demos;
 
 import org.jbox2d.dynamics.Fixture;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.AbstractGame;
@@ -36,7 +37,7 @@ public class BreakoutDemo extends AbstractGame {
 
 	@Override
 	public void init() {
-		Engine.scene.skyColor = new Vec3(0.0f, 0.5f, 1.0f);
+		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
 
 		Engine.loadShader("sprite");
 		Engine.loadTexture("crate.png");
@@ -54,15 +55,15 @@ public class BreakoutDemo extends AbstractGame {
 
 		paddle = new Paddle();
 		Engine.scene.add(paddle);
-		Engine.scene.setGravity(new Vec2(0, 0));
+		Engine.scene.setGravity(vec2(0, 0));
 		Engine.scene.backgroundImage = Engine.getTexture("background.jpg");
-		paddle.setPosition(new Vec2(0.0f, -7.5f));
+		paddle.setPosition(vec2(0.0f, -7.5f));
 
 		int i = 0;
 		for (int y = 0; y < 6; y++) {
 			for (int x = 0; x < 20; x++) {
 				if (level1[i] != 0) {
-					Vec3 color = new Vec3(1, 1, 1);
+					Vec3 color = vec3(1, 1, 1);
 					boolean solid = false;
 					
 					
@@ -70,21 +71,21 @@ public class BreakoutDemo extends AbstractGame {
 						solid = true;
 					}
 					if (level1[i] == 2) {
-						color = new Vec3(0.2f, 0.6f, 1.0f);
+						color = vec3(0.2f, 0.6f, 1.0f);
 					}
 					if (level1[i] == 3) {
-						color = new Vec3(0.0f, 0.7f, 0.0f);
+						color = vec3(0.0f, 0.7f, 0.0f);
 					}
 					if (level1[i] == 4) {
-						color = new Vec3(0.8f, 0.8f, 0.4f);
+						color = vec3(0.8f, 0.8f, 0.4f);
 					}
 					if (level1[i] == 5) {
-						color = new Vec3(1.0f, 0.5f, 0.0f);
+						color = vec3(1.0f, 0.5f, 0.0f);
 					}
 
 					Box b = new Box(solid, color);
 					Engine.scene.add(b);
-					b.setPosition(new Vec2(-10 + 0.5f + x, 8 - 0.5f - y));
+					b.setPosition(vec2(-10 + 0.5f + x, 8 - 0.5f - y));
 				}
 
 				i++;
@@ -115,23 +116,23 @@ public class BreakoutDemo extends AbstractGame {
 
 	private class Paddle extends Sprite {
 		public Paddle() {
-			super("paddle.png", new Vec2(1.5f, 0.5f), false, false);
+			super("paddle.png", vec2(1.5f, 0.5f), false, false);
 
 		}
 
 		public void init(Scene scene) {
 			super.init(scene);
-			this.addCube(new Vec2(), new Vec2(1.5f, 0.5f), 0f, 1f, false);
+			this.addCube(vec2(), vec2(1.5f, 0.5f), 0f, 1f, false);
 		}
 
 		public void update() {
 			Vec2 pos = this.getPosition();
 
 			if (Input.isKeyDown(GLFW_KEY_LEFT)) {
-				this.setPosition(new Vec2(pos.x - (Engine.deltaTime * 8), pos.y));
+				this.setPosition(vec2(pos.x - (Engine.deltaTime * 8), pos.y));
 			}
 			if (Input.isKeyDown(GLFW_KEY_RIGHT)) {
-				this.setPosition(new Vec2(pos.x + (Engine.deltaTime * 8), pos.y));
+				this.setPosition(vec2(pos.x + (Engine.deltaTime * 8), pos.y));
 			}
 		}
 	}
@@ -140,7 +141,7 @@ public class BreakoutDemo extends AbstractGame {
 		public boolean solid;
 		
 		public Box(boolean solid, Vec3 color) {
-			super(solid ? "block_solid.png" : "block.png", new Vec2(0.5f, 0.5f), false, false);
+			super(solid ? "block_solid.png" : "block.png", vec2(0.5f, 0.5f), false, false);
 			this.overlayColor = color;
 			this.tag = "box";
 			this.solid = solid;
@@ -148,22 +149,22 @@ public class BreakoutDemo extends AbstractGame {
 
 		public void init(Scene scene) {
 			super.init(scene);
-			this.addCube(new Vec2(), new Vec2(0.5f, 0.5f), 0f, 1f, false);
+			this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, 1f, false);
 		}
 	}
 
 	private class Player extends Sprite {
 
 		public Player() {
-			super("awesomeface.png", new Vec2(0.5f, 0.5f), true, true);
+			super("awesomeface.png", vec2(0.5f, 0.5f), true, true);
 
 		}
 
 		public void init(Scene scene) {
 			super.init(scene);
 
-			this.addSphere(new Vec2(), 0.5f, 0f);
-			this.setVelocity(new Vec2(8.0f, 8.0f));
+			this.addSphere(vec2(), 0.5f, 0f);
+			this.setVelocity(vec2(8.0f, 8.0f));
 		}
 
 		public void update() {
@@ -171,10 +172,10 @@ public class BreakoutDemo extends AbstractGame {
 			Vec2 vel = this.getVelocity();
 
 			if (Math.abs(pos.x) > 9.5f) {
-				this.setVelocity(new Vec2(-vel.x, vel.y));
+				this.setVelocity(vec2(-vel.x, vel.y));
 			}
 			if (Math.abs(pos.y) > 7.5f) {
-				this.setVelocity(new Vec2(vel.x, -vel.y));
+				this.setVelocity(vec2(vel.x, -vel.y));
 			}
 		}
 		

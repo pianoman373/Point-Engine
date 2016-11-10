@@ -1,5 +1,6 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL32.*;
@@ -211,7 +212,7 @@ public class Shader {
 	 * This actually returns one big string of a file's contents.
 	 */
 	private static String read(String path) {
-		System.out.println("loading shader: " + path);
+		print("loading shader: " + path);
 		String shader = "";
 		try {
 			BufferedReader reader = Files.newBufferedReader(Paths.get(path), Charset.defaultCharset());

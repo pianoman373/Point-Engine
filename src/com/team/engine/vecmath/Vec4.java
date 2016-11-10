@@ -1,5 +1,7 @@
 package com.team.engine.vecmath;
 
+import static com.team.engine.Globals.*;
+
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;

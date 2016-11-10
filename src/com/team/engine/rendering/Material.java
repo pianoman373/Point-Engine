@@ -1,5 +1,7 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
+
 import com.team.engine.vecmath.Vec3;
 
 /**
@@ -55,14 +57,14 @@ public class Material {
      * Creates a material with textured albedo, but constants for everything else.
      */
     public Material(String albedo, float roughness, float metallic) {
-        this(albedo, new Vec3(), null, roughness, null, null, metallic);
+        this(albedo, vec3(), null, roughness, null, null, metallic);
     }
 
     /**
      * Creates a material with textured albedo and normal, but constants for everything else.
      */
     public Material(String albedoTex, float roughness, String normalTex, float metallic) {
-        this(albedoTex, new Vec3(), null, roughness, normalTex, null, metallic);
+        this(albedoTex, vec3(), null, roughness, normalTex, null, metallic);
     }
 
     /**
@@ -70,7 +72,7 @@ public class Material {
      * bound when sent as a uniform.
      */
     public Material(String albedoTex, String roughnessTex, String normalTex, String metallicTex) {
-        this(albedoTex, new Vec3(), roughnessTex, 0f, normalTex, metallicTex, 0.0f);
+        this(albedoTex, vec3(), roughnessTex, 0f, normalTex, metallicTex, 0.0f);
     }
 
     /**
@@ -78,7 +80,7 @@ public class Material {
      * bound when sent as a uniform.
      */
     public Material(String albedoTex, float roughness, String normalTex, String metallicTex) {
-        this(albedoTex, new Vec3(), null, roughness, normalTex, metallicTex, 0.0f);
+        this(albedoTex, vec3(), null, roughness, normalTex, metallicTex, 0.0f);
     }
 
     /**
@@ -86,6 +88,6 @@ public class Material {
      * bound when sent as a uniform.
      */
     public Material(String albedoTex, String roughnessTex, String normalTex, float metallic) {
-        this(albedoTex, new Vec3(), roughnessTex, 0f, normalTex, null, metallic);
+        this(albedoTex, vec3(), roughnessTex, 0f, normalTex, null, metallic);
     }
 }

@@ -21,6 +21,7 @@ import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.opengl.GL11.*;
 
 import javax.vecmath.Vector3f;
@@ -57,7 +58,7 @@ public class Scene implements ContactListener {
 	
 	public World world2D;
 	
-	public Vec3 ambient = new Vec3(0.3f, 0.3f, 0.3f);
+	public Vec3 ambient = vec3(0.3f, 0.3f, 0.3f);
 	/** The skybox that will be automatically rendered in the background. 
 	 * Can be null to use background color instead */
 	public Cubemap skybox = null;
@@ -66,13 +67,13 @@ public class Scene implements ContactListener {
 	public boolean debug = false;
 	
 	/** Background color if skybox is null */
-	public Vec3 skyColor = new Vec3(0.0f, 0.0f, 0.0f);
+	public Vec3 skyColor = vec3(0.0f, 0.0f, 0.0f);
 	public Texture backgroundImage;
 	
 	private Mesh squareOutline;
 	
 	public Scene() {
-		sun = new DirectionalLight(new Vec3(-1.0f, -1.0f, 0.2f), new Vec3(2.0f, 2.0f, 2.0f), Settings.ENABLE_SHADOWS, 30, Settings.SHADOW_RESOLUTION);
+		sun = new DirectionalLight(vec3(-1.0f, -1.0f, 0.2f), vec3(2.0f, 2.0f, 2.0f), Settings.ENABLE_SHADOWS, 30, Settings.SHADOW_RESOLUTION);
 		
 		Engine.loadShader("color");
 		
@@ -136,7 +137,7 @@ public class Scene implements ContactListener {
 		s.bind();
 		
 		for (PointLight light : lights) {
-			s.uniformMat4("model", new Mat4().translate(light.position).scale(0.2f));
+			s.uniformMat4("model", mat4().translate(light.position).scale(0.2f));
 			s.uniformVec3("lightColor", light.color);
 			Engine.cubeMesh.draw();
 		}
@@ -149,8 +150,8 @@ public class Scene implements ContactListener {
 		
 		for (GameObject2D obj : objects2D) {
 			glLineWidth(2);
-			s.uniformVec3("color", new Vec3(0, 1, 0));
-			s.uniformMat4("model", new Mat4().translate(new Vec3(obj.body.getPosition(), 10)).scale(0.1f));
+			s.uniformVec3("color", vec3(0, 1, 0));
+			s.uniformMat4("model", mat4().translate(vec3(obj.body.getPosition(), 10)).scale(0.1f));
 			
 			Fixture f = obj.body.getFixtureList();
 			

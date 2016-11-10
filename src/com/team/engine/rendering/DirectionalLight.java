@@ -1,5 +1,7 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
+
 import com.team.engine.Engine;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2i;
@@ -33,6 +35,6 @@ public class DirectionalLight {
 	 */
 	public Mat4 getShadowMat() {
 		Vec3 offsetPosition = Engine.camera.getPosition().add(Engine.camera.getDirection().multiply(shadowRange - 1));
-		return Mat4.orthographic(-shadowRange, shadowRange, -shadowRange, shadowRange, -shadowRange, shadowRange).multiply(Mat4.LookAt(offsetPosition, offsetPosition.add(direction), new Vec3(0.0f, 1.0f, 0.0f)));
+		return Mat4.orthographic(-shadowRange, shadowRange, -shadowRange, shadowRange, -shadowRange, shadowRange).multiply(Mat4.LookAt(offsetPosition, offsetPosition.add(direction), vec3(0.0f, 1.0f, 0.0f)));
 	}
 }

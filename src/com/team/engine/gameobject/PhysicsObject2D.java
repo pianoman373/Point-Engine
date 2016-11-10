@@ -1,5 +1,7 @@
 package com.team.engine.gameobject;
 
+import static com.team.engine.Globals.*;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vector2;
@@ -66,7 +68,7 @@ public abstract class PhysicsObject2D extends GameObject2D {
 	}
 	
 	public Vec2 getPosition() {
-		return new Vec2(this.body.getPosition());
+		return vec2(this.body.getPosition());
 	}
 	
 	public void setVelocity(Vec2 vec) {
@@ -74,7 +76,7 @@ public abstract class PhysicsObject2D extends GameObject2D {
 	}
 	
 	public Vec2 getVelocity() {
-		return new Vec2(this.body.getLinearVelocity());
+		return vec2(this.body.getLinearVelocity());
 	}
 	
 	/**

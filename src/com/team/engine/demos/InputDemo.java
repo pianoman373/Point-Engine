@@ -13,6 +13,7 @@ import com.team.engine.Engine;
 import com.team.engine.Input;
 import com.team.engine.rendering.Shader;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class InputDemo extends AbstractGame {
@@ -29,7 +30,7 @@ public class InputDemo extends AbstractGame {
 		if (args.length != 1) {
 			port = 5660;
 		} else if (args[0].toString() == "help") {
-			System.out.println("Usage: java RoboKalServer <port number>");
+			print("Usage: java RoboKalServer <port number>");
 			System.exit(1);
 		} else port = Integer.parseInt(args[0]);
 		
@@ -44,14 +45,14 @@ public class InputDemo extends AbstractGame {
 			controller = Controllers.getController(0);
 		}*/
 		
-		System.out.println("Initializing socket...");
+		print("Initializing socket...");
 		try (ServerSocket serverSocket = new ServerSocket(port)) { 
 			socket = serverSocket.accept();
 		} catch (IOException e) {
 			System.err.println("Could not listen on port " + port + ". Is it open?");
 			System.exit(-1);
 		}
-		System.out.println("Socket initialized.");
+		print("Socket initialized.");
 		
 		try {
 			out = new DataOutputStream(socket.getOutputStream());
@@ -112,7 +113,7 @@ public class InputDemo extends AbstractGame {
 					System.err.println("\nConnection to the client lost.\n");
 					e.printStackTrace();
 				}
-				System.out.println(" Done.");
+				print(" Done.");
 			}
 		}
 	}

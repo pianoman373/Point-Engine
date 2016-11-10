@@ -3,6 +3,7 @@ package com.team.engine.demos;
 import org.jbox2d.common.Vector2;
 import org.jbox2d.dynamics.Fixture;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.AbstractGame;
@@ -31,7 +32,7 @@ public class Demo2D extends AbstractGame {
 
 	@Override
 	public void init() {
-		Engine.scene.skyColor = new Vec3(0.0f, 0.5f, 1.0f);
+		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
 
 		Engine.loadShader("sprite");
 		Engine.loadTexture("crate.png");
@@ -66,14 +67,14 @@ class Player extends Sprite {
 	private Fixture feet;
 	
 	public Player() {
-		super(null, new Vec2(0.5f, 0.5f), true, true);
+		super(null, vec2(0.5f, 0.5f), true, true);
 	}
 
 	@Override
 	public void init(Scene scene) {
 		super.init(scene);
-		this.addCube(new Vec2(0, 0), new Vec2(0.5f, 0.5f), 0, false);
-		this.feet = this.addSphere(new Vec2(0.0f, -0.15f), 0.4f, 1000);
+		this.addCube(vec2(0, 0), vec2(0.5f, 0.5f), 0, false);
+		this.feet = this.addSphere(vec2(0.0f, -0.15f), 0.4f, 1000);
 		
 		body.setTransform(new Vector2(10.0f, 20.0f), 0);
 		body.setFixedRotation(true);	
@@ -107,12 +108,12 @@ class Player extends Sprite {
 			body.setAwake(true);
 		}
 		
-		Engine.camera.setPosition(new Vec3(body.getPosition().x, body.getPosition().y, 0));
+		Engine.camera.setPosition(vec3(body.getPosition().x, body.getPosition().y, 0));
 	}
 	
 	public void onContact(Fixture f, GameObject2D other) {
 		if (f == feet) {
-			System.out.println(other);	
+			print(other);	
 			this.onGround = true;
 		}
 	}
@@ -120,7 +121,7 @@ class Player extends Sprite {
 	@Override
 	public void endContact(Fixture f, GameObject2D other) {
 		if (f == feet) {
-			System.out.println(other);
+			print(other);
 			this.onGround = false;
 		}
 	}

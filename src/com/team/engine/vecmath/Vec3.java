@@ -1,5 +1,7 @@
 package com.team.engine.vecmath;
 
+import static com.team.engine.Globals.*;
+
 import java.nio.FloatBuffer;
 
 import org.jbox2d.common.Vector2;
@@ -30,13 +32,13 @@ public class Vec3 {
         this.y = y;
         this.z = z;
     }
-    
+
     public Vec3(Vec4 vec) {
         this.x = vec.x;
         this.y = vec.y;
         this.z = vec.z;
     }
-    
+
     /**
      * Creates a Vec3 out of another Vec2 (box2D's vec2) and a specified z.
      */
@@ -45,13 +47,13 @@ public class Vec3 {
         this.y = v.y;
         this.z = z;
     }
-    
+
     public Vec3(Vector3f v) {
     	this.x = v.x;
     	this.y = v.y;
     	this.z = v.z;
     }
-    
+
     public Vec3(double x, double y, double z) {
     	this((float)x, (float)y, (float)z);
     }
@@ -59,7 +61,7 @@ public class Vec3 {
     public Vector3f asv3f() {
         return new Vector3f(x, y, z);
     }
-    
+
     /**
      * Rotates around the X axis.
      */
@@ -72,7 +74,7 @@ public class Vec3 {
         float newZ = this.z * cosine - this.y * sine;
         return new Vec3(newX, newY, newZ);
     }
-    
+
     /**
      * Rotates around the Y axis.
      */
@@ -85,7 +87,7 @@ public class Vec3 {
         float newZ = this.z * cosine - this.x * sine;
         return new Vec3(newX, newY, newZ);
     }
-    
+
     /**
      * Rotates around the X axis.
      */
@@ -139,7 +141,7 @@ public class Vec3 {
         float z = this.z * other.z;
         return new Vec3(x, y, z);
     }
-    
+
     /**
      * Multiplies this vector to a scalar.
      */
@@ -205,7 +207,7 @@ public class Vec3 {
         buffer.flip();
         return buffer;
     }
-    
+
     public String toString() {
     	return "(" + this.x + ", " + this.y + ", " + this.z + ")";
     }

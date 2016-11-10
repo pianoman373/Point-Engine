@@ -1,5 +1,6 @@
 package com.team.engine;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.vecmath.Mat4;
@@ -11,12 +12,12 @@ import com.team.engine.vecmath.Vec3;
  */
 public class OrthographicCamera extends Camera {
 	
-	private Vec3 position = new Vec3(0, 0, 0);
+	private Vec3 position = vec3(0, 0, 0);
 	private float zoom = 10f;
 
 	@Override
 	public Mat4 getView() {
-		return new Mat4().translate(new Vec3(-position.x, -position.y, 0));
+		return mat4().translate(vec3(-position.x, -position.y, 0));
 	}
 	
 	public void update() {
@@ -48,7 +49,7 @@ public class OrthographicCamera extends Camera {
 
 	@Override
 	public Vec3 getDirection() {
-		return new Vec3(0.0f, 0.0f, 1.0f);
+		return vec3(0.0f, 0.0f, 1.0f);
 	}
 	
 	@Override

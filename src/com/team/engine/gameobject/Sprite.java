@@ -1,5 +1,7 @@
 package com.team.engine.gameobject;
 
+import static com.team.engine.Globals.*;
+
 import com.team.engine.Camera;
 import com.team.engine.Engine;
 import com.team.engine.Scene;
@@ -19,7 +21,7 @@ import com.team.engine.vecmath.Vec4;
 public class Sprite extends PhysicsObject2D {
 	private String image;
 	private Vec2 halfExtents;
-	public Vec3 overlayColor = new Vec3(1, 1, 1);
+	public Vec3 overlayColor = vec3(1, 1, 1);
 	
 	/**
 	 * If you're extending this class, then call super to this.
@@ -49,7 +51,7 @@ public class Sprite extends PhysicsObject2D {
 		if (image != null) {
 			Shader s = Engine.getShader("sprite");
 			s.bind();
-			s.uniformMat4("model", new Mat4().translate(new Vec3(body.getPosition().x, body.getPosition().y, 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(new Vec3(halfExtents.x * 2, halfExtents.y * 2, 1.0f)));
+			s.uniformMat4("model", mat4().translate(vec3(body.getPosition().x, body.getPosition().y, 1)).rotate(vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(vec3(halfExtents.x * 2, halfExtents.y * 2, 1.0f)));
 			s.uniformVec3("overlayColor", overlayColor);
 			Engine.getTexture(image).bind();
 			Engine.spriteMesh.draw();
@@ -57,12 +59,12 @@ public class Sprite extends PhysicsObject2D {
 		else {
 			Shader s = Engine.getShader("color");
 			s.bind();
-			s.uniformMat4("model", new Mat4().translate(new Vec3(body.getPosition().x, body.getPosition().y, 1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(new Vec3(halfExtents.x * 2, halfExtents.y * 2, 1.0f)));
-			s.uniformVec3("color", new Vec3(0.1f, 0.1f, 0.5f));
+			s.uniformMat4("model", mat4().translate(vec3(body.getPosition().x, body.getPosition().y, 1)).rotate(vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(vec3(halfExtents.x * 2, halfExtents.y * 2, 1.0f)));
+			s.uniformVec3("color", vec3(0.1f, 0.1f, 0.5f));
 			Engine.spriteMesh.draw();
 			
-			s.uniformMat4("model", new Mat4().translate(new Vec3(body.getPosition().x, body.getPosition().y, 1.1)).rotate(new Vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(new Vec3(halfExtents.x * 2 * 0.9f, halfExtents.y * 2 * 0.9f, 1.0f)));
-			s.uniformVec3("color", new Vec3(0.5f, 0.5f, 1f));
+			s.uniformMat4("model", mat4().translate(vec3(body.getPosition().x, body.getPosition().y, 1.1)).rotate(vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(vec3(halfExtents.x * 2 * 0.9f, halfExtents.y * 2 * 0.9f, 1.0f)));
+			s.uniformVec3("color", vec3(0.5f, 0.5f, 1f));
 			Engine.spriteMesh.draw();
 		}
 	}

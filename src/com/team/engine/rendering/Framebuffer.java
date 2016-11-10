@@ -1,5 +1,6 @@
 package com.team.engine.rendering;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
@@ -67,7 +68,7 @@ public class Framebuffer {
 		
 		//check for errors
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-			System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+			print("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
 		}
 		
 		
@@ -135,7 +136,7 @@ public class Framebuffer {
 		
 		//check for errors
 		if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-			System.out.println("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+			print("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
 		}
 		
 		int[] attachments = new int[] { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };

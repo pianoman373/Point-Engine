@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import javax.swing.JOptionPane;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -137,7 +138,7 @@ public class Engine {
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), true);
 		debugCubeMesh = Primitives.debugCube();
 		debugSphereMesh = Primitives.debugSphere(64);
-		spriteMesh = Mesh.raw(Primitives.sprite(new Vec2(0, 0), new Vec2(1, 1)), true);
+		spriteMesh = Mesh.raw(Primitives.sprite(vec2(0, 0), vec2(1, 1)), true);
 
 		//all the framebuffers, one for shadows, one for normal rendering, and 3 ping pong shaders for bloom
 		fbuffer = Framebuffer.HdrWithBloom(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT));
@@ -209,7 +210,7 @@ public class Engine {
 			
 			if (isVR) {
 				if (hmd == null) {
-		        	System.out.println("HMD IS NULL!?!?!?!?!");
+		        	print("HMD IS NULL!?!?!?!?!");
 		        	return;
 		        }
 				
@@ -325,12 +326,12 @@ public class Engine {
 		glClearColor(0, 0, 0, 1.0f);
 		clear();
 		
-		s.uniformVec2("offset", new Vec2(bloomRange / (Settings.WINDOW_WIDTH / 2), 0));
+		s.uniformVec2("offset", vec2(bloomRange / (Settings.WINDOW_WIDTH / 2), 0));
 		fbuffer.tex[1].bind();
 		framebufferMesh.draw();
 		
 		pingPong1.tex[0].bind();
-		s.uniformVec2("offset", new Vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 2)));
+		s.uniformVec2("offset", vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 2)));
 		framebufferMesh.draw();
 		
 		//level 2
@@ -340,12 +341,12 @@ public class Engine {
 		glClearColor(0, 0, 0, 1.0f);
 		clear();
 		
-		s.uniformVec2("offset", new Vec2(bloomRange / (Settings.WINDOW_WIDTH / 4), 0));
+		s.uniformVec2("offset", vec2(bloomRange / (Settings.WINDOW_WIDTH / 4), 0));
 		pingPong1.tex[0].bind();
 		framebufferMesh.draw();
 		
 		pingPong2.tex[0].bind();
-		s.uniformVec2("offset", new Vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 4)));
+		s.uniformVec2("offset", vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 4)));
 		framebufferMesh.draw();
 		
 		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
@@ -357,12 +358,12 @@ public class Engine {
 		glClearColor(0, 0, 0, 1.0f);
 		clear();
 		
-		s.uniformVec2("offset", new Vec2(bloomRange / (Settings.WINDOW_WIDTH / 8), 0));
+		s.uniformVec2("offset", vec2(bloomRange / (Settings.WINDOW_WIDTH / 8), 0));
 		pingPong2.tex[0].bind();
 		framebufferMesh.draw();
 		
 		pingPong3.tex[0].bind();
-		s.uniformVec2("offset", new Vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 8)));
+		s.uniformVec2("offset", vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 8)));
 		framebufferMesh.draw();
 		
 		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
@@ -373,10 +374,10 @@ public class Engine {
 		Shader s = Engine.getShader("sprite");
 		s.bind();
 		
-		s.uniformMat4("model", new Mat4().translate(new Vec3(1800/2, 1000/2, 0)).scale(new Vec3(1800, 1000, 0)));
-		s.uniformMat4("view", new Mat4().scale(new Vec3(1f/(Settings.WINDOW_WIDTH/2f), 1f/(Settings.WINDOW_HEIGHT/2f), 0f)).translate(new Vec3(-Settings.WINDOW_WIDTH/2f, -Settings.WINDOW_HEIGHT/2f, 0f)));
-		s.uniformMat4("projection", new Mat4());
-		s.uniformVec3("overlayColor", new Vec3(1, 1, 1));
+		s.uniformMat4("model", mat4().translate(vec3(1800/2, 1000/2, 0)).scale(vec3(1800, 1000, 0)));
+		s.uniformMat4("view", mat4().scale(vec3(1f/(Settings.WINDOW_WIDTH/2f), 1f/(Settings.WINDOW_HEIGHT/2f), 0f)).translate(vec3(-Settings.WINDOW_WIDTH/2f, -Settings.WINDOW_HEIGHT/2f, 0f)));
+		s.uniformMat4("projection", mat4());
+		s.uniformVec3("overlayColor", vec3(1, 1, 1));
 		
 		pingPong3.tex[0].bind();
 		//spriteMesh.draw();
@@ -427,7 +428,7 @@ public class Engine {
 	 */
 	private static void setupContext() {
 		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
-		System.out.println(System.getProperty("java.library.path"));
+		print(System.getProperty("java.library.path"));
 		System.load(Paths.get("native/libassimp.so").toAbsolutePath().toString());
 
 		//set up our window options
@@ -487,7 +488,7 @@ public class Engine {
 	
 	private static void setupVR() {
 		// Loading the SteamVR Runtime
-		System.out.println(errorBuffer.isDirect());
+		print(errorBuffer.isDirect());
 		
         hmd = VR.VR_Init(errorBuffer, VR.EVRApplicationType.VRApplication_Scene);
 
@@ -501,7 +502,7 @@ public class Engine {
         
         hmd.GetRecommendedRenderTargetSize.apply(width, height);
         
-        System.out.println("width: " + width.get(0) + ", height: " + height.get(0));
+        print("width: " + width.get(0) + ", height: " + height.get(0));
         
         
         compositor = new IVRCompositor_FnTable(VR.VR_GetGenericInterface(VR.IVRCompositor_Version, errorBuffer));

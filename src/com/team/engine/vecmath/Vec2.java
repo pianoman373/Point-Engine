@@ -1,5 +1,7 @@
 package com.team.engine.vecmath;
 
+import static com.team.engine.Globals.*;
+
 import java.nio.FloatBuffer;
 
 import org.jbox2d.common.Vector2;
@@ -17,7 +19,7 @@ public class Vec2 {
         this.x = 0f;
         this.y = 0f;
     }
-    
+
     /**
      * Creates a vector out of another vector (box2D's vector type).
      */
@@ -64,7 +66,7 @@ public class Vec2 {
         float y = this.y + other.y;
         return new Vec2(x, y);
     }
-    
+
     public Vec2 multiply(Vec2 other) {
         float x = this.x * other.x;
         float y = this.y * other.y;

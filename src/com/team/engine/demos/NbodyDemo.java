@@ -1,5 +1,6 @@
 package com.team.engine.demos;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -75,12 +76,12 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 			
 			float y = ((rand.nextFloat() * VERTICAL_SIZE) - VERTICAL_SIZE/2) / (float)Math.sqrt(x*x + z*z) * VERTICAL_SHAPE;
 			
-			points[i] = new Vec3(x, y, z);
-			colors[i] = new Vec3(Math.random(), Math.random(), Math.random());
+			points[i] = vec3(x, y, z);
+			colors[i] = vec3(Math.random(), Math.random(), Math.random());
 		}
 		
 		for (int i = 0; i < points.length; i++) {
-			velocities[i] = (points[i].normalize()).cross(new Vec3(0, 1, 0)).multiply(POINT_VELOCITY);
+			velocities[i] = (points[i].normalize()).cross(vec3(0, 1, 0)).multiply(POINT_VELOCITY);
 		}
 		
 		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(points.length * 6);
@@ -113,10 +114,10 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 		glBindVertexArray(0);
 		
 		scene = new Scene();
-		scene.add(new PointLight(new Vec3(0, 0, 0), new Vec3(0.5f, 0.5f, 1f), 1f, 0.032f));
-		scene.add(new PointLight(new Vec3(5, 5, 20), new Vec3(1f, 0.5f, 0.5f), 1f, 0.032f));
-		//scene.add(new PointLight(new Vec3(30, 3, 3), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
-		//scene.add(new PointLight(new Vec3(20, 5, 30), new Vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
+		scene.add(new PointLight(vec3(0, 0, 0), vec3(0.5f, 0.5f, 1f), 1f, 0.032f));
+		scene.add(new PointLight(vec3(5, 5, 20), vec3(1f, 0.5f, 0.5f), 1f, 0.032f));
+		//scene.add(new PointLight(vec3(30, 3, 3), vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
+		//scene.add(new PointLight(vec3(20, 5, 30), vec3(1f, 0.8f, 0.0f), 0.09f, 0.032f));
 		
 		t = new Timer(TIMESTEP, this);
 		t.start();
@@ -160,7 +161,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 	}
 	
 	public Vec3 getInfluenceAt(Vec3 pos) {
-		Vec3 total = new Vec3();
+		Vec3 total = vec3();
 		
 		if (POINT_TO_POINT_GRAVITY) {
 			for (Vec3 i : points) {
@@ -198,8 +199,8 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 		
 		Shader s = Engine.getShader("point");
 		s.bind();
-		s.uniformMat4("model", new Mat4());
-		s.uniformVec3("lightColor", new Vec3(1.0f, 1.0f, 1.0f));
+		s.uniformMat4("model", mat4());
+		s.uniformVec3("lightColor", vec3(1.0f, 1.0f, 1.0f));
 		
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_POINTS, 0, points.length * 3);
@@ -243,12 +244,12 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 						speed = REDSHIFT_RANGE;
 					}
 					
-					colors[i] = new Vec3(0.1f, 0.6f, 1.0f).normalize().lerp(new Vec3(1.0f, 0.1f, 0.1f).normalize(), speed / REDSHIFT_RANGE);
+					colors[i] = vec3(0.1f, 0.6f, 1.0f).normalize().lerp(vec3(1.0f, 0.1f, 0.1f).normalize(), speed / REDSHIFT_RANGE);
 				}
 			}
 //			
 //			if (Mouse.isButtonDown(1) && accum > 0f) {
-//				PointLight p = new PointLight(Engine.instance.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 100f, 0.032f);
+//				PointLight p = new PointLight(Engine.instance.camera.getPosition(), vec3(1.0f, 1.0f, 2.0f), 100f, 0.032f);
 //				scene.add(p);
 //	
 //				accum = 0;

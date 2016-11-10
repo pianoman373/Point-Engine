@@ -1,5 +1,7 @@
 package com.team.engine;
 
+import static com.team.engine.Globals.*;
+
 import java.util.Iterator;
 
 import org.jbox2d.dynamics.BodyDef;
@@ -93,7 +95,7 @@ public class Grid2D extends PhysicsObject2D {
 	 * Computes the uv coordinate for the given integer index;
 	 */
 	private Vec2 computeUV(int index) {
-		return new Vec2((index - 1) % width, (index - 1) / height);
+		return vec2((index - 1) % width, (index - 1) / height);
 	}
 	
 	@Override
@@ -113,7 +115,7 @@ public class Grid2D extends PhysicsObject2D {
 			float xpos = ((float)ob.getX() / 16f) + (rwidth / 2f);
 			float ypos = ((float)ob.getY() / 16f) + (rheight / 2f);
 			
-			this.addCube(new Vec2(xpos, (mapHeight - 1) - ypos + 1), new Vec2(rwidth / 2, rheight / 2), 0.2f, false);
+			this.addCube(vec2(xpos, (mapHeight - 1) - ypos + 1), vec2(rwidth / 2, rheight / 2), 0.2f, false);
 		}
 	}
 
@@ -124,7 +126,7 @@ public class Grid2D extends PhysicsObject2D {
 	public void render(Scene scene, Camera cam) {
 		Shader s = Engine.getShader("sprite");
 		s.bind();
-		s.uniformMat4("model", new Mat4());
+		s.uniformMat4("model", mat4());
 		Engine.getTexture("retro-terrain.png").bind();
 		this.mesh.draw();
 	}

@@ -6,6 +6,7 @@ import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
 
+import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.AbstractGame;
@@ -33,7 +34,7 @@ public class FlappyBirdDemo extends AbstractGame {
 
 	@Override
 	public void init() {
-		Engine.scene.skyColor = new Vec3(0.0f, 0.5f, 1.0f);
+		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
 
 		Engine.loadShader("sprite");
 		Engine.loadTexture("crate.png");
@@ -44,7 +45,7 @@ public class FlappyBirdDemo extends AbstractGame {
 		
 		player = new Bird();
 		Engine.scene.add(player);
-		player.setPosition(new Vec2(-5.0f, 0.0f));
+		player.setPosition(vec2(-5.0f, 0.0f));
 		
 		Engine.getAudio("breakout.wav").play(true, 0.7f);
 		
@@ -84,13 +85,13 @@ public class FlappyBirdDemo extends AbstractGame {
 
 class Pipe extends Sprite {
 	public Pipe() {
-		super(null, new Vec2(1f, 4f), false, false);
+		super(null, vec2(1f, 4f), false, false);
 		this.tag = "pipe";
 	}
 	
 	public void init(Scene scene) {
 		super.init(scene);
-		this.addCube(new Vec2(0, 0), new Vec2(1f, 4f), 0, true);
+		this.addCube(vec2(0, 0), vec2(1f, 4f), 0, true);
 	}
 }
 
@@ -102,13 +103,13 @@ class Bird extends Sprite {
 	public int deaths = 0;
 	
 	public Bird() {
-		super("awesomeface.png", new Vec2(0.5f, 0.5f), true, true);
+		super("awesomeface.png", vec2(0.5f, 0.5f), true, true);
 	}
 
 	@Override
 	public void init(Scene scene) {
 		super.init(scene);
-		this.addCube(new Vec2(0, 0), new Vec2(0.5f, 0.5f), 0, true);
+		this.addCube(vec2(0, 0), vec2(0.5f, 0.5f), 0, true);
 		
 		body.setFixedRotation(true);
 		body.setLinearDamping(0.5f);
@@ -117,8 +118,8 @@ class Bird extends Sprite {
 	@Override
 	public void update() {
 		if (this.isDead) {
-			this.setPosition(new Vec2(-5, 0));
-			this.setVelocity(new Vec2(0, 0));
+			this.setPosition(vec2(-5, 0));
+			this.setVelocity(vec2(0, 0));
 			
 			this.isDead = false;
 		}
@@ -141,18 +142,18 @@ class Bird extends Sprite {
 		
 		body.setTransform(pos, vel.y * (3.14f / 180) * 4);
 		
-		Engine.camera.setPosition(new Vec3(body.getPosition().x, 0, 0));
+		Engine.camera.setPosition(vec3(body.getPosition().x, 0, 0));
 		
 		
 		if (pos.x > pipesPlaced * 5) {
 			float offset = (((float)Math.random() * 6.0f) - 3.0f);
 			Pipe pipe = new Pipe();
 			Engine.scene.add(pipe);
-			pipe.setPosition(new Vec2(pos.x + 15, -7 + offset));
+			pipe.setPosition(vec2(pos.x + 15, -7 + offset));
 		
 			Pipe pipe2 = new Pipe();
 			Engine.scene.add(pipe2);
-			pipe2.setPosition(new Vec2(pos.x + 15, 7 + offset));
+			pipe2.setPosition(vec2(pos.x + 15, 7 + offset));
 			pipesPlaced++;
 		}
 	}
