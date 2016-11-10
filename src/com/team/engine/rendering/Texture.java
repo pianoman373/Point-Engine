@@ -42,8 +42,8 @@ public class Texture {
 		IntBuffer h = BufferUtils.createIntBuffer(1);
 		IntBuffer comp = BufferUtils.createIntBuffer(1);
 		
-		STBImage.stbi_set_flip_vertically_on_load(1);
-		boolean hdr = STBImage.stbi_is_hdr(Settings.RESOURCE_PATH + path) != 0;
+		STBImage.stbi_set_flip_vertically_on_load(true);
+		boolean hdr = STBImage.stbi_is_hdr(Settings.RESOURCE_PATH + path);
 		System.out.println("loading texture: " + path);
 		if (hdr) {
 			FloatBuffer buffer = STBImage.stbi_loadf(Settings.RESOURCE_PATH + path, w, h, comp, 0);

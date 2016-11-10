@@ -24,5 +24,21 @@
 	<classpathentry kind="lib" path="lib/jna-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jna-platform-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jassimp.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-opengl.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-glfw.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-openal.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-stb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
