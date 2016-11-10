@@ -1,8 +1,24 @@
+/*
+ * Copyright LWJGL. All rights reserved.
+ * License terms: https://www.lwjgl.org/license
+ */
 package com.team.engine.demos;
 
-import static com.team.engine.Globals.*;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.nuklear.*;
+import org.lwjgl.opengl.*;
+import org.lwjgl.stb.*;
+import org.lwjgl.system.Callback;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.Platform;
+
+import java.io.IOException;
+import java.nio.*;
+
+import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.*;
+import static org.lwjgl.opengl.ARBDebugOutput.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import static org.lwjgl.opengl.GL13.*;
@@ -10,87 +26,28 @@ import static org.lwjgl.opengl.GL14.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.opengl.GL43.*;
 import static org.lwjgl.stb.STBTruetype.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import org.lwjgl.nuklear.*;
-import org.lwjgl.stb.STBTTAlignedQuad;
-import org.lwjgl.stb.STBTTFontinfo;
-import org.lwjgl.stb.STBTTPackContext;
-import org.lwjgl.stb.STBTTPackedchar;
-
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3f;
-
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.Platform;
-
-import com.bulletphysics.collision.shapes.BoxShape;
-import com.bulletphysics.collision.shapes.SphereShape;
-import com.team.engine.*;
-import com.team.engine.gameobject.MeshObject;
-import com.team.engine.rendering.Cubemap;
-import com.team.engine.rendering.Material;
-import com.team.engine.rendering.Mesh;
-import com.team.engine.rendering.ObjLoader;
-import com.team.engine.rendering.PointLight;
-import com.team.engine.rendering.Primitives;
-import com.team.engine.rendering.Shader;
-import com.team.engine.vecmath.Mat4;
-import com.team.engine.vecmath.Vec3;
-
 /**
- * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
+ * Nuklear demo using GLFW, OpenGL and stb_truetype for rendering.
+ *
+ * <p>This demo is a Java port of
+ * <a href="https://github.com/vurtun/nuklear/tree/master/demo/glfw_opengl3">https://github.com/vurtun/nuklear/tree/master/demo/glfw_opengl3</a>.</p>
  */
-public class GLDemo extends AbstractGame {
-	public static Mesh cubeMesh;
-	public static Mesh groundMesh;
-	
-	public static Mesh mat1;
-	public static Mesh mat2;
-	
-	private Mesh sphere;
-	
-	private Model model;
+public class GLFWDemo {
 
-	public static Material crateMaterial = new Material("container2.png", 0.8f, null, "container2_specular.png");
-	public static Material groundMaterial = new Material("brickwall.jpg", 0.6f, "brickwall_normal.jpg", 0.3f);
-	
-	public static Material outsideMaterial = new Material("metal/albedo.png", "metal/roughness.png", "metal/normal.png", "metal/metallic.png");
-	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
-	
-	
-	//nuklear variables
-	private static final NkAllocator ALLOCATOR;
-	private static final NkDrawVertexLayoutElement.Buffer VERTEX_LAYOUT;
 	private static final int BUFFER_INITIAL_SIZE = 4 * 1024;
-	
+
 	private static final int MAX_VERTEX_BUFFER  = 512 * 1024;
 	private static final int MAX_ELEMENT_BUFFER = 128 * 1024;
-	
-	private int vbo, vao, ebo;
-	private int prog;
-	private int vert_shdr;
-	private int frag_shdr;
-	private int uniform_tex;
-	private int uniform_proj;
-	private NkDrawNullTexture null_texture = NkDrawNullTexture.create();
-	
-	private NkBuffer cmds = NkBuffer.create();
-	private NkContext ctx = NkContext.create();
-	private NkUserFont default_font = NkUserFont.create();
-	
-	private final Demo       demo = new Demo();
-	private final Calculator calc = new Calculator();
-	
-	private ByteBuffer ttf;
-	
+
+	private static final NkAllocator ALLOCATOR;
+
+	private static final NkDrawVertexLayoutElement.Buffer VERTEX_LAYOUT;
+
 	static {
 		ALLOCATOR = NkAllocator.create();
 		ALLOCATOR.alloc((handle, old, size) -> {
@@ -110,169 +67,87 @@ public class GLDemo extends AbstractGame {
 			.position(3).attribute(NK_VERTEX_ATTRIBUTE_COUNT).format(NK_FORMAT_COUNT).offset(0)
 			.flip();
 	}
-	
+
 	public static void main(String[] args) {
-		Engine.start(false, false, new GLDemo());
+		new GLFWDemo().run();
 	}
 
-	@Override
-	public void init() {
-		print("yo");
-		
-		Engine.loadTexture("container2.png", false, true);
-		Engine.loadTexture("container2_specular.png");
-		Engine.loadTexture("brickwall.jpg", false, true);
-		Engine.loadTexture("brickwall_normal.jpg");
-		
-		Engine.loadTexture("metal/albedo.png", false, true);
-		Engine.loadTexture("metal/normal.png");
-		Engine.loadTexture("metal/metallic.png");
-		Engine.loadTexture("metal/roughness.png");
-		
-		Engine.loadTexture("plastic/albedo.png", false, true);
-		Engine.loadTexture("plastic/normal.png");
-		Engine.loadTexture("plastic/metallic.png");
-		Engine.loadTexture("plastic/roughness.png");
-		
-		Engine.loadTexture("gravel/albedo.png", false, true);
-		Engine.loadTexture("gravel/normal.png");
-		Engine.loadTexture("gravel/metallic.png");
-		Engine.loadTexture("gravel/roughness.png");
-		
-		Engine.loadTexture("stone_tile.png", false, true);
-		Engine.loadTexture("stone_tile_normal.png");
-		Engine.loadTexture("stone_tile_specular.png");
-		
-		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
-		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);
-		sphere = ObjLoader.loadFile("sphere.obj");
-		mat1 = ObjLoader.loadFile("matmodel-1.obj");
-		mat2 = ObjLoader.loadFile("matmodel-2.obj");
-		
-		model = new Model("adam.fbx", new Mat4().translate(new Vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
-		
-		
-		Engine.scene.skybox = new Cubemap("sunset");
-		Engine.scene.irradiance = new Cubemap("sunset-irradiance");
-		
-		Engine.camera.setPosition(new Vec3(0, 0, 5));
-		
-		Engine.scene.sun.color = new Vec3(5, 5, 5);
-		Engine.scene.sun.direction = new Vec3(-1, -0.8, -0.7f);
-		
-		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
-		Engine.scene.add(new MeshObject(new Vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
-		
-		Engine.scene.add(new MeshObject(new Vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
-		
-		for (int x = 0; x < 7; x++) {
-			for (int y = 0; y < 7; y++) {
-				Material mat = new Material("stone_tile.png", y / 7f, "stone_tile_normal.png", x / 7f);
-				Engine.scene.add(new MeshObject(new Vec3(x * 3, y * 3, 0).add(new Vec3(0, -9, -15)), new Quat4f(), null, 0f, sphere, 1f, mat));
-			}
+	private final ByteBuffer ttf;
+
+	private long win;
+
+	private int
+		width,
+		height;
+
+	private int
+		display_width,
+		display_height;
+
+	private NkContext  ctx          = NkContext.create();
+	private NkUserFont default_font = NkUserFont.create();
+
+	private NkBuffer          cmds         = NkBuffer.create();
+	private NkDrawNullTexture null_texture = NkDrawNullTexture.create();
+
+	private int vbo, vao, ebo;
+	private int prog;
+	private int vert_shdr;
+	private int frag_shdr;
+	private int uniform_tex;
+	private int uniform_proj;
+
+	private final Demo       demo = new Demo();
+	private final Calculator calc = new Calculator();
+
+	public GLFWDemo() {
+		try {
+			this.ttf = IOUtil.ioResourceToByteBuffer("/home/joseph/git/Game-Engine/resources/HelvetiPixel.ttf", 160 * 1024);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
-		
-		ttf = Util.readFile("/home/joseph/git/Game-Engine/resources/HelvetiPixel.ttf");
-		
-		nk_init(ctx, ALLOCATOR, null);
-		setupContext();
-		setupFont();
-		
 	}
-	
-	private void render(int AA, int max_vertex_buffer, int max_element_buffer) {
-		try ( MemoryStack stack = stackPush() ) {
-			// setup global state
-			glEnable(GL_BLEND);
-			glBlendEquation(GL_FUNC_ADD);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDisable(GL_CULL_FACE);
-			glDisable(GL_DEPTH_TEST);
-			glEnable(GL_SCISSOR_TEST);
-			glActiveTexture(GL_TEXTURE0);
 
-			// setup program
-			glUseProgram(prog);
-			glUniform1i(uniform_tex, 0);
-			glUniformMatrix4fv(uniform_proj, false, stack.floats(
-				2.0f / Settings.WINDOW_WIDTH, 0.0f, 0.0f, 0.0f,
-				0.0f, -2.0f / Settings.WINDOW_HEIGHT, 0.0f, 0.0f,
-				0.0f, 0.0f, -1.0f, 0.0f,
-				-1.0f, 1.0f, 0.0f, 1.0f
-			));
-			glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
-		}
+	private void run() {
+		GLFWErrorCallback.createPrint().set();
+		if ( !glfwInit() )
+			throw new IllegalStateException("Unable to initialize glfw");
 
-		{
-			// convert from command queue into draw list and draw to screen
+		glfwDefaultWindowHints();
+		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		if ( Platform.get() == Platform.MACOSX )
+			glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 
-			// allocate vertex and element buffer
-			glBindVertexArray(vao);
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		int WINDOW_WIDTH = 640;
+		int WINDOW_HEIGHT = 640;
 
-			glBufferData(GL_ARRAY_BUFFER, max_vertex_buffer, GL_STREAM_DRAW);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_element_buffer, GL_STREAM_DRAW);
+		win = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "GLFW Nuklear Demo", NULL, NULL);
+		if ( win == NULL )
+			throw new RuntimeException("Failed to create the GLFW window");
 
-			// load draw vertices & elements directly into vertex + element buffer
-			ByteBuffer vertices = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY, max_vertex_buffer, null);
-			ByteBuffer elements = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY, max_element_buffer, null);
-			try ( MemoryStack stack = stackPush() ) {
-				// fill convert configuration
-				NkConvertConfig config = NkConvertConfig.callocStack(stack)
-					.vertex_layout(VERTEX_LAYOUT)
-					.vertex_size(20)
-					.vertex_alignment(4)
-					.null_texture(null_texture)
-					.circle_segment_count(22)
-					.curve_segment_count(22)
-					.arc_segment_count(22)
-					.global_alpha(1.0f)
-					.shape_AA(AA)
-					.line_AA(AA);
+		glfwMakeContextCurrent(win);
+		GLCapabilities caps = GL.createCapabilities();
+		Callback debugProc = GLUtil.setupDebugMessageCallback();
 
-				// setup buffers to load vertices and elements
-				NkBuffer vbuf = NkBuffer.mallocStack(stack);
-				NkBuffer ebuf = NkBuffer.mallocStack(stack);
+		if ( caps.OpenGL43 )
+			glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER, GL_DEBUG_SEVERITY_NOTIFICATION, (IntBuffer)null, false);
+		else if ( caps.GL_KHR_debug ) {
+			KHRDebug.glDebugMessageControl(
+				KHRDebug.GL_DEBUG_SOURCE_API,
+				KHRDebug.GL_DEBUG_TYPE_OTHER,
+				KHRDebug.GL_DEBUG_SEVERITY_NOTIFICATION,
+				(IntBuffer)null,
+				false
+			);
+		} else if ( caps.GL_ARB_debug_output )
+			glDebugMessageControlARB(GL_DEBUG_SOURCE_API_ARB, GL_DEBUG_TYPE_OTHER_ARB, GL_DEBUG_SEVERITY_LOW_ARB, (IntBuffer)null, false);
 
-				nk_buffer_init_fixed(vbuf, vertices/*, max_vertex_buffer*/);
-				nk_buffer_init_fixed(ebuf, elements/*, max_element_buffer*/);
-				nk_convert(ctx, cmds, vbuf, ebuf, config);
-			}
-			glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-			glUnmapBuffer(GL_ARRAY_BUFFER);
+		NkContext ctx = setupWindow(win);
 
-			// iterate over and execute each draw command
-			float fb_scale_x = 1;
-			float fb_scale_y = 1;
-
-			long offset = NULL;
-			for ( NkDrawCommand cmd = nk__draw_begin(ctx, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, ctx) ) {
-				if ( cmd.elem_count() == 0 ) continue;
-				glBindTexture(GL_TEXTURE_2D, cmd.texture().id());
-				glScissor(
-					(int)(cmd.clip_rect().x() * fb_scale_x),
-					(int)((Settings.WINDOW_HEIGHT - (int)(cmd.clip_rect().y() + cmd.clip_rect().h())) * fb_scale_y),
-					(int)(cmd.clip_rect().w() * fb_scale_x),
-					(int)(cmd.clip_rect().h() * fb_scale_y)
-				);
-				glDrawElements(GL_TRIANGLES, cmd.elem_count(), GL_UNSIGNED_SHORT, offset);
-				offset += cmd.elem_count() * 2;
-			}
-			nk_clear(ctx);
-		}
-
-		// default OpenGL state
-		glUseProgram(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-		glDisable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_SCISSOR_TEST);
-	}
-	
-	private void setupFont() {
 		int BITMAP_W = 1024;
 		int BITMAP_H = 1024;
 
@@ -369,8 +244,48 @@ public class GLDemo extends AbstractGame {
 			.texture().id(fontTexID);
 
 		nk_style_set_font(ctx, default_font);
+
+		glfwShowWindow(win);
+		while ( !glfwWindowShouldClose(win) ) {
+			/* Input */
+			newFrame();
+
+			demo.layout(ctx, 50, 50);
+			calc.layout(ctx, 300, 50);
+
+			try ( MemoryStack stack = stackPush() ) {
+				FloatBuffer bg = stack.mallocFloat(4);
+				nk_color_fv(bg, demo.background);
+
+				IntBuffer width = stack.mallocInt(1);
+				IntBuffer height = stack.mallocInt(1);
+
+				glfwGetWindowSize(win, width, height);
+				glViewport(0, 0, width.get(0), height.get(0));
+
+				glClearColor(bg.get(0), bg.get(1), bg.get(2), bg.get(3));
+			}
+			glClear(GL_COLOR_BUFFER_BIT);
+			/*
+			 * IMPORTANT: `nk_glfw_render` modifies some global OpenGL state
+			 * with blending, scissor, face culling, depth test and viewport and
+			 * defaults everything back into a default state.
+			 * Make sure to either a.) save and restore or b.) reset your own state after
+			 * rendering the UI.
+			 */
+			render(NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
+			glfwSwapBuffers(win);
+		}
+
+		shutdown();
+
+		glfwFreeCallbacks(win);
+		if ( debugProc != null )
+			debugProc.free();
+		glfwTerminate();
+		glfwSetErrorCallback(null).free();
 	}
-	
+
 	private void setupContext() {
 		String NK_SHADER_VERSION = Platform.get() == Platform.MACOSX ? "#version 150\n" : "#version 300 es\n";
 		String vertex_shader =
@@ -454,11 +369,17 @@ public class GLDemo extends AbstractGame {
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		}
-		
-		glfwSetScrollCallback(Engine.window, (window, xoffset, yoffset) -> nk_input_scroll(ctx, (float)yoffset));
-		glfwSetCharCallback(Engine.window, (window, codepoint) -> nk_input_unicode(ctx, codepoint));
-		
-		glfwSetKeyCallback(Engine.window, (window, key, scancode, action, mods) -> {
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+
+	private NkContext setupWindow(long win) {
+		glfwSetScrollCallback(win, (window, xoffset, yoffset) -> nk_input_scroll(ctx, (float)yoffset));
+		glfwSetCharCallback(win, (window, codepoint) -> nk_input_unicode(ctx, codepoint));
+		glfwSetKeyCallback(win, (window, key, scancode, action, mods) -> {
 			boolean press = action == GLFW_PRESS;
 			switch ( key ) {
 				case GLFW_KEY_ESCAPE:
@@ -523,9 +444,8 @@ public class GLDemo extends AbstractGame {
 					break;
 			}
 		});
-		
-		glfwSetCursorPosCallback(Engine.window, (window, xpos, ypos) -> nk_input_motion(ctx, (int)xpos, (int)ypos));
-		glfwSetMouseButtonCallback(Engine.window, (window, button, action, mods) -> {
+		glfwSetCursorPosCallback(win, (window, xpos, ypos) -> nk_input_motion(ctx, (int)xpos, (int)ypos));
+		glfwSetMouseButtonCallback(win, (window, button, action, mods) -> {
 			try ( MemoryStack stack = stackPush() ) {
 				DoubleBuffer cx = stack.mallocDouble(1);
 				DoubleBuffer cy = stack.mallocDouble(1);
@@ -550,72 +470,176 @@ public class GLDemo extends AbstractGame {
 			}
 		});
 
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
+		nk_init(ctx, ALLOCATOR, null);
+		ctx.clip().copy((handle, text, len) -> {
+			if ( len == 0 )
+				return;
+
+			try ( MemoryStack stack = stackPush() ) {
+				ByteBuffer str = stack.malloc(len + 1);
+				memCopy(text, memAddress(str), len);
+				str.put(len, (byte)0);
+
+				glfwSetClipboardString(win, str);
+			}
+		});
+		ctx.clip().paste((handle, edit) -> {
+			long text = nglfwGetClipboardString(win);
+			if ( text != NULL )
+				nnk_textedit_paste(edit, text, nnk_strlen(text));
+		});
+		setupContext();
+		return ctx;
 	}
 
-	private static float accum;
+	private void newFrame() {
+		try ( MemoryStack stack = stackPush() ) {
+			IntBuffer w = stack.mallocInt(1);
+			IntBuffer h = stack.mallocInt(1);
 
-	@Override
-	public void tick() {
-		accum += Engine.deltaTime;
-		
-		if (Input.isButtonDown(1) && accum > 0.1f) {
-			FPSCamera cam = (FPSCamera)Engine.camera;
-			MeshObject c = new MeshObject(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
-			Engine.scene.add(c);
-			c.rb.applyCentralForce(new Vector3f(0.0f, 100.0f, 0.0f));
-			accum = 0;
+			glfwGetWindowSize(win, w, h);
+			width = w.get(0);
+			height = h.get(0);
+
+			glfwGetFramebufferSize(win, w, h);
+			display_width = w.get(0);
+			display_height = h.get(0);
 		}
-		if (Input.isButtonDown(2) && accum > 1f) {
-			PointLight p = new PointLight(Engine.camera.getPosition(), new Vec3(1.0f, 1.0f, 2.0f), 5f, 10f);
-			Engine.scene.add(p);
 
-			accum = 0;
-		}	
-	}
-
-	@Override
-	public void render() {	
 		nk_input_begin(ctx);
 		glfwPollEvents();
 
 		NkMouse mouse = ctx.input().mouse();
 		if ( mouse.grab() )
-			glfwSetInputMode(Engine.window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		else if ( mouse.grabbed() ) {
 			float prevX = mouse.prev().x();
 			float prevY = mouse.prev().y();
-			glfwSetCursorPos(Engine.window, prevX, prevY);
+			glfwSetCursorPos(win, prevX, prevY);
 			mouse.pos().x(prevX);
 			mouse.pos().y(prevY);
 		} else if ( mouse.ungrab() )
-			glfwSetInputMode(Engine.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			glfwSetInputMode(win, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
 		nk_input_end(ctx);
-		
-		model.render();
-		
-		demo.layout(ctx, 50, 50);
-		calc.layout(ctx, 300, 50);
-		
-		render(NK_ANTI_ALIASING_ON, MAX_VERTEX_BUFFER, MAX_ELEMENT_BUFFER);
 	}
 
-	@Override
-	public void postRenderUniforms(Shader shader) {
-		
+	private void render(int AA, int max_vertex_buffer, int max_element_buffer) {
+		try ( MemoryStack stack = stackPush() ) {
+			// setup global state
+			glEnable(GL_BLEND);
+			glBlendEquation(GL_FUNC_ADD);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glDisable(GL_CULL_FACE);
+			glDisable(GL_DEPTH_TEST);
+			glEnable(GL_SCISSOR_TEST);
+			glActiveTexture(GL_TEXTURE0);
+
+			// setup program
+			glUseProgram(prog);
+			glUniform1i(uniform_tex, 0);
+			glUniformMatrix4fv(uniform_proj, false, stack.floats(
+				2.0f / width, 0.0f, 0.0f, 0.0f,
+				0.0f, -2.0f / height, 0.0f, 0.0f,
+				0.0f, 0.0f, -1.0f, 0.0f,
+				-1.0f, 1.0f, 0.0f, 1.0f
+			));
+			glViewport(0, 0, display_width, display_height);
+		}
+
+		{
+			// convert from command queue into draw list and draw to screen
+
+			// allocate vertex and element buffer
+			glBindVertexArray(vao);
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
+			glBufferData(GL_ARRAY_BUFFER, max_vertex_buffer, GL_STREAM_DRAW);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, max_element_buffer, GL_STREAM_DRAW);
+
+			// load draw vertices & elements directly into vertex + element buffer
+			ByteBuffer vertices = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY, max_vertex_buffer, null);
+			ByteBuffer elements = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY, max_element_buffer, null);
+			try ( MemoryStack stack = stackPush() ) {
+				// fill convert configuration
+				NkConvertConfig config = NkConvertConfig.callocStack(stack)
+					.vertex_layout(VERTEX_LAYOUT)
+					.vertex_size(20)
+					.vertex_alignment(4)
+					.null_texture(null_texture)
+					.circle_segment_count(22)
+					.curve_segment_count(22)
+					.arc_segment_count(22)
+					.global_alpha(1.0f)
+					.shape_AA(AA)
+					.line_AA(AA);
+
+				// setup buffers to load vertices and elements
+				NkBuffer vbuf = NkBuffer.mallocStack(stack);
+				NkBuffer ebuf = NkBuffer.mallocStack(stack);
+
+				nk_buffer_init_fixed(vbuf, vertices/*, max_vertex_buffer*/);
+				nk_buffer_init_fixed(ebuf, elements/*, max_element_buffer*/);
+				nk_convert(ctx, cmds, vbuf, ebuf, config);
+			}
+			glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+
+			// iterate over and execute each draw command
+			float fb_scale_x = (float)display_width / (float)width;
+			float fb_scale_y = (float)display_height / (float)height;
+
+			long offset = NULL;
+			for ( NkDrawCommand cmd = nk__draw_begin(ctx, cmds); cmd != null; cmd = nk__draw_next(cmd, cmds, ctx) ) {
+				if ( cmd.elem_count() == 0 ) continue;
+				glBindTexture(GL_TEXTURE_2D, cmd.texture().id());
+				glScissor(
+					(int)(cmd.clip_rect().x() * fb_scale_x),
+					(int)((height - (int)(cmd.clip_rect().y() + cmd.clip_rect().h())) * fb_scale_y),
+					(int)(cmd.clip_rect().w() * fb_scale_x),
+					(int)(cmd.clip_rect().h() * fb_scale_y)
+				);
+				glDrawElements(GL_TRIANGLES, cmd.elem_count(), GL_UNSIGNED_SHORT, offset);
+				offset += cmd.elem_count() * 2;
+			}
+			nk_clear(ctx);
+		}
+
+		// default OpenGL state
+		glUseProgram(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+		glDisable(GL_BLEND);
+		glDisable(GL_SCISSOR_TEST);
 	}
 
-	@Override
-	public void kill() {
-		
+	private void destroy() {
+		glDetachShader(prog, vert_shdr);
+		glDetachShader(prog, frag_shdr);
+		glDeleteShader(vert_shdr);
+		glDeleteShader(frag_shdr);
+		glDeleteProgram(prog);
+		glDeleteTextures(default_font.texture().id());
+		glDeleteTextures(null_texture.texture().id());
+		glDeleteBuffers(vbo);
+		glDeleteBuffers(ebo);
+		nk_buffer_free(cmds);
 	}
 
-	@Override
-	public void renderShadow(Shader s) {
-		model.renderShadow(s);
+	private void shutdown() {
+		ctx.clip().copy().free();
+		ctx.clip().paste().free();
+		nk_free(ctx);
+		destroy();
+		default_font.query().free();
+		default_font.width().free();
+
+		calc.numberFilter.free();
+
+		ALLOCATOR.alloc().free();
+		ALLOCATOR.mfree().free();
 	}
+
 }

@@ -63,7 +63,7 @@ public class Engine {
 	public static boolean is2d;
 
 	private static Shader framebufferShader;
-	private static long window;
+	public static long window;
 	public static Framebuffer fbuffer;
 	private static Framebuffer pingPong1;
 	private static Framebuffer pingPong2;
@@ -194,7 +194,7 @@ public class Engine {
 			lastFrame = currentFrame;
 			
 			//refresh input
-			glfwPollEvents();
+			//glfwPollEvents();
 			
 			//calculate fps
 			time += deltaTime;

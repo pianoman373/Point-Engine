@@ -40,5 +40,9 @@
 	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-windows.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-stb.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-nuklear.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
