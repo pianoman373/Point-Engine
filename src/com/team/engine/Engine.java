@@ -195,7 +195,7 @@ public class Engine {
 			lastFrame = currentFrame;
 			
 			//refresh input
-			//glfwPollEvents();
+			glfwPollEvents();
 			
 			//calculate fps
 			time += deltaTime;
@@ -427,9 +427,10 @@ public class Engine {
 	 * does all that opengl context stuff at the very beginning.
 	 */
 	private static void setupContext() {
-		System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
+		//System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		print(System.getProperty("java.library.path"));
-		System.load(Paths.get("native/libassimp.so").toAbsolutePath().toString());
+		//System.load(Paths.get("native/libassimp.so").toAbsolutePath().toString());
+		//System.load(Paths.get("native/libassimp.so").toAbsolutePath().toString());
 
 		//set up our window options
 		glfwInit();

@@ -80,7 +80,7 @@ public class Globals {
 	//vec4
 	//-------------------------
 	public static Mat4 mat4() {
-		return mat4();
+		return new Mat4();
 	}
 	
 	public static Mat4 mat4(Matrix4f mat) {

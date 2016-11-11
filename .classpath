@@ -23,7 +23,11 @@
 	<classpathentry kind="lib" path="lib/luaj-jse-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jna-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jna-platform-4.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jassimp.jar"/>
+	<classpathentry kind="lib" path="lib/jassimp.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Game-Engine/native"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/lwjgl-opengl.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-glfw.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-openal.jar"/>
