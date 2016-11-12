@@ -3,9 +3,7 @@ package com.team.engine.rendering;
 import static com.team.engine.Globals.*;
 
 import com.team.engine.Engine;
-import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
-import com.team.engine.vecmath.Vec3;
 
 public class FontRenderer {
 	public static void draw(float x, float y, int pSize, String text) {

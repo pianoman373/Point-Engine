@@ -11,7 +11,6 @@ import com.team.engine.gameobject.PhysicsObject2D;
 import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.ModelBuilder;
 import com.team.engine.rendering.Shader;
-import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 
 import tiled.core.Map;

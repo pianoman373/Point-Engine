@@ -9,9 +9,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
 import java.nio.IntBuffer;
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -47,10 +45,7 @@ import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
 import com.team.engine.rendering.Texture;
-import com.team.engine.vecmath.Mat4;
-import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec2i;
-import com.team.engine.vecmath.Vec3;
 
 import vr.IVRCompositor_FnTable;
 import vr.IVRSystem;

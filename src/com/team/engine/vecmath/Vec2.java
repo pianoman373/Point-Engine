@@ -1,7 +1,5 @@
 package com.team.engine.vecmath;
 
-import static com.team.engine.Globals.*;
-
 import java.nio.FloatBuffer;
 
 import org.jbox2d.common.Vector2;

@@ -17,8 +17,6 @@ import com.team.engine.gameobject.GameObject2D;
 import com.team.engine.gameobject.Sprite;
 import com.team.engine.rendering.FontRenderer;
 import com.team.engine.rendering.Shader;
-import com.team.engine.vecmath.Vec2;
-import com.team.engine.vecmath.Vec3;
 
 /**
  * A demo utilizing sprite rendering, Grid2D's and box2D physics.

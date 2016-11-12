@@ -9,7 +9,6 @@ import com.team.engine.rendering.ObjLoader;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
-import com.team.engine.vecmath.Vec3;
 
 import static com.team.engine.Globals.*;
 

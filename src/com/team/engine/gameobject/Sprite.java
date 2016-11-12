@@ -6,10 +6,8 @@ import com.team.engine.Camera;
 import com.team.engine.Engine;
 import com.team.engine.Scene;
 import com.team.engine.rendering.Shader;
-import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
-import com.team.engine.vecmath.Vec4;
 
 /**
  * Sprite contains more helper functions that build on top of PhysicsObject2D that are focused on

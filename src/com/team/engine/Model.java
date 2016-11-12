@@ -13,7 +13,6 @@ import com.team.engine.rendering.Material;
 import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Mat4;
-import com.team.engine.vecmath.Vec3;
 
 import jassimp.AiMaterial;
 import jassimp.AiMesh;

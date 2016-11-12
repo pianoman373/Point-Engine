@@ -9,10 +9,6 @@ import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-import org.lwjgl.glfw.GLFWScrollCallback;
 import org.lwjgl.system.MemoryStack;
 
 import com.team.engine.vecmath.Vec2;

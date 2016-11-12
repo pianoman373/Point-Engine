@@ -1,36 +1,9 @@
 package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.nuklear.Nuklear.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.stb.STBTruetype.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
-
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-
-import org.lwjgl.nuklear.*;
-import org.lwjgl.stb.STBTTAlignedQuad;
-import org.lwjgl.stb.STBTTFontinfo;
-import org.lwjgl.stb.STBTTPackContext;
-import org.lwjgl.stb.STBTTPackedchar;
 
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
-
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.Platform;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
@@ -43,8 +16,6 @@ import com.team.engine.rendering.ObjLoader;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
-import com.team.engine.vecmath.Mat4;
-import com.team.engine.vecmath.Vec3;
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
@@ -132,17 +103,6 @@ public class GLDemo extends AbstractGame {
 				Engine.scene.add(new MeshObject(vec3(x * 3, y * 3, 0).add(vec3(0, -9, -15)), new Quat4f(), null, 0f, sphere, 1f, mat));
 			}
 		}
-		
-		
-		setupContext();
-	}
-	
-	private void render(int AA, int max_vertex_buffer, int max_element_buffer) {
-		
-	}
-	
-	private void setupContext() {
-		
 	}
 
 	private static float accum;

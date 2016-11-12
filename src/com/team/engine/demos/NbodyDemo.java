@@ -21,7 +21,6 @@ import com.team.engine.FPSCamera;
 import com.team.engine.Scene;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Shader;
-import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec3;
 
 /**
