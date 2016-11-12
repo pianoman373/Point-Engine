@@ -9,7 +9,7 @@ public class Settings {
 	public static int WINDOW_WIDTH = 1800;
 	public static int WINDOW_HEIGHT = 1000;
 	public static final boolean FULLSCREEN = false;
-	public static final float MAX_FPS = 50;
+	public static final float MAX_FPS = 60;
 	/**
 	 * Where all resources start at.
 	 */

@@ -19,6 +19,7 @@ import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
 
+import com.team.engine.Engine;
 import com.team.engine.Settings;
 import com.team.engine.Util;
 
@@ -126,6 +127,6 @@ public class Font {
 	}
 	
 	public void enable() {
-		nk_style_set_font(GLDemo.ctx, default_font);
+		nk_style_set_font(Engine.ctx, default_font);
 	}
 }
