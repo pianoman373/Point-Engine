@@ -70,10 +70,6 @@ public class Engine {
 	private static Framebuffer pingPong2;
 	private static Framebuffer pingPong3;
 	private static Mesh skyboxMesh;
-	private static KeyCallback keyCallback;
-	private static CursorCallback cursorCallback;
-	private static MouseCallback mouseCallback;
-	private static ScrollCallback scrollCallback;
 	private static float lastFrame = 0.0f;
 	private static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
 	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
@@ -460,17 +456,11 @@ public class Engine {
 		}
 		
 		glfwMakeContextCurrent(window);
-				
-		//create and set all the event callbacks
-		keyCallback = new KeyCallback();
-		cursorCallback = new CursorCallback();
-		mouseCallback = new MouseCallback();
-		scrollCallback = new ScrollCallback();
 		
-		glfwSetKeyCallback(window, keyCallback);
-		glfwSetCursorPosCallback(window, cursorCallback);
-		glfwSetMouseButtonCallback(window, mouseCallback);
-		glfwSetScrollCallback(window, scrollCallback);
+		glfwSetKeyCallback(window, (long window, int key, int scancode, int action, int mode) -> Input.keyEvent(window, key, action));
+		glfwSetCursorPosCallback(window, (long window, double xpos, double ypos) -> Input.cursorEvent(window, xpos, ypos));
+		glfwSetMouseButtonCallback(window, (long window, int button, int action, int mods) -> Input.mouseEvent(window, button, action, mods));
+		glfwSetScrollCallback(window, (long window, double arg1, double scrollAmount) -> Input.scrollEvent(window, scrollAmount));
 		
 		
 		//and finally create the opengl context and we're ready to go

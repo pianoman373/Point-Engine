@@ -458,7 +458,7 @@ public class GLDemo extends AbstractGame {
 		
 		glfwSetScrollCallback(Engine.window, (window, xoffset, yoffset) -> nk_input_scroll(ctx, (float)yoffset));
 		glfwSetCharCallback(Engine.window, (window, codepoint) -> nk_input_unicode(ctx, codepoint));
-		
+	
 		glfwSetCursorPosCallback(Engine.window, (window, xpos, ypos) -> nk_input_motion(ctx, (int)xpos, (int)ypos));
 		glfwSetMouseButtonCallback(Engine.window, (window, button, action, mods) -> {
 			try ( MemoryStack stack = stackPush() ) {

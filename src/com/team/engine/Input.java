@@ -121,33 +121,3 @@ public class Input {
 		scrollingAmount += scrollAmount;
 	}
 }
-
-class KeyCallback extends GLFWKeyCallback {
-	@Override
-	public void invoke(long window, int key, int scancode, int action, int mode) {
-		Input.keyEvent(window, key, action);
-	}
-}
-
-class CursorCallback extends GLFWCursorPosCallback {
-	@Override
-	public void invoke(long window, double xpos, double ypos) {
-		Input.cursorEvent(window, xpos, ypos);
-	}
-}
-
-class MouseCallback extends GLFWMouseButtonCallback {
-	@Override
-	public void invoke(long window, int button, int action, int mods) {
-		Input.mouseEvent(window, button, action, mods);
-	}
-}
-
-class ScrollCallback extends GLFWScrollCallback {
-
-	@Override
-	public void invoke(long window, double arg1, double scrollAmount) {
-		Input.scrollEvent(window, scrollAmount);
-	}
-	
-}
