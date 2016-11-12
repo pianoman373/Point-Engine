@@ -76,11 +76,6 @@ public class GLDemo extends AbstractGame {
 	private static final int MAX_ELEMENT_BUFFER = 128 * 1024;
 	
 	private int vbo, vao, ebo;
-	private int prog;
-	private int vert_shdr;
-	private int frag_shdr;
-	private int uniform_tex;
-	private int uniform_proj;
 	private NkDrawNullTexture null_texture = NkDrawNullTexture.create();
 	
 	private NkBuffer cmds = NkBuffer.create();
@@ -144,6 +139,8 @@ public class GLDemo extends AbstractGame {
 		Engine.loadTexture("stone_tile_normal.png");
 		Engine.loadTexture("stone_tile_specular.png");
 		
+		Engine.loadShader("gui");
+		
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
 		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		sphere = ObjLoader.loadFile("sphere.obj");
@@ -182,27 +179,26 @@ public class GLDemo extends AbstractGame {
 	}
 	
 	private void render(int AA, int max_vertex_buffer, int max_element_buffer) {
-		try ( MemoryStack stack = stackPush() ) {
-			// setup global state
-			glEnable(GL_BLEND);
-			glBlendEquation(GL_FUNC_ADD);
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			glDisable(GL_CULL_FACE);
-			glDisable(GL_DEPTH_TEST);
-			glEnable(GL_SCISSOR_TEST);
-			glActiveTexture(GL_TEXTURE0);
+		// setup global state
+		glEnable(GL_BLEND);
+		glBlendEquation(GL_FUNC_ADD);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_SCISSOR_TEST);
+		glActiveTexture(GL_TEXTURE0);
 
-			// setup program
-			glUseProgram(prog);
-			glUniform1i(uniform_tex, 0);
-			glUniformMatrix4fv(uniform_proj, false, stack.floats(
-				2.0f / Settings.WINDOW_WIDTH, 0.0f, 0.0f, 0.0f,
-				0.0f, -2.0f / Settings.WINDOW_HEIGHT, 0.0f, 0.0f,
-				0.0f, 0.0f, -1.0f, 0.0f,
-				-1.0f, 1.0f, 0.0f, 1.0f
-			));
-			glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
-		}
+		// setup program
+		Shader s = Engine.getShader("gui");
+		s.bindSimple();
+		s.uniformInt("Texture", 0);
+		s.uniformMat4("ProjMtx", mat4(
+				vec4(2.0f / Settings.WINDOW_WIDTH, 0.0f, 0.0f, 0.0f), 
+				vec4(0.0f, -2.0f / Settings.WINDOW_HEIGHT, 0.0f, 0.0f), 
+				vec4(0.0f, 0.0f, -1.0f, 0.0f), 
+				vec4(-1.0f, 1.0f, 0.0f, 1.0f)
+		));
+		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
 
 		{
 			// convert from command queue into draw list and draw to screen
@@ -373,55 +369,9 @@ public class GLDemo extends AbstractGame {
 	}
 	
 	private void setupContext() {
-		String NK_SHADER_VERSION = Platform.get() == Platform.MACOSX ? "#version 150\n" : "#version 300 es\n";
-		String vertex_shader =
-			NK_SHADER_VERSION +
-				"uniform mat4 ProjMtx;\n" +
-				"in vec2 Position;\n" +
-				"in vec2 TexCoord;\n" +
-				"in vec4 Color;\n" +
-				"out vec2 Frag_UV;\n" +
-				"out vec4 Frag_Color;\n" +
-				"void main() {\n" +
-				"   Frag_UV = TexCoord;\n" +
-				"   Frag_Color = Color;\n" +
-				"   gl_Position = ProjMtx * vec4(Position.xy, 0, 1);\n" +
-				"}\n";
-		String fragment_shader =
-			NK_SHADER_VERSION +
-				"precision mediump float;\n" +
-				"uniform sampler2D Texture;\n" +
-				"in vec2 Frag_UV;\n" +
-				"in vec4 Frag_Color;\n" +
-				"out vec4 Out_Color;\n" +
-				"void main(){\n" +
-				"   Out_Color = Frag_Color * texture(Texture, Frag_UV.st);\n" +
-				"}\n";
-
 		nk_buffer_init(cmds, ALLOCATOR, BUFFER_INITIAL_SIZE);
-		prog = glCreateProgram();
-		vert_shdr = glCreateShader(GL_VERTEX_SHADER);
-		frag_shdr = glCreateShader(GL_FRAGMENT_SHADER);
-		glShaderSource(vert_shdr, vertex_shader);
-		glShaderSource(frag_shdr, fragment_shader);
-		glCompileShader(vert_shdr);
-		glCompileShader(frag_shdr);
-		if ( glGetShaderi(vert_shdr, GL_COMPILE_STATUS) != GL_TRUE )
-			throw new IllegalStateException();
-		if ( glGetShaderi(frag_shdr, GL_COMPILE_STATUS) != GL_TRUE )
-			throw new IllegalStateException();
-		glAttachShader(prog, vert_shdr);
-		glAttachShader(prog, frag_shdr);
-		glLinkProgram(prog);
-		if ( glGetProgrami(prog, GL_LINK_STATUS) != GL_TRUE )
-			throw new IllegalStateException();
-
-		uniform_tex = glGetUniformLocation(prog, "Texture");
-		uniform_proj = glGetUniformLocation(prog, "ProjMtx");
-		int attrib_pos = glGetAttribLocation(prog, "Position");
-		int attrib_uv = glGetAttribLocation(prog, "TexCoord");
-		int attrib_col = glGetAttribLocation(prog, "Color");
-
+		
+		
 		{
 			// buffer setup
 			vbo = glGenBuffers();
@@ -432,13 +382,13 @@ public class GLDemo extends AbstractGame {
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
-			glEnableVertexAttribArray(attrib_pos);
-			glEnableVertexAttribArray(attrib_uv);
-			glEnableVertexAttribArray(attrib_col);
+			glEnableVertexAttribArray(0);
+			glEnableVertexAttribArray(1);
+			glEnableVertexAttribArray(2);
 
-			glVertexAttribPointer(attrib_pos, 2, GL_FLOAT, false, 20, 0);
-			glVertexAttribPointer(attrib_uv, 2, GL_FLOAT, false, 20, 8);
-			glVertexAttribPointer(attrib_col, 4, GL_UNSIGNED_BYTE, true, 20, 16);
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 20, 0);
+			glVertexAttribPointer(1, 2, GL_FLOAT, false, 20, 8);
+			glVertexAttribPointer(2, 4, GL_UNSIGNED_BYTE, true, 20, 16);
 		}
 
 		{

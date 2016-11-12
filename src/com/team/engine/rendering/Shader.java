@@ -74,6 +74,13 @@ public class Shader {
 			this.uniformScene(Engine.scene);
 		}
 	}
+	
+	/**
+	 * Binds the shader without setting up any default uniforms.
+	 */
+	public void bindSimple() {
+		glUseProgram(this.id);
+	}
 
 	/**
 	 * You should never need to use this, but just in case.
