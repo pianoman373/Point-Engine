@@ -32,8 +32,8 @@ public class Demo2D extends AbstractGame {
 	public void init() {
 		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
 
-		Engine.loadShader("sprite");
-		Engine.loadTexture("crate.png");
+		loadShader("sprite");
+		loadTexture("crate.png");
 
 		grid = new Grid2D("retro.tmx");
 		Engine.scene.add(grid);

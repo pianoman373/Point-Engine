@@ -182,26 +182,26 @@ public class Shader {
 
 	public void uniformMaterial(Material mat) {
 		if (mat.albedoTex != null)
-			Engine.getTexture(mat.albedoTex).bind(0);
+			getTexture(mat.albedoTex).bind(0);
 		this.uniformInt("material.albedoTex",  0);
 		this.uniformVec3("material.albedo", mat.albedo);
 		this.uniformBool("material.albedoTextured", mat.albedoTextured);
 
 		if (mat.roughnessTex != null)
-			Engine.getTexture(mat.roughnessTex).bind(1);
+			getTexture(mat.roughnessTex).bind(1);
 		this.uniformInt("material.roughnessTex", 1);
 		this.uniformFloat("material.roughness", mat.roughness);
 		this.uniformBool("material.roughnessTextured", mat.roughnessTextured);
 
 		if (Settings.ENABLE_NORMAL_MAPPING) {
 			if (mat.normalTex != null)
-				Engine.getTexture(mat.normalTex).bind(2);
+				getTexture(mat.normalTex).bind(2);
 			this.uniformInt("material.normalTex", 2);
 			this.uniformBool("material.normalTextured", mat.normalTextured);
 		}
 
 		if (mat.metallicTex != null)
-			Engine.getTexture(mat.metallicTex).bind(3);
+			getTexture(mat.metallicTex).bind(3);
 		this.uniformInt("material.metallicTex", 3);
 		this.uniformFloat("material.metallic", mat.metallic);
 		this.uniformBool("material.metallicTextured", mat.metallicTextured);

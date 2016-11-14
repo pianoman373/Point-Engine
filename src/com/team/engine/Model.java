@@ -44,13 +44,13 @@ public class Model {
 				
 				String diffuseTex = "../" + mat.getTextureFile(AiTextureType.DIFFUSE, 0);
 				
-				Engine.loadTexture(diffuseTex, false, true);
+				loadTexture(diffuseTex, false, true);
 				
 				String normalTex = "../" + mat.getTextureFile(AiTextureType.NORMALS, 0);
-				Engine.loadTexture(normalTex);
+				loadTexture(normalTex);
 				
 				String specularTex = "../" + mat.getTextureFile(AiTextureType.SPECULAR, 0);
-				Engine.loadTexture(specularTex);
+				loadTexture(specularTex);
 				
 				Mesh finalMesh = Mesh.normalIndexed(
 						GLBuffers.toArray(mesh.getPositionBuffer()),
@@ -81,8 +81,8 @@ public class Model {
 	
 	public void render() {
 		Shader s;
-		if (specularWorkflow) s = Engine.getShader("pbr-specular");
-		else s = Engine.getShader("pbr");
+		if (specularWorkflow) s = getShader("pbr-specular");
+		else s = getShader("pbr");
 		s.bind();
 		s.uniformMat4("model", matrix);
 		

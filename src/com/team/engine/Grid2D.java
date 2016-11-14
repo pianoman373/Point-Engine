@@ -35,7 +35,7 @@ public class Grid2D extends PhysicsObject2D {
 	
 	public Grid2D(String tmxfile) {
 		super(false, false);
-		Engine.loadTexture("retro-terrain.png", true, false);
+		loadTexture("retro-terrain.png", true, false);
 		TMXMapReader reader = new TMXMapReader();
 		
 		width = 16;
@@ -123,10 +123,10 @@ public class Grid2D extends PhysicsObject2D {
 
 	@Override
 	public void render(Scene scene, Camera cam) {
-		Shader s = Engine.getShader("sprite");
+		Shader s = getShader("sprite");
 		s.bind();
 		s.uniformMat4("model", mat4());
-		Engine.getTexture("retro-terrain.png").bind();
+		getTexture("retro-terrain.png").bind();
 		this.mesh.draw();
 	}
 }

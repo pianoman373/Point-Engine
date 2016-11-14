@@ -37,8 +37,8 @@ public class FontRenderer {
 		}
 		
 		
-		Shader s = Engine.getShader("sprite");
-		Engine.getTexture("ascii.png").bind();
+		Shader s = getShader("sprite");
+		getTexture("ascii.png").bind();
 		s.bind();
 		s.uniformMat4("model", mat4());//.scale(vec3((float)Graphics.WINDOW_WIDTH, (float)Graphics.WINDOW_HEIGHT, 1f)));
 		s.uniformMat4("view", mat4());

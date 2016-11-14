@@ -74,7 +74,7 @@ public class Scene implements ContactListener {
 	public Scene() {
 		sun = new DirectionalLight(vec3(-1.0f, -1.0f, 0.2f), vec3(2.0f, 2.0f, 2.0f), Settings.ENABLE_SHADOWS, 30, Settings.SHADOW_RESOLUTION);
 		
-		Engine.loadShader("color");
+		loadShader("color");
 		
 		ModelBuilder b = new ModelBuilder();
 		
@@ -120,7 +120,7 @@ public class Scene implements ContactListener {
 	
 	public void render(Camera cam) {
 		if (backgroundImage != null) {
-			Engine.getShader("framebuffer").bind();
+			getShader("framebuffer").bind();
 			backgroundImage.bind();
 			Engine.framebufferMesh.draw();
 		}
@@ -132,7 +132,7 @@ public class Scene implements ContactListener {
 			obj.render(this, cam);
 		}
 		
-		Shader s = Engine.getShader("light");
+		Shader s = getShader("light");
 		s.bind();
 		
 		for (PointLight light : lights) {
@@ -144,7 +144,7 @@ public class Scene implements ContactListener {
 	}
 	
 	private void debugRender() {
-		Shader s = Engine.getShader("color");
+		Shader s = getShader("color");
 		s.bind();
 		
 		for (GameObject2D obj : objects2D) {

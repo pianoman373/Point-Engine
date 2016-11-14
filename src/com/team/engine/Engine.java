@@ -85,9 +85,9 @@ public class Engine {
 	private static Framebuffer pingPong3;
 	private static Mesh skyboxMesh;
 	private static float lastFrame = 0.0f;
-	private static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
-	private static HashMap<String, Texture> textures = new HashMap<String, Texture>();
-	private static HashMap<String, Audio> sounds = new HashMap<String, Audio>();
+	protected static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
+	protected static HashMap<String, Texture> textures = new HashMap<String, Texture>();
+	protected static HashMap<String, Audio> sounds = new HashMap<String, Audio>();
 	private static AbstractGame game;
 	
 	//vr stuff
@@ -582,7 +582,7 @@ public class Engine {
 		glActiveTexture(GL_TEXTURE0);
 
 		// setup program
-		Shader s = Engine.getShader("gui");
+		Shader s = getShader("gui");
 		s.bindSimple();
 		s.uniformInt("Texture", 0);
 		s.uniformMat4("ProjMtx", mat4(
@@ -706,60 +706,5 @@ public class Engine {
 		
 		glfwTerminate();
 		System.exit(0);
-	}
-
-	/**
-	 * This will load a shader from the specified path on disk into memory.
-	 * This does NOT bind the shader or even return the shader. Use getShader for that.
-	 */
-	public static void loadShader(String path) {
-		Shader s = new Shader("shaders/" + path);
-		shaders.put(path, s);
-	}
-	
-	/**
-	 * This will return a shader object from memory ONLY if it has been loaded with loadShader.
-	 * The object will only be returned, you will have to bind it yourself.
-	 */
-	public static Shader getShader(String path) {
-		return shaders.get(path);
-	}
-	
-	/**
-	 * This will load audio from the specified path on disk into memory.
-	 * This does NOT play or even return the audio. Use getAudio for that.
-	 */
-	public static void loadAudio(String path) {
-		Audio a = new Audio("audio/" + path);
-		sounds.put(path, a);
-	}
-	
-	/**
-	 * This will return an audio object from memory ONLY if it has been loaded with loadSAudio.
-	 * The object will only be returned, you will have to play it yourself.
-	 */
-	public static Audio getAudio(String path) {
-		return sounds.get(path);
-	}
-
-	/**
-	 * This will load a texture from the specified path on disk into memory.
-	 * This does NOT bind the texture or even return the texture. Use getTexture for that.
-	 */
-	public static void loadTexture(String path, boolean pixelated, boolean srgb) {
-		Texture s = new Texture("textures/" + path, pixelated, srgb);
-		textures.put(path, s);
-	}
-	
-	public static void loadTexture(String path) {
-		loadTexture(path, false, false);
-	}
-	
-	/**
-	 * This will return a texture object from memory ONLY if it has been loaded with loadTexture.
-	 * The object will only be returned, you will have to bind it yourself.
-	 */
-	public static Texture getTexture(String path) {
-		return textures.get(path);
 	}
 }

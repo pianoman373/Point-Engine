@@ -61,8 +61,8 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 	public void init() {
 		SpaceCamera.WASD_SENSITIVITY = 25.0f;
 		
-		Engine.loadShader("point");
-		Engine.loadShader("light");
+		loadShader("point");
+		loadShader("light");
 		
 		Random rand = new Random();
 		
@@ -196,7 +196,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 	public void render() {
 		scene.render(Engine.camera);
 		
-		Shader s = Engine.getShader("point");
+		Shader s = getShader("point");
 		s.bind();
 		s.uniformMat4("model", mat4());
 		s.uniformVec3("lightColor", vec3(1.0f, 1.0f, 1.0f));

@@ -49,31 +49,31 @@ public class GLDemo extends AbstractGame {
 	public void init() {
 		print("yo");
 		
-		Engine.loadTexture("container2.png", false, true);
-		Engine.loadTexture("container2_specular.png");
-		Engine.loadTexture("brickwall.jpg", false, true);
-		Engine.loadTexture("brickwall_normal.jpg");
+		loadTexture("container2.png", false, true);
+		loadTexture("container2_specular.png");
+		loadTexture("brickwall.jpg", false, true);
+		loadTexture("brickwall_normal.jpg");
 		
-		Engine.loadTexture("metal/albedo.png", false, true);
-		Engine.loadTexture("metal/normal.png");
-		Engine.loadTexture("metal/metallic.png");
-		Engine.loadTexture("metal/roughness.png");
+		loadTexture("metal/albedo.png", false, true);
+		loadTexture("metal/normal.png");
+		loadTexture("metal/metallic.png");
+		loadTexture("metal/roughness.png");
 		
-		Engine.loadTexture("plastic/albedo.png", false, true);
-		Engine.loadTexture("plastic/normal.png");
-		Engine.loadTexture("plastic/metallic.png");
-		Engine.loadTexture("plastic/roughness.png");
+		loadTexture("plastic/albedo.png", false, true);
+		loadTexture("plastic/normal.png");
+		loadTexture("plastic/metallic.png");
+		loadTexture("plastic/roughness.png");
 		
-		Engine.loadTexture("gravel/albedo.png", false, true);
-		Engine.loadTexture("gravel/normal.png");
-		Engine.loadTexture("gravel/metallic.png");
-		Engine.loadTexture("gravel/roughness.png");
+		loadTexture("gravel/albedo.png", false, true);
+		loadTexture("gravel/normal.png");
+		loadTexture("gravel/metallic.png");
+		loadTexture("gravel/roughness.png");
 		
-		Engine.loadTexture("stone_tile.png", false, true);
-		Engine.loadTexture("stone_tile_normal.png");
-		Engine.loadTexture("stone_tile_specular.png");
+		loadTexture("stone_tile.png", false, true);
+		loadTexture("stone_tile_normal.png");
+		loadTexture("stone_tile_specular.png");
 		
-		Engine.loadShader("gui");
+		loadShader("gui");
 		
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
 		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);

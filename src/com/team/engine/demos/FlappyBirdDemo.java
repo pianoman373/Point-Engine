@@ -34,18 +34,18 @@ public class FlappyBirdDemo extends AbstractGame {
 	public void init() {
 		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
 
-		Engine.loadShader("sprite");
-		Engine.loadTexture("crate.png");
-		Engine.loadTexture("awesomeface.png");
+		loadShader("sprite");
+		loadTexture("crate.png");
+		loadTexture("awesomeface.png");
 		
-		Engine.loadAudio("breakout.wav");
-		Engine.loadAudio("powerup.wav");
+		loadAudio("breakout.wav");
+		loadAudio("powerup.wav");
 		
 		player = new Bird();
 		Engine.scene.add(player);
 		player.setPosition(vec2(-5.0f, 0.0f));
 		
-		Engine.getAudio("breakout.wav").play(true, 0.7f);
+		getAudio("breakout.wav").play(true, 0.7f);
 		
 		globals = JsePlatform.standardGlobals();
 		LuaValue library = LuaValue.tableOf();
@@ -160,7 +160,7 @@ class Bird extends Sprite {
 		if (other.tag.equals("pipe")) {
 			this.isDead = true;
 			deaths++;
-			Engine.getAudio("powerup.wav").play(false, 1.0f);
+			getAudio("powerup.wav").play(false, 1.0f);
 			Engine.scene.killWithTag("pipe");
 			pipesPlaced = 0;
 		}

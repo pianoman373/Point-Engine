@@ -49,8 +49,6 @@ public class FPSCamera extends Camera {
 			Mat4 mat = mat4().rotate(vec4(right.x, right.y, right.z, yoffset));
 			Vec4 vec = mat.multiply(vec4(front.x, front.y, front.z, 1.0f));
 			front = vec3(vec.x, vec.y, vec.z);
-			Vec4 vec2 = mat.multiply(vec4(up.x, up.y, up.z, 1.0f));
-			//up = vec3(vec2.x, vec2.y, vec2.z);
 			
 			//horizontal
 			Mat4 mat2 = mat4().rotate(vec4(up.x, up.y, up.z, -xoffset));

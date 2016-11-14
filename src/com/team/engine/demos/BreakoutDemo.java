@@ -39,16 +39,16 @@ public class BreakoutDemo extends AbstractGame {
 	public void init() {
 		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
 
-		Engine.loadShader("sprite");
-		Engine.loadTexture("crate.png");
-		Engine.loadTexture("block.png");
-		Engine.loadTexture("block_solid.png");
-		Engine.loadTexture("awesomeface.png");
-		Engine.loadTexture("paddle.png");
-		Engine.loadTexture("background.jpg");
+		loadShader("sprite");
+		loadTexture("crate.png");
+		loadTexture("block.png");
+		loadTexture("block_solid.png");
+		loadTexture("awesomeface.png");
+		loadTexture("paddle.png");
+		loadTexture("background.jpg");
 
-		Engine.loadAudio("breakout.wav");
-		Engine.loadAudio("powerup.wav");
+		loadAudio("breakout.wav");
+		loadAudio("powerup.wav");
 
 		player = new Player();
 		Engine.scene.add(player);
@@ -56,7 +56,7 @@ public class BreakoutDemo extends AbstractGame {
 		paddle = new Paddle();
 		Engine.scene.add(paddle);
 		Engine.scene.setGravity(vec2(0, 0));
-		Engine.scene.backgroundImage = Engine.getTexture("background.jpg");
+		Engine.scene.backgroundImage = getTexture("background.jpg");
 		paddle.setPosition(vec2(0.0f, -7.5f));
 
 		int i = 0;

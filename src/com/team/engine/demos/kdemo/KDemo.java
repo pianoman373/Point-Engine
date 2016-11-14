@@ -41,13 +41,13 @@ public class KDemo extends AbstractGame {
 		Engine.scene.sun.direction = vec3(0.0f, -1.0f, 0.0f);
 		Engine.scene.sun.color = vec3(1.2f, 1.2f, 1.2f);
 		
-		Engine.loadTexture("stone_tile.png", false, true);
-		Engine.loadTexture("stone_tile_normal.png");
-		Engine.loadTexture("stone_tile_specular.png");
-		Engine.loadTexture("planks.jpg", false, true);
-		Engine.loadTexture("planks_specular.jpg");
+		loadTexture("stone_tile.png", false, true);
+		loadTexture("stone_tile_normal.png");
+		loadTexture("stone_tile_specular.png");
+		loadTexture("planks.jpg", false, true);
+		loadTexture("planks_specular.jpg");
 		
-		Engine.loadShader("pbr");
+		loadShader("pbr");
 		planeMesh = Mesh.raw(Primitives.plane(16.0f), true);
 		boxMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		sphereMesh = ObjLoader.loadFile("sphere.obj");
@@ -72,7 +72,7 @@ public class KDemo extends AbstractGame {
 
 	@Override
 	public void render() {
-		//Shader s = Engine.getShader("standard");
+		//Shader s = getShader("standard");
 		//s.bind();
 	}
 

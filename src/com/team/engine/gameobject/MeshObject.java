@@ -69,7 +69,7 @@ public class MeshObject implements GameObject {
 	}
 	
 	public void render(Scene scene, Camera cam) {
-		Shader s = Engine.getShader("pbr");
+		Shader s = getShader("pbr");
 		s.bind();
 		
 		s.uniformMaterial(this.material);
@@ -88,7 +88,7 @@ public class MeshObject implements GameObject {
 		if (scene.debug) {
 			CollisionShape shape = rb.getCollisionShape();
 			
-			Shader s2 = Engine.getShader("debug");
+			Shader s2 = getShader("debug");
 			s2.bind();
 			s2.uniformVec3("color", vec3(5, 1, 1));
 			s2.uniformMat4("model", mat4(mat).scale(this.scale * 1.0001f));

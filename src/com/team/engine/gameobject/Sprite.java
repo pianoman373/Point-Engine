@@ -47,15 +47,15 @@ public class Sprite extends PhysicsObject2D {
 	@Override
 	public void render(Scene scene, Camera cam) {
 		if (image != null) {
-			Shader s = Engine.getShader("sprite");
+			Shader s = getShader("sprite");
 			s.bind();
 			s.uniformMat4("model", mat4().translate(vec3(body.getPosition().x, body.getPosition().y, 1)).rotate(vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(vec3(halfExtents.x * 2, halfExtents.y * 2, 1.0f)));
 			s.uniformVec3("overlayColor", overlayColor);
-			Engine.getTexture(image).bind();
+			getTexture(image).bind();
 			Engine.spriteMesh.draw();
 		}
 		else {
-			Shader s = Engine.getShader("color");
+			Shader s = getShader("color");
 			s.bind();
 			s.uniformMat4("model", mat4().translate(vec3(body.getPosition().x, body.getPosition().y, 1)).rotate(vec4(0.0f, 0.0f, 1.0f, (float)Math.toDegrees(body.getAngle()))).scale(vec3(halfExtents.x * 2, halfExtents.y * 2, 1.0f)));
 			s.uniformVec3("color", vec3(0.1f, 0.1f, 0.5f));
