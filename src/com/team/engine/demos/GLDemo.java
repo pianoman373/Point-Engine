@@ -112,7 +112,7 @@ public class GLDemo extends AbstractGame {
 		accum += Engine.deltaTime;
 		
 		if (Input.isButtonDown(1) && accum > 0.1f) {
-			FPSCamera cam = (FPSCamera)Engine.camera;
+			SpaceCamera cam = (SpaceCamera)Engine.camera;
 			MeshObject c = new MeshObject(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
 			Engine.scene.add(c);
 			c.rb.applyCentralForce(new Vector3f(0.0f, 100.0f, 0.0f));

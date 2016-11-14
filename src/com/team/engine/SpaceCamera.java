@@ -7,7 +7,7 @@ import com.team.engine.vecmath.Vec4;
 import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
-public class FPSCamera extends Camera {
+public class SpaceCamera extends Camera {
 	public Vec3 position = vec3(0.0f, 0.0f, 15.0f);
 	public Vec3 front = vec3(0.0f, 0.0f, -1.0f);
 	public float pitch = 0.0f;
@@ -50,7 +50,7 @@ public class FPSCamera extends Camera {
 			Vec4 vec = mat.multiply(vec4(front.x, front.y, front.z, 1.0f));
 			front = vec3(vec.x, vec.y, vec.z);
 			Vec4 vec2 = mat.multiply(vec4(up.x, up.y, up.z, 1.0f));
-			//up = vec3(vec2.x, vec2.y, vec2.z);
+			up = vec3(vec2.x, vec2.y, vec2.z);
 			
 			//horizontal
 			Mat4 mat2 = mat4().rotate(vec4(up.x, up.y, up.z, -xoffset));
@@ -61,18 +61,29 @@ public class FPSCamera extends Camera {
 		lastX = (float)Input.mousePos.x;
 		lastY = (float)Input.mousePos.y;
 		
+		if (Input.isKeyDown(GLFW_KEY_E)) {
+			Mat4 mat = mat4().rotate(vec4(front.x, front.y, front.z, 20f * Engine.deltaTime));
+			Vec4 vec = mat.multiply(vec4(up.x, up.y, up.z, 1.0f));
+			up = vec3(vec.x, vec.y, vec.z);
+		}
+		if (Input.isKeyDown(GLFW_KEY_Q)) {
+			Mat4 mat = mat4().rotate(vec4(front.x, front.y, front.z, -20f * Engine.deltaTime));
+			Vec4 vec = mat.multiply(vec4(up.x, up.y, up.z, 1.0f));
+			up = vec3(vec.x, vec.y, vec.z);
+		}
+		
 		float cameraSpeed = WASD_SENSITIVITY * Engine.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
 	    if(Input.isKeyDown(GLFW_KEY_W)) {
-	        position = position.add((vec3(front.x, 0, front.z).multiply(cameraSpeed)));
+	        position = position.add((front.multiply(cameraSpeed)));
 	    }
 	    if(Input.isKeyDown(GLFW_KEY_S)) {
-	    	position = position.subtract((vec3(front.x, 0, front.z).multiply(cameraSpeed)));
+	    	position = position.subtract((front.multiply(cameraSpeed)));
 	    }
 	    if(Input.isKeyDown(GLFW_KEY_A)) {
-	    	position = position.subtract(vec3(right.x, 0, right.z).multiply(cameraSpeed));
+	    	position = position.subtract(right.multiply(cameraSpeed));
 	    }
 	    if(Input.isKeyDown(GLFW_KEY_D)) {
-	    	position = position.add(vec3(right.x, 0, right.z).multiply(cameraSpeed));
+	    	position = position.add(right.multiply(cameraSpeed));
 	    }
 	    if(Input.isKeyDown(GLFW_KEY_R)) {
 	    	position = position.add(up.multiply(cameraSpeed));

@@ -17,7 +17,7 @@ import org.lwjgl.BufferUtils;
 
 import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
-import com.team.engine.FPSCamera;
+import com.team.engine.SpaceCamera;
 import com.team.engine.Scene;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Shader;
@@ -59,7 +59,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 
 	@Override
 	public void init() {
-		FPSCamera.WASD_SENSITIVITY = 25.0f;
+		SpaceCamera.WASD_SENSITIVITY = 25.0f;
 		
 		Engine.loadShader("point");
 		Engine.loadShader("light");

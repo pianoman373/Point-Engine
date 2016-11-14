@@ -209,7 +209,7 @@ public class Engine {
 			framebufferShader = getShader("framebuffer");
 		}
 		else {
-			camera = new FPSCamera();
+			camera = new SpaceCamera();
 			framebufferShader = getShader("hdr");
 			glEnable(GL_FRAMEBUFFER_SRGB); 
 		}
