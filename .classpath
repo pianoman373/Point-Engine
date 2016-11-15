@@ -31,7 +31,6 @@
 	<classpathentry kind="lib" path="lib/lwjgl-opengl.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-glfw.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-openal.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-linux.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-windows.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-natives-linux.jar"/>
@@ -40,7 +39,6 @@
 	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-linux.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-linux.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-windows.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-stb.jar"/>
@@ -48,5 +46,7 @@
 	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-windows.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-nuklear.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-linux.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

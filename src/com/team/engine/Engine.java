@@ -8,8 +8,10 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.nio.file.Paths;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -471,8 +473,7 @@ public class Engine {
 	private static void setupContext() {
 		//System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		print(System.getProperty("java.library.path"));
-		//System.load(Paths.get("native/libassimp.so").toAbsolutePath().toString());
-		//System.load(Paths.get("native/libassimp.so").toAbsolutePath().toString());
+		//System.setProperty( "java.library.path", "natives/" );
 
 		//set up our window options
 		glfwInit();
@@ -586,9 +587,9 @@ public class Engine {
 		s.bindSimple();
 		s.uniformInt("Texture", 0);
 		s.uniformMat4("ProjMtx", mat4(
-				vec4(2.0f / Settings.WINDOW_WIDTH, 0.0f, 0.0f, 0.0f), 
-				vec4(0.0f, -2.0f / Settings.WINDOW_HEIGHT, 0.0f, 0.0f), 
-				vec4(0.0f, 0.0f, -1.0f, 0.0f), 
+				vec4(2.0f / Settings.WINDOW_WIDTH, 0.0f, 0.0f, 0.0f),
+				vec4(0.0f, -2.0f / Settings.WINDOW_HEIGHT, 0.0f, 0.0f),
+				vec4(0.0f, 0.0f, -1.0f, 0.0f),
 				vec4(-1.0f, 1.0f, 0.0f, 1.0f)
 		));
 		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);

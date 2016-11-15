@@ -47,8 +47,6 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void init() {
-		print("yo");
-		
 		loadTexture("container2.png", false, true);
 		loadTexture("container2_specular.png");
 		loadTexture("brickwall.jpg", false, true);
@@ -81,7 +79,7 @@ public class GLDemo extends AbstractGame {
 		mat1 = ObjLoader.loadFile("matmodel-1.obj");
 		mat2 = ObjLoader.loadFile("matmodel-2.obj");
 		
-		model = new Model("adam.fbx", mat4().translate(vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
+		model = new Model("adam/adam.fbx", mat4().translate(vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
 		
 		
 		Engine.scene.skybox = new Cubemap("sunset");

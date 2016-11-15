@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.team.engine.rendering.Material;
 import com.team.engine.rendering.Mesh;
@@ -41,6 +43,15 @@ public class Model {
 			for (int i = 0; i < sceneMeshes.size(); i++) {
 				AiMesh mesh = sceneMeshes.get(i);
 				AiMaterial mat = sceneMaterials.get(mesh.getMaterialIndex());
+				
+				Matcher matcher = Pattern.compile("(.*/).*$").matcher(file);
+				
+				if (matcher.find()) {
+					print(matcher.group(1));
+				}
+				else {
+					print("something went wrong");
+				}
 				
 				String diffuseTex = "../" + mat.getTextureFile(AiTextureType.DIFFUSE, 0);
 				
