@@ -39,28 +39,30 @@ public class Model {
 			AiScene scene = Jassimp.importFile(Settings.RESOURCE_PATH + file, mySet);
 			List<AiMesh> sceneMeshes = scene.getMeshes();
 			List<AiMaterial> sceneMaterials = scene.getMaterials();
-			
+
+			Matcher matcher = Pattern.compile("(.*/).*$").matcher(file);
+			String folder;
+
+			if (matcher.find()) {
+				folder = matcher.group(1);
+			}
+			else {
+				folder = "";
+			}
+
+
 			for (int i = 0; i < sceneMeshes.size(); i++) {
 				AiMesh mesh = sceneMeshes.get(i);
 				AiMaterial mat = sceneMaterials.get(mesh.getMaterialIndex());
-				
-				Matcher matcher = Pattern.compile("(.*/).*$").matcher(file);
-				
-				if (matcher.find()) {
-					print(matcher.group(1));
-				}
-				else {
-					print("something went wrong");
-				}
-				
-				String diffuseTex = "../" + mat.getTextureFile(AiTextureType.DIFFUSE, 0);
+
+				String diffuseTex = "../" + folder + mat.getTextureFile(AiTextureType.DIFFUSE, 0);
 				
 				loadTexture(diffuseTex, false, true);
 				
-				String normalTex = "../" + mat.getTextureFile(AiTextureType.NORMALS, 0);
+				String normalTex = "../" + folder + mat.getTextureFile(AiTextureType.NORMALS, 0);
 				loadTexture(normalTex);
 				
-				String specularTex = "../" + mat.getTextureFile(AiTextureType.SPECULAR, 0);
+				String specularTex = "../" + folder + mat.getTextureFile(AiTextureType.SPECULAR, 0);
 				loadTexture(specularTex);
 				
 				Mesh finalMesh = Mesh.normalIndexed(
@@ -72,7 +74,7 @@ public class Model {
 				);
 				meshes.add(finalMesh);
 				
-				if (diffuseTex.equals("../")) {
+				if (diffuseTex.equals("../" + folder)) {
 					materials.add(new Material(vec3(0.5, 0.5, 0.5), 0.5f, 0.0f));
 				}
 				else {
