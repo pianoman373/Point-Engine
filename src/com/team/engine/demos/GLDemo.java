@@ -9,6 +9,8 @@ import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.team.engine.*;
 import com.team.engine.gameobject.MeshObject;
+import com.team.engine.gui.GuiCalculator;
+import com.team.engine.gui.GuiTest;
 import com.team.engine.rendering.Cubemap;
 import com.team.engine.rendering.Material;
 import com.team.engine.rendering.Mesh;
@@ -38,8 +40,8 @@ public class GLDemo extends AbstractGame {
 	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
 	
 	
-	private final Demo       demo = new Demo();
-	private final Calculator calc = new Calculator();
+	private final GuiTest       demo = new GuiTest();
+	private final GuiCalculator calc = new GuiCalculator();
 	
 	public static void main(String[] args) {
 		Engine.start(false, false, new GLDemo());

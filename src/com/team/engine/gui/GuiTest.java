@@ -1,4 +1,4 @@
-package com.team.engine.demos;
+package com.team.engine.gui;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.nuklear.*;
@@ -14,7 +14,7 @@ import static org.lwjgl.system.MemoryStack.*;
  * Java port of
  * <a href="https://github.com/vurtun/nuklear/blob/master/demo/glfw_opengl3/main.c">https://github.com/vurtun/nuklear/blob/master/demo/glfw_opengl3/main.c</a>.
  */
-class Demo {
+public class GuiTest {
 
 	private static final int EASY = 0;
 	private static final int HARD = 1;
@@ -25,12 +25,12 @@ class Demo {
 
 	private IntBuffer compression = BufferUtils.createIntBuffer(1).put(0, 20);
 
-	Demo() {
+	public GuiTest() {
 		background = NkColor.create();
 		nk_rgb(28, 48, 62, background);
 	}
 
-	void layout(NkContext ctx, int x, int y) {
+	public void layout(NkContext ctx, int x, int y) {
 		try ( MemoryStack stack = stackPush() ) {
 			NkRect rect = NkRect.mallocStack(stack);
 

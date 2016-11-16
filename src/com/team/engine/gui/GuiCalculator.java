@@ -2,7 +2,7 @@
  * Copyright LWJGL. All rights reserved.
  * License terms: https://www.lwjgl.org/license
  */
-package com.team.engine.demos;
+package com.team.engine.gui;
 
 import org.lwjgl.nuklear.*;
 import org.lwjgl.system.MemoryStack;
@@ -21,7 +21,7 @@ import static org.lwjgl.system.MemoryUtil.*;
  * Java port of
  * <a href="https://github.com/vurtun/nuklear/blob/master/demo/calculator.c">https://github.com/vurtun/nuklear/blob/master/demo/calculator.c</a>.
  */
-class Calculator {
+public class GuiCalculator {
 
 	private static final String NUMS = "789456123";
 	private static final String OPS  = "+-*/";
@@ -42,7 +42,7 @@ class Calculator {
 
 	final NkPluginFilter numberFilter;
 
-	Calculator() {
+	public GuiCalculator() {
 		format.setGroupingUsed(false);
 		format.setDecimalSeparatorAlwaysShown(true);
 
@@ -56,7 +56,7 @@ class Calculator {
 		numberFilter = NkPluginFilter.create(Nuklear::nnk_filter_float);
 	}
 
-	void layout(NkContext ctx, int x, int y) {
+	public void layout(NkContext ctx, int x, int y) {
 		try ( MemoryStack stack = stackPush() ) {
 			NkRect rect = NkRect.mallocStack(stack);
 			if ( nk_begin(ctx, "Calculator", nk_rect(x, y, 180, 250, rect), NK_WINDOW_BORDER | NK_WINDOW_NO_SCROLLBAR | NK_WINDOW_MOVABLE) ) {

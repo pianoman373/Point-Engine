@@ -1,4 +1,4 @@
-package com.team.engine.demos;
+package com.team.engine;
 
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -18,10 +18,6 @@ import org.lwjgl.stb.STBTTFontinfo;
 import org.lwjgl.stb.STBTTPackContext;
 import org.lwjgl.stb.STBTTPackedchar;
 import org.lwjgl.system.MemoryStack;
-
-import com.team.engine.Engine;
-import com.team.engine.Settings;
-import com.team.engine.Util;
 
 public class Font {
 	private NkUserFont default_font = NkUserFont.create();

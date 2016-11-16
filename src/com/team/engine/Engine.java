@@ -41,7 +41,6 @@ import org.lwjgl.opengl.ARBSeamlessCubeMap;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import com.team.engine.demos.Font;
 import com.team.engine.rendering.Framebuffer;
 import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.Primitives;
