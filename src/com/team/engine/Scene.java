@@ -8,6 +8,7 @@ import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
+import com.bulletphysics.linearmath.IDebugDraw;
 import com.team.engine.gameobject.GameObject;
 import com.team.engine.gameobject.GameObject2D;
 import com.team.engine.rendering.Cubemap;

@@ -7,7 +7,10 @@ import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
+import com.bulletphysics.dynamics.constraintsolver.Generic6DofConstraint;
+import com.bulletphysics.linearmath.Transform;
 import com.team.engine.*;
+import com.team.engine.gameobject.FirstPersonController;
 import com.team.engine.gameobject.MeshObject;
 import com.team.engine.gui.GuiCalculator;
 import com.team.engine.gui.GuiTest;
@@ -103,6 +106,17 @@ public class GLDemo extends AbstractGame {
 				Engine.scene.add(new MeshObject(vec3(x * 3, y * 3, 0).add(vec3(0, -9, -15)), new Quat4f(), null, 0f, sphere, 1f, mat));
 			}
 		}
+		
+		FirstPersonController player = new FirstPersonController(vec3(10, 0, 0));
+		MeshObject obj = new MeshObject(vec3(10, 5, 0), new Quat4f(), new SphereShape(0.5f), 0f, sphere, 1, groundMaterial);
+		
+		Generic6DofConstraint constraint = new Generic6DofConstraint(player.rb, obj.rb, new Transform(), new Transform(), true);
+		constraint.setLimit(5, 0, 0);
+		
+		obj.rb.addConstraintRef(constraint);
+		
+		Engine.scene.add(player);
+		Engine.scene.add(obj);
 	}
 
 	private static float accum;
@@ -113,9 +127,8 @@ public class GLDemo extends AbstractGame {
 		
 		if (Input.isButtonDown(1) && accum > 0.1f) {
 			SpaceCamera cam = (SpaceCamera)Engine.camera;
-			MeshObject c = new MeshObject(cam.getPosition(), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
+			MeshObject c = new MeshObject(cam.getPosition(), cam.front.multiply(30), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
 			Engine.scene.add(c);
-			c.rb.applyCentralForce(new Vector3f(0.0f, 100.0f, 0.0f));
 			accum = 0;
 		}
 		if (Input.isButtonDown(2) && accum > 1f) {

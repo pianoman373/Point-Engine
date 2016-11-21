@@ -46,7 +46,7 @@ public class MeshObject implements GameObject {
 	 * This object is hardcoded to use the standard shader. If you need to use a custom shader you will have to render manually or make
 	 * your own game object.
 	 */
-	public MeshObject(Vec3 pos, Quat4f rotation, CollisionShape bounds, float mass, Mesh mesh, float scale, Material material) {
+	public MeshObject(Vec3 pos, Vec3 velocity, Quat4f rotation, CollisionShape bounds, float mass, Mesh mesh, float scale, Material material) {
 		// setup the motion state for the crate
 		DefaultMotionState fallMotionState = new DefaultMotionState(new Transform(new Matrix4f(rotation, new Vector3f(pos.x, pos.y, pos.z), 1.0f)));
 
@@ -58,6 +58,12 @@ public class MeshObject implements GameObject {
 		this.scale = scale;
 
 		rb = new RigidBody(mass,fallMotionState,bounds,fallInertia); 
+		
+		rb.setLinearVelocity(velocity.asv3f());
+	}
+	
+	public MeshObject(Vec3 pos, Quat4f rotation, CollisionShape bounds, float mass, Mesh mesh, float scale, Material material) {
+		this(pos, vec3(), rotation, bounds, mass, mesh, scale, material);
 	}
 	
 	public void init(Scene scene) {
