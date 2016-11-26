@@ -37,14 +37,19 @@ public class FirstPersonController extends MeshObject {
 		
 		trans.setRotation(rotation);
 		
+		Vector3f velocity = new Vector3f();
+		rb.getLinearVelocity(velocity);
+		
 		
 		rb.setWorldTransform(trans);
 		
+		Vec3 vel = vec3();
+		
 		if (Input.isKeyDown(GLFW_KEY_UP)) {
-			this.rb.setLinearVelocity(vec3(0, 0, -10).rotateYaw(angle).asv3f());
+			vel = vec3(0, 0, -10).rotateYaw(angle);
 		}
 		if (Input.isKeyDown(GLFW_KEY_DOWN)) {
-			this.rb.setLinearVelocity(vec3(0, 0, -10).rotateYaw(angle).negate().asv3f());
+			vel = vec3(0, 0, -10).rotateYaw(angle).negate();
 		}
 		
 		if (Input.isKeyDown(GLFW_KEY_LEFT)) {
@@ -55,6 +60,18 @@ public class FirstPersonController extends MeshObject {
 			angle -= 2;
 		}
 		
+		vel.y =velocity.y;
+		
+		if (Input.isKeyDown(GLFW_KEY_SPACE)) {
+			vel.y = 10f;
+		}
+		
+		this.rb.setLinearVelocity(vel.asv3f());
+		
 		this.rb.activate();
+	}
+	
+	public Vec3 getDirection() {
+		return vec3(0, 0, -1).rotateYaw(angle);
 	}
 }

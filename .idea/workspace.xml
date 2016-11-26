@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b2319068-7ddd-48bf-82b0-a228fc2047df" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/Adam_LOD_02_Limbs_a.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/Adam_LOD_02_Limbs_n.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/Adam_LOD_02_Limbs_sg.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/Adam_LOD_02_Torso_a.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/Adam_LOD_02_Torso_n.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/resources/Adam_LOD_02_Torso_sg.png" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/resources/adam/adam.fbx" afterPath="$PROJECT_DIR$/resources/adam/adam.fbx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/team/engine/Model.java" afterPath="$PROJECT_DIR$/src/com/team/engine/Model.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/team/engine/Util.java" afterPath="$PROJECT_DIR$/src/com/team/engine/Util.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/team/engine/demos/GLDemo.java" afterPath="$PROJECT_DIR$/src/com/team/engine/demos/GLDemo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/team/engine/gameobject/MeshObject.java" afterPath="$PROJECT_DIR$/src/com/team/engine/gameobject/MeshObject.java" />
     </list>
     <ignored path="Game-Engine.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -39,10 +33,10 @@
       <file leaf-file-name="Engine.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/team/engine/Engine.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6615">
-              <caret line="497" column="8" selection-start-line="497" selection-start-column="8" selection-end-line="497" selection-end-column="8" />
+            <state relative-caret-position="0">
+              <caret line="495" column="8" selection-start-line="495" selection-start-column="8" selection-end-line="495" selection-end-column="8" />
               <folding>
-                <marker date="1479241139843" expanded="true" signature="14710:14743" ph="//..." />
+                <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
               </folding>
             </state>
           </provider>
@@ -61,8 +55,8 @@
       <file leaf-file-name="GLDemo.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/team/engine/demos/GLDemo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="66" column="43" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="43" />
+            <state relative-caret-position="435">
+              <caret line="129" column="25" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -119,8 +113,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
-      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -195,7 +189,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -558,14 +552,12 @@
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32900432" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -578,8 +570,10 @@
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32977587" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -608,7 +602,33 @@
         <state relative-caret-position="7455">
           <caret line="497" column="8" selection-start-line="497" selection-start-column="8" selection-end-line="497" selection-end-column="8" />
           <folding>
-            <marker date="1479241139843" expanded="true" signature="14710:14743" ph="//..." />
+            <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/team/engine/Model.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="810">
+          <caret line="75" column="16" selection-start-line="75" selection-start-column="16" selection-end-line="75" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/team/engine/demos/GLDemo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/team/engine/Engine.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7455">
+          <caret line="497" column="8" selection-start-line="497" selection-start-column="8" selection-end-line="497" selection-end-column="8" />
+          <folding>
+            <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -634,7 +654,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1479241139843" expanded="true" signature="14710:14743" ph="//..." />
+            <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -644,7 +664,7 @@
         <state relative-caret-position="6360">
           <caret line="480" column="40" selection-start-line="480" selection-start-column="40" selection-end-line="480" selection-end-column="40" />
           <folding>
-            <marker date="1479241139843" expanded="true" signature="14710:14743" ph="//..." />
+            <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -661,7 +681,7 @@
         <state relative-caret-position="6375">
           <caret line="480" column="40" selection-start-line="480" selection-start-column="40" selection-end-line="480" selection-end-column="40" />
           <folding>
-            <marker date="1479241139843" expanded="true" signature="14710:14743" ph="//..." />
+            <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -678,7 +698,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1479241139843" expanded="true" signature="14710:14743" ph="//..." />
+            <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -706,10 +726,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/team/engine/Engine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6615">
-          <caret line="497" column="8" selection-start-line="497" selection-start-column="8" selection-end-line="497" selection-end-column="8" />
+        <state relative-caret-position="0">
+          <caret line="495" column="8" selection-start-line="495" selection-start-column="8" selection-end-line="495" selection-end-column="8" />
           <folding>
-            <marker date="1479241139843" expanded="true" signature="14710:14743" ph="//..." />
+            <marker date="1479592106572" expanded="true" signature="14675:14708" ph="//..." />
           </folding>
         </state>
       </provider>
@@ -726,14 +746,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="158">
           <caret line="15" column="32" selection-start-line="15" selection-start-column="32" selection-end-line="15" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/jbullet.jar!/com/bulletphysics/dynamics/constraintsolver/Generic6DofConstraint.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1181">
+          <caret line="212" column="45" selection-start-line="212" selection-start-column="45" selection-end-line="212" selection-end-column="45" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/team/engine/demos/GLDemo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="66" column="43" selection-start-line="66" selection-start-column="8" selection-end-line="66" selection-end-column="43" />
+        <state relative-caret-position="435">
+          <caret line="129" column="25" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
           <folding />
         </state>
       </provider>

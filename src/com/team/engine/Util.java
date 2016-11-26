@@ -1,8 +1,10 @@
 package com.team.engine;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SeekableByteChannel;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
@@ -35,5 +37,19 @@ public class Util {
 		}
 		
 		return null;
+	}
+	
+	public static String readFileString(String resource) {
+		String source = "";
+		try {
+			BufferedReader reader = Files.newBufferedReader(Paths.get(Settings.RESOURCE_PATH + resource), Charset.defaultCharset());
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				source += line + "\n";
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return source;
 	}
 }

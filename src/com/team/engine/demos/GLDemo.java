@@ -1,13 +1,20 @@
 package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
+import static org.lwjgl.opengl.GL11.*;
 
+import javax.script.Invocable;
+import javax.script.ScriptContext;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.constraintsolver.Generic6DofConstraint;
+import com.bulletphysics.dynamics.constraintsolver.Point2PointConstraint;
 import com.bulletphysics.linearmath.Transform;
 import com.team.engine.*;
 import com.team.engine.gameobject.FirstPersonController;
@@ -43,8 +50,10 @@ public class GLDemo extends AbstractGame {
 	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
 	
 	
-	private final GuiTest       demo = new GuiTest();
+	private final GuiTest demo = new GuiTest();
 	private final GuiCalculator calc = new GuiCalculator();
+	
+	FirstPersonController player;
 	
 	public static void main(String[] args) {
 		Engine.start(false, false, new GLDemo());
@@ -92,8 +101,8 @@ public class GLDemo extends AbstractGame {
 		
 		Engine.camera.setPosition(vec3(0, 0, 5));
 		
-		Engine.scene.sun.color = vec3(5, 5, 5);
-		Engine.scene.sun.direction = vec3(-1, -0.8, -0.7f);
+		//Engine.scene.sun.color = vec3(5, 5, 5);
+		//Engine.scene.sun.direction = vec3(-1, -0.8, -0.7f);
 		
 		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
 		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
@@ -103,20 +112,30 @@ public class GLDemo extends AbstractGame {
 		for (int x = 0; x < 7; x++) {
 			for (int y = 0; y < 7; y++) {
 				Material mat = new Material("stone_tile.png", y / 7f, "stone_tile_normal.png", x / 7f);
-				Engine.scene.add(new MeshObject(vec3(x * 3, y * 3, 0).add(vec3(0, -9, -15)), new Quat4f(), null, 0f, sphere, 1f, mat));
+				Engine.scene.add(new MeshObject(vec3(x * 3, y * 3, 0).add(vec3(0, -9, -15)), new Quat4f(), new SphereShape(1f), 1f, sphere, 1f, mat));
 			}
 		}
 		
-		FirstPersonController player = new FirstPersonController(vec3(10, 0, 0));
-		MeshObject obj = new MeshObject(vec3(10, 5, 0), new Quat4f(), new SphereShape(0.5f), 0f, sphere, 1, groundMaterial);
-		
-		Generic6DofConstraint constraint = new Generic6DofConstraint(player.rb, obj.rb, new Transform(), new Transform(), true);
-		constraint.setLimit(5, 0, 0);
-		
-		obj.rb.addConstraintRef(constraint);
+		player = new FirstPersonController(vec3(10, 0, 0));
 		
 		Engine.scene.add(player);
-		Engine.scene.add(obj);
+		
+		ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
+	    ScriptEngine nashorn = scriptEngineManager.getEngineByName("nashorn");
+			
+	    String name = "Mahesh";
+	    Integer result = null;
+	      
+	    try {
+	    	nashorn.eval(Util.readFileString("builtin.js"));
+	       print(nashorn.eval(Util.readFileString("test.js")));
+	       
+	       
+	       ((Invocable) nashorn).invokeFunction("init");
+	         
+	    }catch(ScriptException | NoSuchMethodException e){
+	       System.out.println("Error executing script: "+ e.getMessage());
+	    }
 	}
 
 	private static float accum;
@@ -136,19 +155,18 @@ public class GLDemo extends AbstractGame {
 			Engine.scene.add(p);
 
 			accum = 0;
-		}	
+		}
+		
+		//Engine.camera.setPosition(vec3(player.getTransform().origin) .add (vec3(0, 5, 0)) .subtract (player.getDirection().multiply(6)));
+		//Engine.camera.setDirection(player.getDirection().normalize() .add (vec3(0, -0.5f, 0)));
 	}
 
 	@Override
-	public void render() {	
-		
-		
+	public void render() {
 		model.render();
 		
 		demo.layout(Engine.ctx, 50, 50);
 		calc.layout(Engine.ctx, 300, 50);
-		
-		
 	}
 
 	@Override

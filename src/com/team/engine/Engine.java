@@ -66,6 +66,7 @@ public class Engine {
 	public static Mesh debugSphereMesh;
 	public static Mesh spriteMesh;
 	public static Mesh framebufferMesh;
+	public static Tessellator tessellator;
 	/** This is constantly updated every frame. It represents the time elapsed in seconds since the last frame.
 	 * It is usually less than 0 (unless you have serious lag). It should be used for any physics and movement
 	 * related functions. Multiply the distance traveled by the delta time every second, and you will always travel
@@ -200,6 +201,7 @@ public class Engine {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+		tessellator = new Tessellator();
 		
 		//setup the scene and it's physics
 		scene = new Scene();
@@ -480,8 +482,8 @@ public class Engine {
 		glfwWindowHint(GLFW_SAMPLES, 4);
 		//opengl version stuff
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		
 		//here we create our window in fullscreen or a normal window
 		if(Settings.FULLSCREEN) {

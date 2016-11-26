@@ -57,7 +57,7 @@ public class MeshObject implements GameObject {
 		this.material = material;
 		this.scale = scale;
 
-		rb = new RigidBody(mass,fallMotionState,bounds,fallInertia); 
+		rb = new RigidBody(mass,fallMotionState,bounds,fallInertia);
 		
 		rb.setLinearVelocity(velocity.asv3f());
 	}
@@ -72,6 +72,13 @@ public class MeshObject implements GameObject {
 	
 	public void update() {
 		
+	}
+	
+	public Transform getTransform() {
+		Transform t = new Transform();
+		this.rb.getWorldTransform(t);
+		
+		return t;
 	}
 	
 	public void render(Scene scene, Camera cam) {

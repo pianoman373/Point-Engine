@@ -6,9 +6,11 @@ import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
 import com.bulletphysics.linearmath.IDebugDraw;
+import com.bulletphysics.linearmath.Transform;
 import com.team.engine.gameobject.GameObject;
 import com.team.engine.gameobject.GameObject2D;
 import com.team.engine.rendering.Cubemap;
@@ -108,11 +110,13 @@ public class Scene implements ContactListener {
 		world = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
 
 		// set the gravity of our world
-		world.setGravity(new Vector3f(0, -10, 0));
+		world.setGravity(new Vector3f(0, -9.8f, 0));
 		
 		//setup jbox2D
 		world2D = new World(new Vector2(0, -9.8f));	
 		world2D.setContactListener(this);
+		
+		world.setDebugDrawer(new BulletDebugDrawer());
 	}
 	
 	public void setGravity(Vec2 grav) {
@@ -141,7 +145,8 @@ public class Scene implements ContactListener {
 			s.uniformVec3("lightColor", light.color);
 			Engine.cubeMesh.draw();
 		}
-		//debugRender();
+		world.debugDrawWorld();
+		world.debugDrawObject(new Transform(), new SphereShape(1f), new Vector3f(0, 10, 0));
 	}
 	
 	private void debugRender() {
