@@ -157,8 +157,8 @@ public class GLDemo extends AbstractGame {
 			accum = 0;
 		}
 		
-		//Engine.camera.setPosition(vec3(player.getTransform().origin) .add (vec3(0, 5, 0)) .subtract (player.getDirection().multiply(6)));
-		//Engine.camera.setDirection(player.getDirection().normalize() .add (vec3(0, -0.5f, 0)));
+		Engine.camera.setPosition(vec3(player.getTransform().origin) .add (vec3(0, 5, 0)) .subtract (player.getDirection().multiply(6)));
+		Engine.camera.setDirection(player.getDirection().normalize() .add (vec3(0, -0.5f, 0)));
 	}
 
 	@Override

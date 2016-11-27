@@ -175,6 +175,7 @@ public class Engine {
 		loadShader("debug");
 		loadShader("pbr");
 		loadShader("pbr-specular");
+		loadShader("gui");
 		
 		loadTexture("ascii.png", true, false);
 

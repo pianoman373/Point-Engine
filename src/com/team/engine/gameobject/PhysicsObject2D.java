@@ -91,6 +91,7 @@ public abstract class PhysicsObject2D extends GameObject2D {
 	 */
 	public Fixture addSphere(Vec2 pos, float radius, float friction) {
 		CircleShape shape2 = new CircleShape();
+		
 		shape2.m_p.set(new Vector2(pos.x, pos.y));
 		shape2.setRadius(radius);
 		Fixture fix = body.createFixture(shape2, 1);

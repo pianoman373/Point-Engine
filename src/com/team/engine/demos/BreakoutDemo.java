@@ -37,9 +37,8 @@ public class BreakoutDemo extends AbstractGame {
 
 	@Override
 	public void init() {
-		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
-
-		loadShader("sprite");
+		print("blah");
+		
 		loadTexture("crate.png");
 		loadTexture("block.png");
 		loadTexture("block_solid.png");
@@ -162,7 +161,7 @@ public class BreakoutDemo extends AbstractGame {
 
 		public void init(Scene scene) {
 			super.init(scene);
-
+			
 			this.addSphere(vec2(), 0.5f, 0f);
 			this.setVelocity(vec2(8.0f, 8.0f));
 		}
@@ -183,9 +182,9 @@ public class BreakoutDemo extends AbstractGame {
 			if (other.tag.equals("box") && other instanceof Box) {
 				if (!((Box)other).solid) {
 					Engine.scene.delete(other);
+					getAudio("powerup.wav").play(false, 1.0f);
 				}
 			}
 		}
-
 	}
 }

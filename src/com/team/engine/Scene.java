@@ -145,8 +145,6 @@ public class Scene implements ContactListener {
 			s.uniformVec3("lightColor", light.color);
 			Engine.cubeMesh.draw();
 		}
-		world.debugDrawWorld();
-		world.debugDrawObject(new Transform(), new SphereShape(1f), new Vector3f(0, 10, 0));
 	}
 	
 	private void debugRender() {
