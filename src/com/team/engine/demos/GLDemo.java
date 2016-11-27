@@ -76,11 +76,6 @@ public class GLDemo extends AbstractGame {
 		loadTexture("plastic/metallic.png");
 		loadTexture("plastic/roughness.png");
 		
-		loadTexture("gravel/albedo.png", false, true);
-		loadTexture("gravel/normal.png");
-		loadTexture("gravel/metallic.png");
-		loadTexture("gravel/roughness.png");
-		
 		loadTexture("stone_tile.png", false, true);
 		loadTexture("stone_tile_normal.png");
 		loadTexture("stone_tile_specular.png");
@@ -119,23 +114,6 @@ public class GLDemo extends AbstractGame {
 		player = new FirstPersonController(vec3(10, 0, 0));
 		
 		Engine.scene.add(player);
-		
-		ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-	    ScriptEngine nashorn = scriptEngineManager.getEngineByName("nashorn");
-			
-	    String name = "Mahesh";
-	    Integer result = null;
-	      
-	    try {
-	    	nashorn.eval(Util.readFileString("builtin.js"));
-	       print(nashorn.eval(Util.readFileString("test.js")));
-	       
-	       
-	       ((Invocable) nashorn).invokeFunction("init");
-	         
-	    }catch(ScriptException | NoSuchMethodException e){
-	       System.out.println("Error executing script: "+ e.getMessage());
-	    }
 	}
 
 	private static float accum;
