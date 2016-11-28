@@ -660,9 +660,11 @@ public class Engine {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
-		glDisable(GL_BLEND);
+		glEnable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_SCISSOR_TEST);
+		glEnable(GL_CULL_FACE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	
 	private static void setupVR() {

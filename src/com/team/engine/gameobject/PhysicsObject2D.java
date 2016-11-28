@@ -4,6 +4,7 @@ import static com.team.engine.Globals.*;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.common.Transform;
 import org.jbox2d.common.Vector2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
@@ -69,6 +70,10 @@ public abstract class PhysicsObject2D extends GameObject2D {
 	
 	public Vec2 getPosition() {
 		return vec2(this.body.getPosition());
+	}
+	
+	public void setRotation(float rotation) {
+		this.body.setTransform(this.body.getPosition(), (float)Math.toRadians(rotation));
 	}
 	
 	public void setVelocity(Vec2 vec) {

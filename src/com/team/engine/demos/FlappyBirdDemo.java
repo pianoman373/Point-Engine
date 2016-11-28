@@ -31,7 +31,8 @@ public class FlappyBirdDemo extends AbstractGame {
 
 		loadShader("sprite");
 		loadTexture("crate.png");
-		loadTexture("awesomeface.png");
+		loadTexture("pipe.png", true, false);
+		loadTexture("awesomeface.png", true, false);
 		
 		loadAudio("breakout.wav");
 		loadAudio("powerup.wav");
@@ -67,14 +68,20 @@ public class FlappyBirdDemo extends AbstractGame {
 }
 
 class Pipe extends Sprite {
-	public Pipe() {
-		super(null, vec2(1f, 4f), false, false);
+	boolean top;
+	
+	public Pipe(boolean top) {
+		super("pipe.png", vec2(1f, 4f), false, false);
 		this.tag = "pipe";
+		this.top = top;
 	}
 	
 	public void init(Scene scene) {
 		super.init(scene);
 		this.addCube(vec2(0, 0), vec2(1f, 4f), 0, true);
+		if (top) {
+			this.setRotation(180);
+		}
 	}
 }
 
@@ -130,11 +137,11 @@ class Bird extends Sprite {
 		
 		if (pos.x > pipesPlaced * 5) {
 			float offset = (((float)Math.random() * 6.0f) - 3.0f);
-			Pipe pipe = new Pipe();
+			Pipe pipe = new Pipe(false);
 			Engine.scene.add(pipe);
 			pipe.setPosition(vec2(pos.x + 15, -7 + offset));
 		
-			Pipe pipe2 = new Pipe();
+			Pipe pipe2 = new Pipe(true);
 			Engine.scene.add(pipe2);
 			pipe2.setPosition(vec2(pos.x + 15, 7 + offset));
 			pipesPlaced++;
