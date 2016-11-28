@@ -8,45 +8,49 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/jbullet.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="file:///home/joseph/git/Game-Engine/doc/bullet-javadoc"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Game-Engine/lib/javadoc/bullet-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/stack-alloc.jar"/>
 	<classpathentry kind="lib" path="lib/vecmath.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl.jar">
+	<classpathentry kind="lib" path="lib/libtiled.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Game%20Engine/doc/javadoc.zip!/"/>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Game-Engine/lib/javadoc/libtiled-javadoc.zip!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/libtiled.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/luaj-jse-3.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/jna-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jna-platform-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jassimp.jar">
 		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/Game-Engine/lib/javadoc/jassimp-javadoc.zip!/"/>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Game-Engine/native"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/lwjgl-opengl.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-glfw.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-openal.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-macos.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-natives-linux.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-natives-macos.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-linux.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-macos.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-openal-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-macos.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-stb.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-linux.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-macos.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-nuklear-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-nuklear.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-glfw-natives-linux.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl-stb-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-glfw/lwjgl-glfw.jar" sourcepath="lib/lwjgl/lwjgl-glfw/lwjgl-glfw-sources.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc.jar" sourcepath="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-sources.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear.jar" sourcepath="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-sources.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal.jar" sourcepath="lib/lwjgl/lwjgl-openal/lwjgl-openal-sources.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-opengl/lwjgl-opengl.jar" sourcepath="lib/lwjgl/lwjgl-opengl/lwjgl-opengl-sources.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-stb/lwjgl-stb.jar" sourcepath="lib/lwjgl/lwjgl-stb/lwjgl-stb-sources.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-glfw/lwjgl-glfw-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-glfw/lwjgl-glfw-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-glfw/lwjgl-glfw-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-windows.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-stb/lwjgl-stb-natives-linux.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-stb/lwjgl-stb-natives-macos.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-stb/lwjgl-stb-natives-windows.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

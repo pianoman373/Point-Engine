@@ -2,9 +2,6 @@ package com.team.engine.demos;
 
 import org.jbox2d.common.Vector2;
 import org.jbox2d.dynamics.Fixture;
-import org.luaj.vm2.Globals;
-import org.luaj.vm2.LuaValue;
-import org.luaj.vm2.lib.jse.JsePlatform;
 
 import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -22,8 +19,6 @@ import com.team.engine.rendering.Shader;
  * A demo utilizing sprite rendering, Grid2D's and box2D physics.
  */
 public class FlappyBirdDemo extends AbstractGame {
-	private Globals globals;
-
 	public Bird player;
 
 	public static void main(String[] args) {
@@ -46,19 +41,10 @@ public class FlappyBirdDemo extends AbstractGame {
 		player.setPosition(vec2(-5.0f, 0.0f));
 		
 		getAudio("breakout.wav").play(true, 0.7f);
-		
-		globals = JsePlatform.standardGlobals();
-		LuaValue library = LuaValue.tableOf();
-		globals.set("point", library);
-		LuaValue chunk = globals.loadfile("resources/scripts/test.lua");
-		chunk.call();
-		
-		//globals.get("point").get("init").call();
 	}
 	
 	@Override
 	public void tick() {
-		//globals.get("point").get("tick").call();
 	}
 
 	@Override
@@ -66,7 +52,6 @@ public class FlappyBirdDemo extends AbstractGame {
 		//grid.render();
 		FontRenderer.draw(-1f + 0.05f, 1f - 0.1f, 1, "Deaths: " + this.player.deaths);
 		
-		//globals.get("point").get("render").call();
 	}
 
 	@Override
