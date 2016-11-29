@@ -45,13 +45,13 @@ public class FlappyBirdDemo extends AbstractGame {
 	}
 	
 	@Override
-	public void tick() {
+	public void update() {
 	}
 
 	@Override
 	public void render() {
 		//grid.render();
-		FontRenderer.draw(-1f + 0.05f, 1f - 0.1f, 1, "Deaths: " + this.player.deaths);
+		FontRenderer.draw(-1f + 0.05f, 1f - 0.1f, 2, "Deaths: " + this.player.deaths);
 		
 	}
 

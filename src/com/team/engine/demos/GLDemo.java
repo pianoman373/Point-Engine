@@ -119,7 +119,7 @@ public class GLDemo extends AbstractGame {
 	private static float accum;
 
 	@Override
-	public void tick() {
+	public void update() {
 		accum += Engine.deltaTime;
 		
 		if (Input.isButtonDown(1) && accum > 0.1f) {
@@ -135,6 +135,10 @@ public class GLDemo extends AbstractGame {
 			accum = 0;
 		}
 		
+		
+	}
+	
+	public void postUpdate() {
 		Engine.camera.setPosition(vec3(player.getTransform().origin) .add (vec3(0, 5, 0)) .subtract (player.getDirection().multiply(6)));
 		Engine.camera.setDirection(player.getDirection().normalize() .add (vec3(0, -0.5f, 0)));
 	}

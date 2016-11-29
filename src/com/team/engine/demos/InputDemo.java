@@ -64,7 +64,7 @@ public class InputDemo extends AbstractGame {
 	}
 	
 	@Override
-	public void tick() {
+	public void update() {
 		accumulator += Engine.deltaTime;
 		
 		if (accumulator > REFRESH_RATE) {

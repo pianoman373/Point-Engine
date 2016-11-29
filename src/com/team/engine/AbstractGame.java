@@ -11,11 +11,13 @@ public abstract class AbstractGame {
 	 * Called one time only when the game is first loaded.
 	 */
 	public abstract void init();
-
+	
 	/**
 	 * Called every update and should be used for non-rendering functions.
 	 */
-	public abstract void tick();
+	public void update() {}
+	
+	public void postUpdate() {}
 
 	/**
 	 * Called every time the frame updates.

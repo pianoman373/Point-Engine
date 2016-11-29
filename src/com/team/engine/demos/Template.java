@@ -18,7 +18,7 @@ public class Template extends AbstractGame {
 	}
 	
 	@Override
-	public void tick() {
+	public void update() {
 		
 	}
 

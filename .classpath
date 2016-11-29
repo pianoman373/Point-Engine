@@ -21,7 +21,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jna-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jna-platform-4.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl.jar" sourcepath="lib/lwjgl/lwjgl/lwjgl-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-glfw/lwjgl-glfw.jar" sourcepath="lib/lwjgl/lwjgl-glfw/lwjgl-glfw-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc.jar" sourcepath="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear.jar" sourcepath="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-sources.jar"/>

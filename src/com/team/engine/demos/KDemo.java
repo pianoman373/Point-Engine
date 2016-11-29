@@ -63,7 +63,7 @@ public class KDemo extends AbstractGame {
 	}
 	
 	@Override
-	public void tick() {
+	public void update() {
 		
 	}
 

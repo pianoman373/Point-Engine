@@ -43,7 +43,13 @@ public class Demo2D extends AbstractGame {
 	}
 	
 	@Override
-	public void tick() {}
+	public void update() {
+		
+	}
+	
+	public void postUpdate() {
+		Engine.camera.setPosition(vec3(player.body.getPosition().x, player.body.getPosition().y, 0));
+	}
 
 	@Override
 	public void render() {
@@ -75,7 +81,8 @@ class Player extends Sprite {
 		this.feet = this.addSphere(vec2(0.0f, -0.15f), 0.4f, 1000);
 		
 		body.setTransform(new Vector2(10.0f, 20.0f), 0);
-		body.setFixedRotation(true);	
+		body.setFixedRotation(true);
+		body.setLinearDamping(0.5f);
 	}
 
 	@Override
@@ -105,8 +112,6 @@ class Player extends Sprite {
 			body.applyLinearImpulse(new Vector2(600 * Engine.deltaTime, 0), new Vector2(pos.x, pos.y));
 			body.setAwake(true);
 		}
-		
-		Engine.camera.setPosition(vec3(body.getPosition().x, body.getPosition().y, 0));
 	}
 	
 	public void onContact(Fixture f, GameObject2D other) {

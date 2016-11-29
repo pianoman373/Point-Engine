@@ -27,13 +27,13 @@ public class FontRenderer {
 		    Vec2 uv_down_right = vec2(uv_x + 1.0f / 16.0f, (uv_y + 1.0f / 16.0f));
 		    Vec2 uv_down_left = vec2(uv_x, (uv_y + 1.0f/16.0f));
 		    
-		    mb.vertex(vertex_up_left.x, vertex_up_left.y, -1, uv_up_left.x, uv_up_left.y);
-		    mb.vertex(vertex_down_left.x, vertex_down_left.y, -1, uv_down_left.x, uv_down_left.y);
-		    mb.vertex(vertex_up_right.x, vertex_up_right.y, -1, uv_up_right.x, uv_up_right.y);
+		    mb.vertex(vertex_up_left.x, vertex_up_left.y, -1, uv_up_left.x, 1 - uv_up_left.y);
+		    mb.vertex(vertex_down_left.x, vertex_down_left.y, -1, uv_down_left.x, 1 - uv_down_left.y);
+		    mb.vertex(vertex_up_right.x, vertex_up_right.y, -1, uv_up_right.x, 1 - uv_up_right.y);
 		    
-		    mb.vertex(vertex_down_right.x, vertex_down_right.y, -1, uv_down_right.x, uv_down_right.y);
-		    mb.vertex(vertex_up_right.x, vertex_up_right.y, -1, uv_up_right.x, uv_up_right.y);
-		    mb.vertex(vertex_down_left.x, vertex_down_left.y, -1, uv_down_left.x, uv_down_left.y);
+		    mb.vertex(vertex_down_right.x, vertex_down_right.y, -1, uv_down_right.x, 1 - uv_down_right.y);
+		    mb.vertex(vertex_up_right.x, vertex_up_right.y, -1, uv_up_right.x, 1 - uv_up_right.y);
+		    mb.vertex(vertex_down_left.x, vertex_down_left.y, -1, uv_down_left.x, 1 - uv_down_left.y);
 		}
 		
 		
@@ -43,7 +43,7 @@ public class FontRenderer {
 		s.uniformMat4("model", mat4());//.scale(vec3((float)Graphics.WINDOW_WIDTH, (float)Graphics.WINDOW_HEIGHT, 1f)));
 		s.uniformMat4("view", mat4());
 		s.uniformMat4("projection", mat4());
-		s.uniformVec3("color", vec3(0.1f, 0.1f, 0.5f));
+		s.uniformVec3("color", vec3(1f, 1f, 1f));
 		//Engine.spriteMesh.draw();
 		Mesh m = mb.toMesh();
 		m.draw();

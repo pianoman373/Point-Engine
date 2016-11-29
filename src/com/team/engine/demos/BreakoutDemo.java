@@ -37,8 +37,6 @@ public class BreakoutDemo extends AbstractGame {
 
 	@Override
 	public void init() {
-		print("blah");
-		
 		loadTexture("crate.png");
 		loadTexture("block.png");
 		loadTexture("block_solid.png");
@@ -93,7 +91,7 @@ public class BreakoutDemo extends AbstractGame {
 	}
 
 	@Override
-	public void tick() {
+	public void update() {
 		
 	}
 
@@ -128,10 +126,10 @@ public class BreakoutDemo extends AbstractGame {
 			Vec2 pos = this.getPosition();
 
 			if (Input.isKeyDown(GLFW_KEY_LEFT)) {
-				this.setPosition(vec2(pos.x - (Engine.deltaTime * 8), pos.y));
+				this.setPosition(vec2(pos.x - (Engine.deltaTime * 12), pos.y));
 			}
 			if (Input.isKeyDown(GLFW_KEY_RIGHT)) {
-				this.setPosition(vec2(pos.x + (Engine.deltaTime * 8), pos.y));
+				this.setPosition(vec2(pos.x + (Engine.deltaTime * 12), pos.y));
 			}
 		}
 	}
@@ -162,7 +160,10 @@ public class BreakoutDemo extends AbstractGame {
 		public void init(Scene scene) {
 			super.init(scene);
 			
-			this.addSphere(vec2(), 0.5f, 0f);
+			this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, false);
+			
+			body.setFixedRotation(true);
+			//this.addSphere(vec2(), 0.5f, 0f);
 			this.setVelocity(vec2(8.0f, 8.0f));
 		}
 

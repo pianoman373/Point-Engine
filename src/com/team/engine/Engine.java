@@ -283,12 +283,12 @@ public class Engine {
 	        	
 				}
 			}
-
 			
-			scene.update();				
-			
-			game.tick();
+			scene.update();
+			game.update();
 			camera.update();
+			
+			game.postUpdate();
 			
 			//update matrices
 			if (isVR) {

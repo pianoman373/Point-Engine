@@ -152,7 +152,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 	}
 
 	@Override
-	public void tick() {
+	public void update() {
 		if (readyToRender) {
 			readyToRender = false;
 			updateVBO();
