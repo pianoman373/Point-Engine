@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.ByteBuffer;
 
-import com.team.engine.GLBuffers;
+import com.team.engine.Util;
 import com.team.engine.vecmath.Vec2i;
 
 public class Framebuffer {
@@ -73,7 +73,7 @@ public class Framebuffer {
 		
 		
 		int[] attachments = new int[] { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-		glDrawBuffers(GLBuffers.StaticBuffer(attachments));
+		glDrawBuffers(Util.toBuffer(attachments));
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);  
 		
@@ -140,7 +140,7 @@ public class Framebuffer {
 		}
 		
 		int[] attachments = new int[] { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
-		glDrawBuffers(GLBuffers.StaticBuffer(attachments));
+		glDrawBuffers(Util.toBuffer(attachments));
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);  
 		
@@ -175,7 +175,7 @@ public class Framebuffer {
 		glGenerateMipmap(GL_TEXTURE_2D);
 		//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, null); 
 		float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, GLBuffers.StaticBuffer(borderColor));
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, Util.toBuffer(borderColor));
 		
 		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);

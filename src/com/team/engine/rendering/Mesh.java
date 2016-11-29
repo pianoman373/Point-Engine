@@ -10,7 +10,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
-import com.team.engine.GLBuffers;
+import com.team.engine.Util;
 import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
@@ -144,8 +144,8 @@ public class Mesh {
 		int EBO = glGenBuffers();
 		int VBO = glGenBuffers();
 		
-		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(tangents ? toTangentBuffer(vertices) : vertices);
-		IntBuffer indexBuffer = GLBuffers.StaticBuffer(indices);
+		FloatBuffer vertexBuffer = Util.toBuffer(tangents ? toTangentBuffer(vertices) : vertices);
+		IntBuffer indexBuffer = Util.toBuffer(indices);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);
@@ -255,7 +255,7 @@ public class Mesh {
 		int EBO = glGenBuffers();
 		int VBO = glGenBuffers();
 		
-		FloatBuffer vertexBuffer = GLBuffers.StaticBuffer(tangents ? toTangentBuffer(vertices) : vertices);
+		FloatBuffer vertexBuffer = Util.toBuffer(tangents ? toTangentBuffer(vertices) : vertices);
 		
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertexBuffer, GL_STATIC_DRAW);

@@ -138,7 +138,7 @@ public class Globals {
 	}
 	
 	//-------------------------
-	//vec4
+	//mat4
 	//-------------------------
 	public static Mat4 mat4() {
 		return new Mat4();

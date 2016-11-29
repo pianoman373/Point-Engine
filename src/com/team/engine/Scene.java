@@ -88,8 +88,6 @@ public class Scene implements ContactListener {
 		//setup jbox2D
 		world2D = new World(new Vector2(0, -9.8f));	
 		world2D.setContactListener(this);
-		
-		world.setDebugDrawer(new BulletDebugDrawer());
 	}
 	
 	public void setGravity(Vec2 grav) {

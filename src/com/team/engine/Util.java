@@ -3,6 +3,8 @@ package com.team.engine;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.nio.channels.SeekableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -51,5 +53,55 @@ public class Util {
 			e.printStackTrace();
 		}
 		return source;
+	}
+	
+	public static FloatBuffer toBuffer(float[] contents) {
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(contents.length);
+		for (float i : contents) {
+			buffer.put(i);
+		}
+		buffer.flip();
+		
+		return buffer;
+	}
+	
+	public static IntBuffer toBuffer(int[] contents) {
+		IntBuffer buffer = BufferUtils.createIntBuffer(contents.length);
+		for (int i : contents) {
+			buffer.put(i);
+		}
+		buffer.flip();
+		
+		return buffer;
+	}
+	
+	public static ByteBuffer toBuffer(byte[] contents) {
+		ByteBuffer buffer = BufferUtils.createByteBuffer(contents.length);
+		for (byte i : contents) {
+			buffer.put(i);
+		}
+		buffer.flip();
+		
+		return buffer;
+	}
+	
+	public static float[] toArray(FloatBuffer array) {
+		float[] ret = new float[array.capacity()];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = array.get(i);
+		}
+		
+		return ret;
+	}
+	
+	public static int[] toArray(IntBuffer array) {
+		int[] ret = new int[array.capacity()];
+		
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = array.get(i);
+		}
+		
+		return ret;
 	}
 }
