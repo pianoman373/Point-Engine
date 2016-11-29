@@ -8,13 +8,9 @@ import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.CapsuleShape;
-import com.bulletphysics.collision.shapes.CollisionShape;
-import com.bulletphysics.dynamics.constraintsolver.Generic6DofConstraint;
 import com.bulletphysics.linearmath.Transform;
 import com.team.engine.Input;
-import com.team.engine.Scene;
 import com.team.engine.rendering.Material;
-import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.ObjLoader;
 import com.team.engine.vecmath.Vec3;
 

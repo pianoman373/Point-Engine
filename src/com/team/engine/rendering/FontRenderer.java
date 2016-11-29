@@ -2,7 +2,6 @@ package com.team.engine.rendering;
 
 import static com.team.engine.Globals.*;
 
-import com.team.engine.Engine;
 import com.team.engine.vecmath.Vec2;
 
 public class FontRenderer {

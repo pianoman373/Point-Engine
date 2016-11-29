@@ -23,7 +23,6 @@
 
 package com.team.engine;
 
-import com.bulletphysics.linearmath.DebugDrawModes;
 import com.bulletphysics.linearmath.IDebugDraw;
 import com.team.engine.rendering.Shader;
 
@@ -39,8 +38,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class BulletDebugDrawer extends IDebugDraw {
 	private int debugMode;
 	
-	private final Vector3f tmpVec = new Vector3f();
-
 	@Override
 	public void drawLine(Vector3f from, Vector3f to, Vector3f color) {
 		Shader s = getShader("debug");

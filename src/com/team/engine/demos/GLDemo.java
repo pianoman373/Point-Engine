@@ -1,21 +1,12 @@
 package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
-import static org.lwjgl.opengl.GL11.*;
 
-import javax.script.Invocable;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
-import com.bulletphysics.dynamics.constraintsolver.Generic6DofConstraint;
-import com.bulletphysics.dynamics.constraintsolver.Point2PointConstraint;
-import com.bulletphysics.linearmath.Transform;
 import com.team.engine.*;
 import com.team.engine.gameobject.FirstPersonController;
 import com.team.engine.gameobject.MeshObject;

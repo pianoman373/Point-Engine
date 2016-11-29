@@ -6,18 +6,12 @@ import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
-import com.bulletphysics.collision.shapes.SphereShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
 import com.bulletphysics.dynamics.constraintsolver.SequentialImpulseConstraintSolver;
-import com.bulletphysics.linearmath.IDebugDraw;
-import com.bulletphysics.linearmath.Transform;
-import com.team.engine.demos.Demo2D;
 import com.team.engine.gameobject.GameObject;
 import com.team.engine.gameobject.GameObject2D;
 import com.team.engine.rendering.Cubemap;
 import com.team.engine.rendering.DirectionalLight;
-import com.team.engine.rendering.Mesh;
-import com.team.engine.rendering.ModelBuilder;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Shader;
 import com.team.engine.rendering.Texture;
@@ -25,18 +19,14 @@ import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
 import static com.team.engine.Globals.*;
-import static org.lwjgl.opengl.GL11.*;
 
 import javax.vecmath.Vector3f;
 
 import org.jbox2d.callbacks.ContactImpulse;
 import org.jbox2d.callbacks.ContactListener;
 import org.jbox2d.collision.Manifold;
-import org.jbox2d.collision.shapes.PolygonShape;
-import org.jbox2d.collision.shapes.ShapeType;
 import org.jbox2d.common.Vector2;
 import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.World;
 import org.jbox2d.dynamics.contacts.Contact;
 
@@ -73,28 +63,10 @@ public class Scene implements ContactListener {
 	public Vec3 skyColor = vec3(0.0f, 0.0f, 0.0f);
 	public Texture backgroundImage;
 	
-	private Mesh squareOutline;
-	
 	public Scene() {
 		sun = new DirectionalLight(vec3(-1.0f, -1.0f, 0.2f), vec3(2.0f, 2.0f, 2.0f), Settings.ENABLE_SHADOWS, 30, Settings.SHADOW_RESOLUTION);
 		
 		loadShader("color");
-		
-		ModelBuilder b = new ModelBuilder();
-		
-		b.vertex(-0.5f, -0.5f, 0.0f);
-		b.vertex(-0.5f, 0.5f, 0.0f);
-		
-		b.vertex(-0.5f, 0.5f, 0.0f);
-		b.vertex(0.5f, 0.5f, 0.0f);
-		
-		b.vertex(0.5f, 0.5f, 0.0f);
-		b.vertex(0.5f, -0.5f, 0.0f);
-		
-		b.vertex(0.5f, -0.5f, 0.0f);
-		b.vertex(-0.5f, -0.5f, 0.0f);
-		
-		squareOutline = b.toMesh();
 	}
 
 	/**
@@ -148,38 +120,6 @@ public class Scene implements ContactListener {
 		}
 	}
 	
-	private void debugRender() {
-		Shader s = getShader("color");
-		s.bind();
-		
-		for (GameObject2D obj : objects2D) {
-			glLineWidth(2);
-			s.uniformVec3("color", vec3(0, 1, 0));
-			s.uniformMat4("model", mat4().translate(vec3(obj.body.getPosition(), 10)).scale(0.1f));
-			
-			Fixture f = obj.body.getFixtureList();
-			
-			while (f != null) {
-				if (f.getShape().getType() == ShapeType.POLYGON) {
-					PolygonShape pshape = (PolygonShape)f.getShape();
-					
-					
-					Vector2[] vertices = pshape.getVertices();
-					ModelBuilder mb = new ModelBuilder();
-					for (Vector2 i : vertices) {
-						mb.vertex(i.x, i.y, 0);
-					}
-					mb.toMesh().draw(GL_LINES);
-				}
-				f.getShape();
-				
-				f = f.getNext();
-			}
-		}
-		
-		squareOutline.draw(GL_LINES);
-	}
-	
 	public void update() {
 		//remove all objects pending to be deleted from the scene
 		for (GameObject obj: objectsDelete) {
@@ -211,7 +151,7 @@ public class Scene implements ContactListener {
 		}
 		
 		world2D.step(Engine.deltaTime, 4, 4);
-		world.stepSimulation(Engine.deltaTime, 10);
+		world.stepSimulation(1 / Engine.deltaTime, 10);
 	}
 	
 	public void renderShadow(Shader s) {

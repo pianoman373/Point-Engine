@@ -4,16 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
-import static org.lwjgl.system.MemoryStack.*;
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.system.MemoryStack;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Vector;
-
-import org.lwjgl.system.MemoryStack;
 
 public class Tessellator {
 	private int VBO;

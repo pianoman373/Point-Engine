@@ -21,20 +21,20 @@ public class OrthographicCamera extends Camera {
 	}
 	
 	public void update() {
-//		float cameraSpeed = 10.0f * Engine.deltaTime;
-//		
-//		if(Input.isKeyDown(GLFW_KEY_W)) {
-//	        position.y += cameraSpeed;
-//	    }
-//	    if(Input.isKeyDown(GLFW_KEY_S)) {
-//	    	position.y -= cameraSpeed;
-//	    }
-//	    if(Input.isKeyDown(GLFW_KEY_A)) {
-//	    	position.x -= cameraSpeed;
-//	    }
-//	    if(Input.isKeyDown(GLFW_KEY_D)) {
-//	    	position.x += cameraSpeed;
-//	    }
+		float cameraSpeed = 10.0f * Engine.deltaTime;
+		
+		if(Input.isKeyDown(GLFW_KEY_W)) {
+	        position.y += cameraSpeed;
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_S)) {
+	    	position.y -= cameraSpeed;
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_A)) {
+	    	position.x -= cameraSpeed;
+	    }
+	    if(Input.isKeyDown(GLFW_KEY_D)) {
+	    	position.x += cameraSpeed;
+	    }
 	}
 
 	@Override

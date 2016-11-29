@@ -1,17 +1,10 @@
 package com.team.engine;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL12.*;
-import static org.lwjgl.opengl.GL13.*;
-import static org.lwjgl.opengl.GL14.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.nio.file.Paths;
 import java.util.HashMap;
 
 import javax.swing.JOptionPane;
@@ -20,26 +13,14 @@ import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.nuklear.NkAllocator;
-import org.lwjgl.nuklear.NkBuffer;
-import org.lwjgl.nuklear.NkContext;
-import org.lwjgl.nuklear.NkConvertConfig;
-import org.lwjgl.nuklear.NkDrawCommand;
-import org.lwjgl.nuklear.NkDrawNullTexture;
-import org.lwjgl.nuklear.NkDrawVertexLayoutElement;
-import org.lwjgl.nuklear.NkMouse;
 import org.lwjgl.openal.AL;
 import org.lwjgl.openal.ALC;
 import org.lwjgl.openal.ALC10;
 import org.lwjgl.openal.ALCCapabilities;
 import org.lwjgl.opengl.ARBSeamlessCubeMap;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
 
 import com.team.engine.rendering.Framebuffer;
 import com.team.engine.rendering.Mesh;
@@ -48,12 +29,6 @@ import com.team.engine.rendering.Shader;
 import com.team.engine.rendering.Texture;
 import com.team.engine.vecmath.Vec2i;
 
-import vr.IVRCompositor_FnTable;
-import vr.IVRSystem;
-import vr.Texture_t;
-import vr.TrackedDevicePose_t;
-import vr.VR;
-import vr.VREvent_t;
 /**
  * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
  *
