@@ -95,7 +95,7 @@ public class Input {
 	protected static void cursorEvent(long window, double xpos, double ypos) {
 		mousePos = vec2((float)xpos, (float)ypos);
 		
-		nk_input_motion(Engine.ctx, (int)xpos, (int)ypos);
+		nk_input_motion(NuklearManager.ctx, (int)xpos, (int)ypos);
 	}
 	
 	protected static void mouseEvent(long window, int button, int action, int mods) {
@@ -138,13 +138,13 @@ public class Input {
 				default:
 					nkButton = NK_BUTTON_LEFT;
 			}
-			nk_input_button(Engine.ctx, nkButton, x, y, action == GLFW_PRESS);
+			nk_input_button(NuklearManager.ctx, nkButton, x, y, action == GLFW_PRESS);
 		}
 	}
 	
 	protected static void scrollEvent(long window, double scrollAmount) {
 		scrollingAmount += scrollAmount;
 		
-		nk_input_scroll(Engine.ctx, (float)scrollAmount);
+		nk_input_scroll(NuklearManager.ctx, (float)scrollAmount);
 	}
 }

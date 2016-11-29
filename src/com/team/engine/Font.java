@@ -123,6 +123,6 @@ public class Font {
 	}
 	
 	public void enable() {
-		nk_style_set_font(Engine.ctx, default_font);
+		nk_style_set_font(NuklearManager.ctx, default_font);
 	}
 }

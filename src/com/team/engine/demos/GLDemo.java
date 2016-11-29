@@ -147,8 +147,8 @@ public class GLDemo extends AbstractGame {
 	public void render() {
 		//model.render();
 		
-		demo.layout(Engine.ctx, 50, 50);
-		calc.layout(Engine.ctx, 300, 50);
+		demo.layout(NuklearManager.ctx, 50, 50);
+		calc.layout(NuklearManager.ctx, 300, 50);
 	}
 
 	@Override

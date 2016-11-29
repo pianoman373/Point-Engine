@@ -97,7 +97,7 @@ public class SpaceCamera extends Camera {
 	@Override
 	public Mat4 getView() {
 		if (Engine.isVR) {
-			vr.HmdMatrix34_t mat = Engine.lEyeView;
+			vr.HmdMatrix34_t mat = VRManager.lEyeView;
 			
 			
 			return mat4(
@@ -116,7 +116,7 @@ public class SpaceCamera extends Camera {
 		
 		if (Engine.isVR) {
 			
-			vr.HmdMatrix44_t mat = Engine.lEyeProj;
+			vr.HmdMatrix44_t mat = VRManager.lEyeProj;
 			
 			
 			return mat4(
