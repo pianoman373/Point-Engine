@@ -41,7 +41,7 @@ public class GLDemo extends AbstractGame {
 	
 	private Mesh sphere;
 	
-	private Model model;
+	//private Model model;
 
 	public static Material crateMaterial = new Material("container2.png", 0.8f, null, "container2_specular.png");
 	public static Material groundMaterial = new Material("brickwall.jpg", 0.6f, "brickwall_normal.jpg", 0.3f);
@@ -88,7 +88,7 @@ public class GLDemo extends AbstractGame {
 		mat1 = ObjLoader.loadFile("matmodel-1.obj");
 		mat2 = ObjLoader.loadFile("matmodel-2.obj");
 		
-		model = new Model("adam/adam.fbx", mat4().translate(vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
+		//model = new Model("adam/adam.fbx", mat4().translate(vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
 		
 		
 		Engine.scene.skybox = new Cubemap("sunset");
@@ -141,7 +141,7 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void render() {
-		model.render();
+		//model.render();
 		
 		demo.layout(Engine.ctx, 50, 50);
 		calc.layout(Engine.ctx, 300, 50);
@@ -159,6 +159,6 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void renderShadow(Shader s) {
-		model.renderShadow(s);
+		//model.renderShadow(s);
 	}
 }

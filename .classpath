@@ -21,12 +21,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/jna-4.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/jna-platform-4.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jassimp.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/Game-Engine/lib/javadoc/jassimp-javadoc.zip!/"/>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Game-Engine/native"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-glfw/lwjgl-glfw.jar" sourcepath="lib/lwjgl/lwjgl-glfw/lwjgl-glfw-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc.jar" sourcepath="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-sources.jar"/>
