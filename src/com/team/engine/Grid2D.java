@@ -83,7 +83,7 @@ public class Grid2D extends PhysicsObject2D {
 					
 					Vec2 uv = computeUV(value);
 					
-					mb.square(x, y, x + 1f, y + 1f, uv.x / width, uv.y / height, (uv.x + 1f) / width, (uv.y + 1f) / height);
+					mb.square(x, y, x + 1f, y + 1f, uv.x / width, 1 - (uv.y / height), (uv.x + 1f) / width, 1 - ((uv.y + 1f) / height));
 				}
 			}
 		}
@@ -126,6 +126,7 @@ public class Grid2D extends PhysicsObject2D {
 		Shader s = getShader("sprite");
 		s.bind();
 		s.uniformMat4("model", mat4());
+		s.uniformVec3("overlayColor", vec3(1, 1, 1));
 		getTexture("retro-terrain.png").bind();
 		this.mesh.draw();
 	}
