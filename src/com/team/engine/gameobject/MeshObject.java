@@ -66,10 +66,12 @@ public class MeshObject implements GameObject {
 		this(pos, vec3(), rotation, bounds, mass, mesh, scale, material);
 	}
 	
+	@Override
 	public void init(Scene scene) {
 		scene.world.addRigidBody(this.rb);
 	}
 	
+	@Override
 	public void update() {
 		
 	}
@@ -81,6 +83,7 @@ public class MeshObject implements GameObject {
 		return t;
 	}
 	
+	@Override
 	public void render(Scene scene, Camera cam) {
 		Shader s = getShader("pbr");
 		s.bind();

@@ -24,6 +24,7 @@ public class FirstPersonController extends MeshObject {
 		//this.rb.setDamping(0.1f, 10000f);
 	}
 	
+	@Override
 	public void update() {
 		Transform trans = new Transform();
 		rb.getMotionState().getWorldTransform(trans);

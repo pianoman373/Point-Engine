@@ -2,20 +2,11 @@ package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.team.engine.*;
 import com.team.engine.gameobject.FirstPersonController;
 import com.team.engine.gameobject.MeshObject;
@@ -29,8 +20,6 @@ import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
 
-import jdk.nashorn.internal.parser.JSONParser;
-
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
  */
@@ -43,14 +32,11 @@ public class GLDemo extends AbstractGame {
 	
 	private Mesh sphere;
 	
-	//private Model model;
-
 	public static Material crateMaterial = new Material("container2.png", 0.8f, null, "container2_specular.png");
 	public static Material groundMaterial = new Material("brickwall.jpg", 0.6f, "brickwall_normal.jpg", 0.3f);
 	
 	public static Material outsideMaterial = new Material("metal/albedo.png", "metal/roughness.png", "metal/normal.png", "metal/metallic.png");
 	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
-	
 	
 	private final GuiTest demo = new GuiTest();
 	private final GuiCalculator calc = new GuiCalculator();
@@ -82,24 +68,19 @@ public class GLDemo extends AbstractGame {
 		loadTexture("stone_tile_normal.png");
 		loadTexture("stone_tile_specular.png");
 		
-		loadShader("gui");
-		
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
 		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		sphere = ObjLoader.loadFile("sphere.obj");
 		mat1 = ObjLoader.loadFile("matmodel-1.obj");
-		mat2 = ObjLoader.loadFile("matmodel-2.obj");
-		
-		//model = new Model("adam/adam.fbx", mat4().translate(vec3(0, -10, 0)).rotateX(-90).scale(0.053f), true);
-		
+		mat2 = ObjLoader.loadFile("matmodel-2.obj");		
 		
 		Engine.scene.skybox = new Cubemap("sunset");
 		Engine.scene.irradiance = new Cubemap("sunset-irradiance");
 		
 		Engine.camera.setPosition(vec3(0, 0, 5));
 		
-		//Engine.scene.sun.color = vec3(5, 5, 5);
-		//Engine.scene.sun.direction = vec3(-1, -0.8, -0.7f);
+		Engine.scene.sun.color = vec3(5, 5, 5);
+		Engine.scene.sun.direction = vec3(-1, -0.8, -0.7f);
 		
 		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
 		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
@@ -136,10 +117,9 @@ public class GLDemo extends AbstractGame {
 
 			accum = 0;
 		}
-		
-		
 	}
 	
+	@Override
 	public void postUpdate() {
 		Engine.camera.setPosition(vec3(player.getTransform().origin) .add (vec3(0, 5, 0)) .subtract (player.getDirection().multiply(6)));
 		Engine.camera.setDirection(player.getDirection().normalize() .add (vec3(0, -0.5f, 0)));
@@ -147,28 +127,16 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void render() {
-		//model.render();
-		
 		demo.layout(NuklearManager.ctx, 50, 50);
 		calc.layout(NuklearManager.ctx, 300, 50);
 	}
 
 	@Override
-	public void postRenderUniforms(Shader shader) {
-		
-	}
+	public void postRenderUniforms(Shader shader) {}
 
 	@Override
-	public void kill() {
-		
-	}
+	public void kill() {}
 
 	@Override
-	public void renderShadow(Shader s) {
-		//model.renderShadow(s);
-	}
-}
-
-interface SimpleEvent {
-	public void call();
+	public void renderShadow(Shader s) {}
 }

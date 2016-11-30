@@ -47,6 +47,7 @@ public class Demo2D extends AbstractGame {
 		
 	}
 	
+	@Override
 	public void postUpdate() {
 		Engine.camera.setPosition(vec3(player.body.getPosition().x, player.body.getPosition().y, 0));
 	}
@@ -114,6 +115,7 @@ class Player extends Sprite {
 		}
 	}
 	
+	@Override
 	public void onContact(Fixture f, GameObject2D other) {
 		if (f == feet) {
 			print(other);	

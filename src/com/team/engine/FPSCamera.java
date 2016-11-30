@@ -24,6 +24,7 @@ public class FPSCamera extends Camera {
 	/**
 	 * Called by the game loop every frame. Get's keyboard and mouse input and moves the camera accordingly
 	 */
+	@Override
 	public void update() {
 		Vec3 right = front.cross(up);
 					
@@ -31,15 +32,15 @@ public class FPSCamera extends Camera {
 		
 		if (Input.mouseGrabbed == true) {
 			if(Input.firstMouse) {
-				lastX = (float) Input.mousePos.x;
-				lastY = (float) Input.mousePos.y;
+				lastX = Input.mousePos.x;
+				lastY = Input.mousePos.y;
 				Input.firstMouse = false;
 			}
 
-			float xoffset = (float)Input.mousePos.x - lastX;
-			float yoffset = lastY - (float)Input.mousePos.y;
-			lastX = (float)Input.mousePos.x;
-			lastY = (float)Input.mousePos.y;
+			float xoffset = Input.mousePos.x - lastX;
+			float yoffset = lastY - Input.mousePos.y;
+			lastX = Input.mousePos.x;
+			lastY = Input.mousePos.y;
 
 			float sensitivity = MOUSE_SENSITIVITY * Engine.deltaTime;
 			xoffset *= sensitivity;
@@ -56,8 +57,8 @@ public class FPSCamera extends Camera {
 			front = vec3(vec3.x, vec3.y, vec3.z);
 		}
 		
-		lastX = (float)Input.mousePos.x;
-		lastY = (float)Input.mousePos.y;
+		lastX = Input.mousePos.x;
+		lastY = Input.mousePos.y;
 		
 		float cameraSpeed = WASD_SENSITIVITY * Engine.deltaTime * ((float)Input.scrollingAmount * (float)Input.scrollingAmount * 0.05f);
 	    if(Input.isKeyDown(GLFW_KEY_W)) {

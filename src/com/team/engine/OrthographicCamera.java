@@ -20,6 +20,7 @@ public class OrthographicCamera extends Camera {
 		return mat4().translate(vec3(-position.x, -position.y, 0));
 	}
 	
+	@Override
 	public void update() {
 		float cameraSpeed = 10.0f * Engine.deltaTime;
 		

@@ -79,6 +79,7 @@ class Pipe extends Sprite {
 		this.top = top;
 	}
 	
+	@Override
 	public void init(Scene scene) {
 		super.init(scene);
 		this.addCube(vec2(0, 0), vec2(1f, 4f), 0, true);
@@ -151,6 +152,7 @@ class Bird extends Sprite {
 		}
 	}
 	
+	@Override
 	public void onContact(Fixture f, GameObject2D other) {
 		if (other.tag.equals("pipe")) {
 			this.isDead = true;

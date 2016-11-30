@@ -117,11 +117,13 @@ public class BreakoutDemo extends AbstractGame {
 
 		}
 
+		@Override
 		public void init(Scene scene) {
 			super.init(scene);
 			this.addCube(vec2(), vec2(1.5f, 0.5f), 0f, 1f, false);
 		}
 
+		@Override
 		public void update() {
 			Vec2 pos = this.getPosition();
 
@@ -144,6 +146,7 @@ public class BreakoutDemo extends AbstractGame {
 			this.solid = solid;
 		}
 
+		@Override
 		public void init(Scene scene) {
 			super.init(scene);
 			this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, 1f, false);
@@ -157,6 +160,7 @@ public class BreakoutDemo extends AbstractGame {
 
 		}
 
+		@Override
 		public void init(Scene scene) {
 			super.init(scene);
 			
@@ -167,6 +171,7 @@ public class BreakoutDemo extends AbstractGame {
 			this.setVelocity(vec2(8.0f, 8.0f));
 		}
 
+		@Override
 		public void update() {
 			Vec2 pos = this.getPosition();
 			Vec2 vel = this.getVelocity();
@@ -179,6 +184,7 @@ public class BreakoutDemo extends AbstractGame {
 			}
 		}
 		
+		@Override
 		public void endContact(Fixture f, GameObject2D other) {
 			if (other.tag.equals("box") && other instanceof Box) {
 				if (!((Box)other).solid) {

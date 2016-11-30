@@ -206,7 +206,8 @@ public class Vec3 {
         return buffer;
     }
 
-    public String toString() {
+    @Override
+	public String toString() {
     	return "(" + this.x + ", " + this.y + ", " + this.z + ")";
     }
 }

@@ -4,6 +4,7 @@
 	<contentEntry url="file://$MODULE_DIR$"/>
 	<lib name="jbullet.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jbullet.jar!/"/>
+		<relative-module-javadoc project-related="jar://$PROJECT_DIR$/lib/javadoc/bullet-javadoc.zip!/"/>
 	</lib>
 	<lib name="stack-alloc.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/stack-alloc.jar!/"/>
@@ -11,14 +12,9 @@
 	<lib name="vecmath.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/vecmath.jar!/"/>
 	</lib>
-	<lib name="lwjgl.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl.jar!/"/>
-	</lib>
 	<lib name="libtiled.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/libtiled.jar!/"/>
-	</lib>
-	<lib name="luaj-jse-3.0.1.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/luaj-jse-3.0.1.jar!/"/>
+		<relative-module-javadoc project-related="jar://$PROJECT_DIR$/lib/javadoc/libtiled-javadoc.zip!/"/>
 	</lib>
 	<lib name="jna-4.2.2.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jna-4.2.2.jar!/"/>
@@ -26,67 +22,97 @@
 	<lib name="jna-platform-4.2.2.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jna-platform-4.2.2.jar!/"/>
 	</lib>
-	<lib name="jassimp.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/jassimp.jar!/"/>
-	</lib>
-	<lib name="lwjgl-opengl.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-opengl.jar!/"/>
+	<lib name="lwjgl.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl/lwjgl-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl/lwjgl-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl/lwjgl.jar!/"/>
 	</lib>
 	<lib name="lwjgl-glfw.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-glfw.jar!/"/>
+		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-glfw/lwjgl-glfw-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw/lwjgl-glfw-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw/lwjgl-glfw.jar!/"/>
 	</lib>
-	<lib name="lwjgl-openal.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-openal.jar!/"/>
-	</lib>
-	<lib name="lwjgl-glfw-natives-macos.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-glfw-natives-macos.jar!/"/>
-	</lib>
-	<lib name="lwjgl-glfw-natives-windows.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-glfw-natives-windows.jar!/"/>
-	</lib>
-	<lib name="lwjgl-natives-linux.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-natives-linux.jar!/"/>
-	</lib>
-	<lib name="lwjgl-natives-macos.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-natives-macos.jar!/"/>
-	</lib>
-	<lib name="lwjgl-natives-windows.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-natives-windows.jar!/"/>
-	</lib>
-	<lib name="lwjgl-openal-natives-linux.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-openal-natives-linux.jar!/"/>
-	</lib>
-	<lib name="lwjgl-openal-natives-macos.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-openal-natives-macos.jar!/"/>
-	</lib>
-	<lib name="lwjgl-openal-natives-windows.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-openal-natives-windows.jar!/"/>
-	</lib>
-	<lib name="lwjgl-stb-natives-macos.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-stb-natives-macos.jar!/"/>
-	</lib>
-	<lib name="lwjgl-stb-natives-windows.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-stb-natives-windows.jar!/"/>
-	</lib>
-	<lib name="lwjgl-stb.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-stb.jar!/"/>
-	</lib>
-	<lib name="lwjgl-nuklear-natives-linux.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-nuklear-natives-linux.jar!/"/>
-	</lib>
-	<lib name="lwjgl-nuklear-natives-macos.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-nuklear-natives-macos.jar!/"/>
-	</lib>
-	<lib name="lwjgl-nuklear-natives-windows.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-nuklear-natives-windows.jar!/"/>
+	<lib name="lwjgl-jemalloc.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc.jar!/"/>
 	</lib>
 	<lib name="lwjgl-nuklear.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-nuklear.jar!/"/>
+		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear.jar!/"/>
+	</lib>
+	<lib name="lwjgl-openal.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal.jar!/"/>
+	</lib>
+	<lib name="lwjgl-opengl.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-opengl/lwjgl-opengl-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-opengl/lwjgl-opengl-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-opengl/lwjgl-opengl.jar!/"/>
+	</lib>
+	<lib name="lwjgl-stb.jar" scope="COMPILE">
+		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-stb/lwjgl-stb-sources.jar!/"/>
+		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb/lwjgl-stb-sources.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb/lwjgl-stb.jar!/"/>
+	</lib>
+	<lib name="lwjgl-natives-linux.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl/lwjgl-natives-linux.jar!/"/>
+	</lib>
+	<lib name="lwjgl-natives-macos.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl/lwjgl-natives-macos.jar!/"/>
+	</lib>
+	<lib name="lwjgl-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl/lwjgl-natives-windows.jar!/"/>
 	</lib>
 	<lib name="lwjgl-glfw-natives-linux.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-glfw-natives-linux.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw/lwjgl-glfw-natives-linux.jar!/"/>
+	</lib>
+	<lib name="lwjgl-glfw-natives-macos.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw/lwjgl-glfw-natives-macos.jar!/"/>
+	</lib>
+	<lib name="lwjgl-glfw-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-glfw/lwjgl-glfw-natives-windows.jar!/"/>
+	</lib>
+	<lib name="lwjgl-jemalloc-natives-linux.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-linux.jar!/"/>
+	</lib>
+	<lib name="lwjgl-jemalloc-natives-macos.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-macos.jar!/"/>
+	</lib>
+	<lib name="lwjgl-jemalloc-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-windows.jar!/"/>
+	</lib>
+	<lib name="lwjgl-nuklear-natives-linux.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-linux.jar!/"/>
+	</lib>
+	<lib name="lwjgl-nuklear-natives-macos.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-macos.jar!/"/>
+	</lib>
+	<lib name="lwjgl-nuklear-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-windows.jar!/"/>
+	</lib>
+	<lib name="lwjgl-openal-natives-linux.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-linux.jar!/"/>
+	</lib>
+	<lib name="lwjgl-openal-natives-macos.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-macos.jar!/"/>
+	</lib>
+	<lib name="lwjgl-openal-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-windows.jar!/"/>
 	</lib>
 	<lib name="lwjgl-stb-natives-linux.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl-stb-natives-linux.jar!/"/>
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb/lwjgl-stb-natives-linux.jar!/"/>
+	</lib>
+	<lib name="lwjgl-stb-natives-macos.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb/lwjgl-stb-natives-macos.jar!/"/>
+	</lib>
+	<lib name="lwjgl-stb-natives-windows.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-stb/lwjgl-stb-natives-windows.jar!/"/>
+	</lib>
+	<lib name="gson-2.8.0.jar" scope="COMPILE">
+		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/gson-2.8.0.jar!/"/>
+		<relative-module-javadoc project-related="jar://$PROJECT_DIR$/lib/javadoc/gson-2.8.0-javadoc.jar!/"/>
 	</lib>
 </component>
