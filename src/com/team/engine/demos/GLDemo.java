@@ -2,6 +2,10 @@ package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
 
+import java.util.concurrent.Callable;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
@@ -105,6 +109,12 @@ public class GLDemo extends AbstractGame {
 		player = new FirstPersonController(vec3(10, 0, 0));
 		
 		Engine.scene.add(player);
+		
+		
+	}
+	
+	private static void test(Consumer event) {
+		
 	}
 
 	private static float accum;
@@ -156,4 +166,8 @@ public class GLDemo extends AbstractGame {
 	public void renderShadow(Shader s) {
 		//model.renderShadow(s);
 	}
+}
+
+interface SimpleEvent {
+	public void call();
 }

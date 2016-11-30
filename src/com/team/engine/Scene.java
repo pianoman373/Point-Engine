@@ -149,7 +149,7 @@ public class Scene implements ContactListener {
 		}
 		
 		world2D.step(Engine.deltaTime, 4, 4);
-		world.stepSimulation(1 / Engine.deltaTime, 10);
+		world.stepSimulation(Engine.deltaTime, 10);
 	}
 	
 	public void renderShadow(Shader s) {

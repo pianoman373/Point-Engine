@@ -32,10 +32,13 @@ public class FlappyBirdDemo extends AbstractGame {
 		loadShader("sprite");
 		loadTexture("crate.png");
 		loadTexture("pipe.png", true, false);
-		loadTexture("awesomeface.png", true, false);
+		loadTexture("bird.png", true, false);
+		loadTexture("bg.png", true, false);
 		
 		loadAudio("breakout.wav");
 		loadAudio("powerup.wav");
+		
+		Engine.scene.backgroundImage = getTexture("bg.png");
 		
 		player = new Bird();
 		Engine.scene.add(player);
@@ -93,7 +96,7 @@ class Bird extends Sprite {
 	public int deaths = 0;
 	
 	public Bird() {
-		super("awesomeface.png", vec2(0.5f, 0.5f), true, true);
+		super("bird.png", vec2(1f, 1f), true, true);
 	}
 
 	@Override
