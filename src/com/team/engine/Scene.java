@@ -74,13 +74,6 @@ public class Scene implements ContactListener {
 	public Scene() {
 		sun = new DirectionalLight(vec3(-1.0f, -1.0f, 0.2f), vec3(2.0f, 2.0f, 2.0f), Settings.ENABLE_SHADOWS, 30, Settings.SHADOW_RESOLUTION);
 		
-		loadShader("color");
-	}
-
-	/**
-	 * Initializes the dynamicsWorld for this scene
-	 */
-	public void setupPhysics() {
 		//setup bullet
 		BroadphaseInterface broadphase = new DbvtBroadphase();
 		DefaultCollisionConfiguration collisionConfiguration = new DefaultCollisionConfiguration();

@@ -121,6 +121,7 @@ public class NuklearManager {
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_SCISSOR_TEST);
 		glActiveTexture(GL_TEXTURE0);
+		glDisable(GL_FRAMEBUFFER_SRGB); 
 
 		// setup program
 		Shader s = getShader("gui");
@@ -193,16 +194,7 @@ public class NuklearManager {
 			nk_clear(ctx);
 		}
 
-		// default OpenGL state
-		glUseProgram(0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-		glEnable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_SCISSOR_TEST);
-		glEnable(GL_CULL_FACE);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		Engine.setupOpenglState();
 	}
 	
 	public static void preInput() {

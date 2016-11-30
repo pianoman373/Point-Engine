@@ -1,6 +1,8 @@
 package com.team.engine;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.ByteBuffer;
@@ -37,6 +39,7 @@ import com.team.engine.vecmath.Vec2i;
  */
 public class Engine {
 	public static Camera camera;
+	
 	public static Mesh cubeMesh;
 	public static Mesh debugCubeMesh;
 	public static Mesh debugSphereMesh;
@@ -44,32 +47,42 @@ public class Engine {
 	public static Mesh framebufferMesh;
 	
 	public static Tessellator tessellator;
+	
 	/** This is constantly updated every frame. It represents the time elapsed in seconds since the last frame.
 	 * It is usually less than 0 (unless you have serious lag). It should be used for any physics and movement
 	 * related functions. Multiply the distance traveled by the delta time every second, and you will always travel
 	 * that distance in exactly one second.
 	 */
 	public static float deltaTime = 0.0f;
+	
 	/** turn on to render everything in wireframe */
 	public static boolean wireframe = false;
+	
 	/** The main Scene object you should use */
 	public static Scene scene;
+	
 	public static boolean is2d;
-
-	private static Shader framebufferShader;
+	public static boolean isVR;
+	
+	/** The pointer to the window object being used. Used for glfw stuff */
 	public static long window;
+	
+	/** The frame buffer of the final rendered image before post processing. */
 	public static Framebuffer fbuffer;
+
+	
+	private static Shader framebufferShader;
 	private static Framebuffer pingPong1;
 	private static Framebuffer pingPong2;
 	private static Framebuffer pingPong3;
 	private static Mesh skyboxMesh;
 	private static float lastFrame = 0.0f;
+	private static AbstractGame game;
+	
+	
 	protected static HashMap<String, Shader> shaders = new HashMap<String, Shader>();
 	protected static HashMap<String, Texture> textures = new HashMap<String, Texture>();
 	protected static HashMap<String, Audio> sounds = new HashMap<String, Audio>();
-	private static AbstractGame game;
-	
-	public static boolean isVR;
 	
 	/**
 	 * Sets a shader to be used for post-processing.
@@ -82,95 +95,25 @@ public class Engine {
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
 	 */
 	public static void start(boolean i2d, boolean vr, AbstractGame g) {
-		//the contents of this function are the backbone of the engine. It contains the main loop
-		//and all the rendering. I will comment through every step.
 		game = g;
 		is2d = i2d;
 		isVR = vr;
+		
 		setupContext();
-
-		//load all our vital shaders
-		loadShader("hdr");
-		loadShader("framebuffer");
-		loadShader("blur");
-		loadShader("skybox");
-		loadShader("light");
-		loadShader("shadow");
-		loadShader("sprite");
-		loadShader("debug");
-		loadShader("pbr");
-		loadShader("pbr-specular");
-		loadShader("gui");
+		init();
 		
-		loadTexture("ascii.png", true, false);
-
-		//vital meshes
-		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);
-		skyboxMesh = Mesh.raw(Primitives.skybox(), false);
-		cubeMesh = Mesh.raw(Primitives.cube(1.0f), true);
-		debugCubeMesh = Primitives.debugCube();
-		debugSphereMesh = Primitives.debugSphere(64);
-		spriteMesh = Mesh.raw(Primitives.sprite(vec2(0, 0), vec2(1, 1)), true);
-
-		//all the framebuffers, one for shadows, one for normal rendering, and 3 ping pong shaders for bloom
-		fbuffer = Framebuffer.HdrWithBloom(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT));
-		if (Settings.ENABLE_BLOOM) {
-			pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2), false);
-			pingPong2 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 4, Settings.WINDOW_HEIGHT / 4), false);
-			pingPong3 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 8, Settings.WINDOW_HEIGHT / 8), false);
-		}
-
-		//setup our opengl states
-		glEnable(GL_DEPTH_TEST);
-		glEnable(ARBSeamlessCubeMap.GL_TEXTURE_CUBE_MAP_SEAMLESS);
-		glEnable(GL_CULL_FACE);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		tessellator = new Tessellator();
-		
-		//setup the scene and it's physics
-		scene = new Scene();
-		
-		//create the camera depending on what mode we're in
-		if (is2d) {
-			camera = new OrthographicCamera();
-			framebufferShader = getShader("framebuffer");
-		}
-		else {
-			camera = new SpaceCamera();
-			framebufferShader = getShader("hdr");
-			glEnable(GL_FRAMEBUFFER_SRGB); 
-		}
-		scene.setupPhysics();
-		
-		//initialize the main game
-		game.init();
-			
-		//create values for calculating delta time
+		//variables for calculating delta time and fps
 		float time = 0;
 		lastFrame = (float)glfwGetTime();
 		int fps = 0;
-
+		
+		//the main game loop
 		while (!glfwWindowShouldClose(window)) {
 			//limit fps
 			if ((float)glfwGetTime()-lastFrame <= 1.0f/Settings.MAX_FPS) {
+				//if not enough time has elapsed, we start the loop again
 				continue;
 			}
-			
-			//clear the actual screen color
-			glClearColor(0, 0, 0, 1.0f);
-			clear();
-			
-			//calculate delta time
-			float currentFrame = (float)glfwGetTime();
-			deltaTime = currentFrame - lastFrame;
-			lastFrame = currentFrame;
-			
-			//refresh input
-			NuklearManager.preInput();
-			glfwPollEvents();
-			NuklearManager.postInput();
 			
 			//calculate fps
 			time += deltaTime;
@@ -183,82 +126,150 @@ public class Engine {
 				fps = 0;
 			}
 			
-			scene.update();
-			game.update();
-			camera.update();
+			//calculate delta time
+			float currentFrame = (float)glfwGetTime();
+			deltaTime = currentFrame - lastFrame;
+			lastFrame = currentFrame;
 			
-			game.postUpdate();
-			
-			//update matrices
-			if (isVR) {
-				VRManager.update();
-			}
-			
-			if (!is2d && scene.sun.castShadow) {
-				//we render the scene from the shadow-caster's point of view
-				scene.sun.shadowBuffer.bind();
-				glViewport(0, 0, scene.sun.shadowResolution, scene.sun.shadowResolution);
-				clear();
-			
-				Shader s = getShader("shadow");
-				s.bind();
-				s.uniformMat4("lightSpace", scene.sun.getShadowMat());
-				
-				//tell the main game to render any shadow casters now
-				game.renderShadow(s);
-			
-				scene.renderShadow(s);
-			}
-			
-			//do actual rendering to the fbuffer
-			renderWorld(fbuffer, camera);
-			NuklearManager.render();
-			
-			
-			if (Settings.ENABLE_BLOOM) {	
-				doBloom();
-			}
-
-			//we unbind framebuffers which means the output of this next render will go to the screen
-			Framebuffer.unbind();
-			
-			
-			//here we bind the post proccessing shader and render the framebuffer to the screen and apply bloom and hdr if using hdr shaders
-			framebufferShader.bind();
-			framebufferShader.uniformFloat("exposure", 1.0f);
-			game.postRenderUniforms(framebufferShader);
-			
-			framebufferShader.uniformInt("screenTexture", 0);
-			
-			fbuffer.tex[0].bind(0);
-			framebufferShader.uniformInt("screenTexture", 0);
-			
-			if (Settings.ENABLE_BLOOM) {
-				framebufferShader.uniformBool("doBloom", true);
-				pingPong1.tex[0].bind(1);
-				pingPong2.tex[0].bind(2);
-				pingPong3.tex[0].bind(3);
-				
-				framebufferShader.uniformInt("bloomTexture1", 1);
-				framebufferShader.uniformInt("bloomTexture2", 2);
-				framebufferShader.uniformInt("bloomTexture3", 3);
-			}
-			else {
-				framebufferShader.uniformBool("doBloom", false);
-			}
-			
-			framebufferMesh.draw();
-			
-			if (isVR) {
-				VRManager.postRender();
-			}
-
-			//now we swap buffers which updates the window
-			glfwSwapBuffers(window);
+			update();
+			render();
 		}
 		
-		//if the loop ends, die peacefully
 		end();
+	}
+	
+	private static void init() {
+		//load all our vital shaders
+		loadShader("hdr");
+		loadShader("framebuffer");
+		loadShader("blur");
+		loadShader("skybox");
+		loadShader("light");
+		loadShader("shadow");
+		loadShader("sprite");
+		loadShader("debug");
+		loadShader("pbr");
+		loadShader("pbr-specular");
+		loadShader("gui");
+		loadShader("color");
+		
+		//TODO: why are we loading this default?
+		loadTexture("ascii.png", true, false);
+
+		//vital meshes
+		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);
+		skyboxMesh = Mesh.raw(Primitives.skybox(), false);
+		cubeMesh = Mesh.raw(Primitives.cube(1.0f), true);
+		debugCubeMesh = Primitives.debugCube();
+		debugSphereMesh = Primitives.debugSphere(64);
+		spriteMesh = Mesh.raw(Primitives.sprite(vec2(0, 0), vec2(1, 1)), true);
+
+		//initialize the main framebuffer
+		fbuffer = Framebuffer.HdrWithBloom(new Vec2i(Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT));
+		if (Settings.ENABLE_BLOOM) {
+			//if bloom is enabled set those framebuffers up too
+			pingPong1 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2), false);
+			pingPong2 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 4, Settings.WINDOW_HEIGHT / 4), false);
+			pingPong3 = Framebuffer.standard(new Vec2i(Settings.WINDOW_WIDTH / 8, Settings.WINDOW_HEIGHT / 8), false);
+		}
+
+		setupOpenglState();
+
+		tessellator = new Tessellator();
+		scene = new Scene();
+		
+		//create the camera depending on what mode we're in
+		if (is2d) {
+			camera = new OrthographicCamera();
+			framebufferShader = getShader("framebuffer");
+		}
+		else {
+			camera = new SpaceCamera();
+			framebufferShader = getShader("hdr");
+		}
+		
+		//initialize the game instance (A.K.A call init on the demo class)
+		game.init();
+	}
+	
+	private static void update() {
+		//refresh key/mouse/etc input
+		NuklearManager.preInput();
+		glfwPollEvents();
+		NuklearManager.postInput();
+		
+		scene.update();
+		game.update();
+		//TODO: why is camera getting it's own update and why is it last?
+		camera.update();
+		
+		game.postUpdate();
+		
+		if (isVR) {
+			VRManager.update();
+		}
+	}
+	
+	private static void render() {
+		//clear the actual screen color with black
+		clear(0, 0, 0, 1.0f);
+		
+		if (!is2d && scene.sun.castShadow) {
+			//we render the scene from the shadow-caster's point of view
+			scene.sun.shadowBuffer.bind();
+			clear(0, 0, 0, 1.0f);
+			
+			glViewport(0, 0, scene.sun.shadowResolution, scene.sun.shadowResolution);
+		
+			Shader s = getShader("shadow");
+			s.bind();
+			s.uniformMat4("lightSpace", scene.sun.getShadowMat());
+			
+			//tell the main game to render any shadow casters now
+			game.renderShadow(s);
+		
+			scene.renderShadow(s);
+		}
+		
+		renderWorld(fbuffer, camera);
+		
+		if (Settings.ENABLE_BLOOM) {	
+			doBloom();
+		}
+
+		//we unbind framebuffers which means the output of this next render will go to the screen
+		Framebuffer.unbind();
+		
+		
+		//here we bind the post proccessing shader and render the framebuffer to the screen and apply bloom and hdr if using hdr shaders
+		framebufferShader.bind();
+		framebufferShader.uniformFloat("exposure", 1.0f);
+		game.postRenderUniforms(framebufferShader);
+		
+		fbuffer.tex[0].bind(0);
+		framebufferShader.uniformInt("screenTexture", 0);
+		
+		framebufferShader.uniformBool("doBloom", Settings.ENABLE_BLOOM);
+		if (Settings.ENABLE_BLOOM) {
+			pingPong1.tex[0].bind(1);
+			pingPong2.tex[0].bind(2);
+			pingPong3.tex[0].bind(3);
+			
+			framebufferShader.uniformInt("bloomTexture1", 1);
+			framebufferShader.uniformInt("bloomTexture2", 2);
+			framebufferShader.uniformInt("bloomTexture3", 3);
+		}
+		
+		framebufferMesh.draw();
+		
+		if (isVR) {
+			VRManager.postRender();
+		}
+		
+		NuklearManager.render();
+
+		//now we swap buffers which updates the window
+		glfwSwapBuffers(window);
 	}
 	
 	public static void doBloom() {
@@ -267,12 +278,11 @@ public class Engine {
 		
 		float bloomRange = 1f;
 		
-		//level 1
+		//level 1 blur
 		glViewport(0, 0, Settings.WINDOW_WIDTH / 2, Settings.WINDOW_HEIGHT / 2);
 		pingPong1.bind();
 		
-		glClearColor(0, 0, 0, 1.0f);
-		clear();
+		clear(0, 0, 0, 1.0f);
 		
 		s.uniformVec2("offset", vec2(bloomRange / (Settings.WINDOW_WIDTH / 2), 0));
 		fbuffer.tex[1].bind();
@@ -282,12 +292,11 @@ public class Engine {
 		s.uniformVec2("offset", vec2(0f, bloomRange / (Settings.WINDOW_WIDTH / 2)));
 		framebufferMesh.draw();
 		
-		//level 2
+		//level 2 blur
 		glViewport(0, 0, Settings.WINDOW_WIDTH / 4, Settings.WINDOW_HEIGHT / 4);
 		pingPong2.bind();
 		
-		glClearColor(0, 0, 0, 1.0f);
-		clear();
+		clear(0, 0, 0, 1.0f);
 		
 		s.uniformVec2("offset", vec2(bloomRange / (Settings.WINDOW_WIDTH / 4), 0));
 		pingPong1.tex[0].bind();
@@ -299,12 +308,11 @@ public class Engine {
 		
 		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
 		
-		//level 2
+		//level 3 blur
 		glViewport(0, 0, Settings.WINDOW_WIDTH / 8, Settings.WINDOW_HEIGHT / 8);
 		pingPong3.bind();
 		
-		glClearColor(0, 0, 0, 1.0f);
-		clear();
+		clear(0, 0, 0, 1.0f);
 		
 		s.uniformVec2("offset", vec2(bloomRange / (Settings.WINDOW_WIDTH / 8), 0));
 		pingPong2.tex[0].bind();
@@ -317,17 +325,19 @@ public class Engine {
 		glViewport(0, 0, Settings.WINDOW_WIDTH, Settings.WINDOW_HEIGHT);
 	}
 	
+	/**
+	 * Renders the world from the perspective of the camera to the specified
+	 * framebuffer. No post processing is done in this function.
+	 */
 	public static void renderWorld(Framebuffer target, Camera cam) {
 		if (is2d)
 			glDepthMask(false);
 		
-		//bind the main rendering buffer and now we're ready to render normally
 		target.bind();
 		glViewport(0, 0, target.dimensions.x, target.dimensions.y);
 		
-		//clear the renderbuffer
-		glClearColor(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 1.0f);
-		clear();
+		//clear the given framebuffer with the sky color
+		clear(scene.skyColor.x, scene.skyColor.y, scene.skyColor.z, 1.0f);
 		
 		//first, render the skybox if there is one
 		if (!is2d) {
@@ -349,7 +359,7 @@ public class Engine {
 		//now render the scene stuff first
 		scene.render(camera);
 		
-		//and finally, tell the game to render
+		//and then tell the game to render
 		game.render();
 		
 
@@ -365,9 +375,7 @@ public class Engine {
 	 * does all that opengl context stuff at the very beginning.
 	 */
 	private static void setupContext() {
-		//System.setProperty("org.lwjgl.librarypath", Paths.get("native").toAbsolutePath().toString());
 		print(System.getProperty("java.library.path"));
-		//System.setProperty( "java.library.path", "natives/" );
 
 		//set up our window options
 		glfwInit();
@@ -376,7 +384,7 @@ public class Engine {
 		//opengl version stuff
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwSwapInterval(1);
 		
 		//here we create our window in fullscreen or a normal window
 		if(Settings.FULLSCREEN) {
@@ -398,13 +406,13 @@ public class Engine {
 		
 		glfwMakeContextCurrent(window);
 		
+		//tell input events to be sent to Input
 		glfwSetKeyCallback(window, (long window, int key, int scancode, int action, int mode) -> Input.keyEvent(window, key, action));
 		glfwSetCursorPosCallback(window, (long window, double xpos, double ypos) -> Input.cursorEvent(window, xpos, ypos));
 		glfwSetMouseButtonCallback(window, (long window, int button, int action, int mods) -> Input.mouseEvent(window, button, action, mods));
 		glfwSetScrollCallback(window, (long window, double arg1, double scrollAmount) -> Input.scrollEvent(window, scrollAmount));
 		glfwSetCharCallback(Engine.window, (window, codepoint) -> nk_input_unicode(NuklearManager.ctx, codepoint));
 		
-		//and finally create the opengl context and we're ready to go
 		GL.createCapabilities();
 		
 		//setup openAL
@@ -419,18 +427,39 @@ public class Engine {
 		NuklearManager.init();
 	}
 	
-	
-
 	/**
-	 * Clears the currently bound framebuffer.
+	 * Restores the opengl state to it's default.
 	 */
-	public static void clear() {
+	public static void setupOpenglState() {
+		glUseProgram(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+		glEnable(GL_BLEND);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_SCISSOR_TEST);
+		glEnable(GL_CULL_FACE);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(ARBSeamlessCubeMap.GL_TEXTURE_CUBE_MAP_SEAMLESS);
+		
+		if (is2d) {
+			glDisable(GL_FRAMEBUFFER_SRGB); 
+		}
+		else {
+			glEnable(GL_FRAMEBUFFER_SRGB); 
+		}
+	}
+	
+	/**
+	 * Clears the currently bound framebuffer with the specified color.
+	 */
+	public static void clear(float r, float g, float b, float a) {
+		glClearColor(r, g, b, a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
 	private static void end() {
 		game.kill();
-		
 		
 		fbuffer.delete();
 		
