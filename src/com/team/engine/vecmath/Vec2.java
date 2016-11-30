@@ -107,6 +107,18 @@ public class Vec2 {
     public float dot(Vec2 other) {
         return this.x * other.x + this.y * other.y;
     }
+    
+    /**
+     * Rotates around the X axis.
+     */
+    public Vec2 rotate(float angle)
+    {
+        float cosine = (float)Math.cos(Math.toRadians(angle));
+        float sine = (float)Math.sin(Math.toRadians(angle));
+        float newX = this.x * cosine + this.y * sine;
+        float newY = this.y * cosine + this.x * sine;
+        return new Vec2(newX, newY);
+    }
 
     /**
      * Calculates a linear interpolation between this vector with another

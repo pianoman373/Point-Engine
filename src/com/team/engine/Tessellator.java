@@ -62,6 +62,10 @@ public class Tessellator {
 		vertex(x, y, z, 0, 0, 0, 0, 0);
 	}
 	
+	public void vertex(float x, float y, float z, float nx, float ny, float nz) {
+		vertex(x, y, z, nx, ny, nz, 0, 0);
+	}
+	
 	public void end() {
 		if (drawing) {
 			glBindVertexArray(VAO);

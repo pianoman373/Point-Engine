@@ -160,10 +160,10 @@ public class BreakoutDemo extends AbstractGame {
 		public void init(Scene scene) {
 			super.init(scene);
 			
-			this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, false);
+			//this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, false);
 			
 			body.setFixedRotation(true);
-			//this.addSphere(vec2(), 0.5f, 0f);
+			this.addSphere(vec2(), 0.5f, 0f);
 			this.setVelocity(vec2(8.0f, 8.0f));
 		}
 
