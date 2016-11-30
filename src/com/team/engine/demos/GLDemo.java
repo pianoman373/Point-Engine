@@ -2,6 +2,7 @@ package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
 
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -11,6 +12,10 @@ import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.team.engine.*;
 import com.team.engine.gameobject.FirstPersonController;
 import com.team.engine.gameobject.MeshObject;
@@ -23,6 +28,8 @@ import com.team.engine.rendering.ObjLoader;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
+
+import jdk.nashorn.internal.parser.JSONParser;
 
 /**
  * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
@@ -110,7 +117,9 @@ public class GLDemo extends AbstractGame {
 		
 		Engine.scene.add(player);
 		
-		
+		JsonObject json = new JsonParser().parse(Util.readFileString("test.json")).getAsJsonObject();
+		print(json.get("array").getAsJsonArray().get(2));
+		print(json.get("string-value").getAsString());
 	}
 	
 	private static void test(Consumer event) {
