@@ -116,14 +116,6 @@ public class GLDemo extends AbstractGame {
 		player = new FirstPersonController(vec3(10, 0, 0));
 		
 		Engine.scene.add(player);
-		
-		JsonObject json = new JsonParser().parse(Util.readFileString("test.json")).getAsJsonObject();
-		print(json.get("array").getAsJsonArray().get(2));
-		print(json.get("string-value").getAsString());
-	}
-	
-	private static void test(Consumer event) {
-		
 	}
 
 	private static float accum;
