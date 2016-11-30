@@ -1,4 +1,4 @@
-package com.team.engine;
+package com.team.engine.gameobject;
 
 import static com.team.engine.Globals.*;
 
@@ -7,7 +7,9 @@ import java.util.Iterator;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 
-import com.team.engine.gameobject.PhysicsObject2D;
+import com.team.engine.Camera;
+import com.team.engine.Scene;
+import com.team.engine.Settings;
 import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.ModelBuilder;
 import com.team.engine.rendering.Shader;

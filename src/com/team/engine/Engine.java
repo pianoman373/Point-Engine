@@ -26,6 +26,7 @@ import com.team.engine.rendering.Framebuffer;
 import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
+import com.team.engine.rendering.Tessellator;
 import com.team.engine.rendering.Texture;
 import com.team.engine.vecmath.Vec2i;
 

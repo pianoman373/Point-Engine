@@ -8,10 +8,10 @@ import static org.lwjgl.glfw.GLFW.*;
 
 import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
-import com.team.engine.Grid2D;
 import com.team.engine.Input;
 import com.team.engine.Scene;
 import com.team.engine.gameobject.GameObject2D;
+import com.team.engine.gameobject.Grid2D;
 import com.team.engine.gameobject.Sprite;
 import com.team.engine.rendering.Shader;
 

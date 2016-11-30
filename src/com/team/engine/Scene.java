@@ -15,6 +15,7 @@ import com.team.engine.rendering.DirectionalLight;
 import com.team.engine.rendering.ModelBuilder;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Shader;
+import com.team.engine.rendering.Tessellator;
 import com.team.engine.rendering.Texture;
 import com.team.engine.vecmath.Mat4;
 import com.team.engine.vecmath.Vec2;
