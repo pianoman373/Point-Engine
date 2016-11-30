@@ -219,10 +219,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 	}
 
 	@Override
-	public void renderShadow(Shader s) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void renderShadow(Shader s) {}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

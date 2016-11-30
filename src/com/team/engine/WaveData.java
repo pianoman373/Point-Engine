@@ -119,7 +119,6 @@ public class WaveData {
 		try {
 			return create(Paths.get(path).toUri().toURL());
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
