@@ -103,7 +103,6 @@ public class Scene implements ContactListener {
 	}
 	
 	public void render(Camera cam) {
-		glDepthMask(false);
 		if (backgroundImage != null) {
 			getShader("framebuffer").bind();
 			backgroundImage.bind();
@@ -128,9 +127,8 @@ public class Scene implements ContactListener {
 		
 		//debug drawing
 		if (debug)
-			debugDraw2D();
-		
-		glDepthMask(true);
+			if (Engine.is2d)
+				debugDraw2D();
 	}
 	
 	private void debugDraw2D() {

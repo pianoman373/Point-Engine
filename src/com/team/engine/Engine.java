@@ -318,6 +318,9 @@ public class Engine {
 	}
 	
 	public static void renderWorld(Framebuffer target, Camera cam) {
+		if (is2d)
+			glDepthMask(false);
+		
 		//bind the main rendering buffer and now we're ready to render normally
 		target.bind();
 		glViewport(0, 0, target.dimensions.x, target.dimensions.y);
@@ -353,6 +356,9 @@ public class Engine {
 		if (wireframe) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		}
+		
+		if (is2d)
+			glDepthMask(true);
 	}
 
 	/**
