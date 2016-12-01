@@ -18,30 +18,28 @@ import com.team.engine.Settings;
 import com.team.engine.Util;
 import com.team.engine.vecmath.Mat4;
 
-public class FontRenderer {
+public class Font {
 	private int texID;
+	private int size;
 	private STBTTBakedChar.Buffer cdata;
+	private ByteBuffer ttf;
 	
 	int BITMAP_W = 512;
 	int BITMAP_H = 512;
 	
-	public FontRenderer() {
-		texID = glGenTextures();
-		cdata = STBTTBakedChar.malloc(96);
-		
-		ByteBuffer ttf = Util.readFile("resources/Arial.ttf");
+	public Font(String font, int size) {
+		this.texID = glGenTextures();
+		this.cdata = STBTTBakedChar.malloc(96);
+		this.size = size;
+		this.ttf = Util.readFile(Settings.RESOURCE_PATH + font);
 
 		ByteBuffer bitmap = BufferUtils.createByteBuffer(BITMAP_W * BITMAP_H);
-		stbtt_BakeFontBitmap(ttf, getFontHeight(), bitmap, BITMAP_W, BITMAP_H, 32, cdata);
+		stbtt_BakeFontBitmap(ttf, size, bitmap, BITMAP_W, BITMAP_H, 32, cdata);
 
 		glBindTexture(GL_TEXTURE_2D, texID);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, BITMAP_W, BITMAP_H, 0, GL_ALPHA, GL_UNSIGNED_BYTE, bitmap);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	}
-	
-	private static int getFontHeight() {
-		return 64;
 	}
 	
 	public void draw(float xpos, float ypos, String text) {
@@ -51,7 +49,7 @@ public class FontRenderer {
 		Shader s = getShader("sprite");
 		glBindTexture(GL_TEXTURE_2D, texID);
 		s.bind();
-		s.uniformMat4("model", mat4().translate(vec3(xpos, ypos, 0)));
+		s.uniformMat4("model", mat4().translate(vec3(-(Settings.WINDOW_WIDTH / 2) + xpos, -(Settings.WINDOW_HEIGHT / 2) +ypos, 0)));
 		s.uniformMat4("view", mat4());
 		float w = Settings.WINDOW_WIDTH / 2;
 		float h = Settings.WINDOW_HEIGHT / 2;
@@ -69,7 +67,7 @@ public class FontRenderer {
 			for ( int i = 0; i < text.length(); i++ ) {
 				char c = text.charAt(i);
 				if ( c == '\n' ) {
-					y.put(0, y.get(0) + getFontHeight());
+					y.put(0, y.get(0) + size);
 					x.put(0, 0.0f);
 					continue;
 				} else if ( c < 32 || 128 <= c )

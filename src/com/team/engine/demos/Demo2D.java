@@ -79,7 +79,7 @@ class Player extends Sprite {
 	public void init(Scene scene) {
 		super.init(scene);
 		this.addCube(vec2(0, 0), vec2(0.5f, 0.5f), 0, false);
-		this.feet = this.addSphere(vec2(0.0f, -0.15f), 0.4f, 1000);
+		this.feet = this.addSphere(vec2(0.0f, -0.15f), 0.4f, 1000f, 0f, false);
 		
 		body.setTransform(new Vector2(10.0f, 20.0f), 0);
 		body.setFixedRotation(true);

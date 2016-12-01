@@ -167,7 +167,7 @@ public class BreakoutDemo extends AbstractGame {
 			//this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, false);
 			
 			body.setFixedRotation(true);
-			this.addSphere(vec2(), 0.5f, 0f);
+			this.addSphere(vec2(), 0.5f, 0f, 0f, false);
 			this.setVelocity(vec2(8.0f, 8.0f));
 		}
 

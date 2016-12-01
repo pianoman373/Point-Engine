@@ -13,7 +13,7 @@ import com.team.engine.Scene;
 import com.team.engine.Settings;
 import com.team.engine.gameobject.GameObject2D;
 import com.team.engine.gameobject.Sprite;
-import com.team.engine.rendering.FontRenderer;
+import com.team.engine.rendering.Font;
 import com.team.engine.rendering.Shader;
 
 /**
@@ -21,7 +21,7 @@ import com.team.engine.rendering.Shader;
  */
 public class FlappyBirdDemo extends AbstractGame {
 	public Bird player;
-	FontRenderer font;
+	Font font;
 
 	public static void main(String[] args) {
 		Engine.start(true, false, new FlappyBirdDemo());
@@ -48,7 +48,7 @@ public class FlappyBirdDemo extends AbstractGame {
 		
 		getAudio("breakout.wav").play(true, 0.7f);
 		
-		font = new FontRenderer();
+		font = new Font("Arial.ttf", 32);
 	}
 	
 	@Override
@@ -57,8 +57,7 @@ public class FlappyBirdDemo extends AbstractGame {
 
 	@Override
 	public void render() {
-		//grid.render();
-		font.draw(-Settings.WINDOW_WIDTH / 2, (Settings.WINDOW_HEIGHT / 2)-64, "Deaths: " + player.deaths);
+		font.draw(0, 0, "Deaths: " + player.deaths);
 		
 	}
 
@@ -107,7 +106,8 @@ class Bird extends Sprite {
 	@Override
 	public void init(Scene scene) {
 		super.init(scene);
-		this.addCube(vec2(0, 0), vec2(0.5f, 0.5f), 0, true);
+		this.addCube(vec2(0, 0), vec2(0.7f, 0.6f), 0, true);
+		this.addSphere(vec2(), 0.5f, 0, 0, true);
 		
 		body.setFixedRotation(true);
 		body.setLinearDamping(0.5f);

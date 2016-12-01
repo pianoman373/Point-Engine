@@ -114,16 +114,11 @@ public class Engine {
 				continue;
 			}
 			
+			double begin = glfwGetTime();
+			
 			//calculate fps
 			time += deltaTime;
 			++fps;
-			
-			//display fps every second
-			if (time >= 1.0f) {
-				time = 1.0f - time;
-				glfwSetWindowTitle(window, ("Game Engine FPS: " + fps));
-				fps = 0;
-			}
 			
 			//calculate delta time
 			float currentFrame = (float)glfwGetTime();
@@ -132,6 +127,14 @@ public class Engine {
 			
 			update();
 			render();
+			
+			//display fps every second
+			if (time >= 1.0f) {
+				time = 1.0f - time;
+				double nanoseconds = ((glfwGetTime() - begin) * 1000);
+				glfwSetWindowTitle(window, ("Game Engine FPS: " + fps + " Delta: " + nanoseconds + " nanoseconds"));
+				fps = 0;
+			}
 		}
 		
 		end();
