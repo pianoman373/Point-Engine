@@ -24,7 +24,6 @@
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl/lwjgl.jar" sourcepath="lib/lwjgl/lwjgl/lwjgl-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-glfw/lwjgl-glfw.jar" sourcepath="lib/lwjgl/lwjgl-glfw/lwjgl-glfw-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc.jar" sourcepath="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-sources.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear.jar" sourcepath="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal.jar" sourcepath="lib/lwjgl/lwjgl-openal/lwjgl-openal-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-opengl/lwjgl-opengl.jar" sourcepath="lib/lwjgl/lwjgl-opengl/lwjgl-opengl-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-stb/lwjgl-stb.jar" sourcepath="lib/lwjgl/lwjgl-stb/lwjgl-stb-sources.jar"/>
@@ -37,9 +36,6 @@
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-linux.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-windows.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-linux.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-macos.jar"/>
-	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-windows.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-linux.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-macos.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-windows.jar"/>

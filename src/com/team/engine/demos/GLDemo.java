@@ -1,8 +1,6 @@
 package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
-import static org.lwjgl.stb.STBEasyFont.*;
-
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
@@ -11,8 +9,6 @@ import com.bulletphysics.collision.shapes.SphereShape;
 import com.team.engine.*;
 import com.team.engine.gameobject.FirstPersonController;
 import com.team.engine.gameobject.MeshObject;
-import com.team.engine.gui.GuiCalculator;
-import com.team.engine.gui.GuiTest;
 import com.team.engine.rendering.Cubemap;
 import com.team.engine.rendering.Material;
 import com.team.engine.rendering.Mesh;
@@ -38,9 +34,6 @@ public class GLDemo extends AbstractGame {
 	
 	public static Material outsideMaterial = new Material("metal/albedo.png", "metal/roughness.png", "metal/normal.png", "metal/metallic.png");
 	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
-	
-	private final GuiTest demo = new GuiTest();
-	private final GuiCalculator calc = new GuiCalculator();
 	
 	FirstPersonController player;
 	
@@ -132,8 +125,7 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void render() {
-		demo.layout(NuklearManager.ctx, 50, 50);
-		calc.layout(NuklearManager.ctx, 300, 50);
+		
 	}
 
 	@Override

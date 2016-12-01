@@ -2,14 +2,8 @@ package com.team.engine;
 
 import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.nuklear.Nuklear.*;
-import static org.lwjgl.system.MemoryStack.*;
-
 import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
-
-import org.lwjgl.system.MemoryStack;
 
 import com.team.engine.vecmath.Vec2;
 
@@ -94,8 +88,6 @@ public class Input {
 	
 	protected static void cursorEvent(long window, double xpos, double ypos) {
 		mousePos = vec2((float)xpos, (float)ypos);
-		
-		nk_input_motion(NuklearManager.ctx, (int)xpos, (int)ypos);
 	}
 	
 	protected static void mouseEvent(long window, int button, int action, int mods) {
@@ -117,34 +109,9 @@ public class Input {
 		if (action == GLFW_RELEASE) {
 			mouse[button] = false;
 		}
-		
-		try ( MemoryStack stack = stackPush() ) {
-			DoubleBuffer cx = stack.mallocDouble(1);
-			DoubleBuffer cy = stack.mallocDouble(1);
-
-			glfwGetCursorPos(window, cx, cy);
-
-			int x = (int)cx.get(0);
-			int y = (int)cy.get(0);
-
-			int nkButton;
-			switch ( button ) {
-				case GLFW_MOUSE_BUTTON_RIGHT:
-					nkButton = NK_BUTTON_RIGHT;
-					break;
-				case GLFW_MOUSE_BUTTON_MIDDLE:
-					nkButton = NK_BUTTON_MIDDLE;
-					break;
-				default:
-					nkButton = NK_BUTTON_LEFT;
-			}
-			nk_input_button(NuklearManager.ctx, nkButton, x, y, action == GLFW_PRESS);
-		}
 	}
 	
 	protected static void scrollEvent(long window, double scrollAmount) {
 		scrollingAmount += scrollAmount;
-		
-		nk_input_scroll(NuklearManager.ctx, (float)scrollAmount);
 	}
 }

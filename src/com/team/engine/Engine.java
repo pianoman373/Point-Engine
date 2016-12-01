@@ -13,7 +13,6 @@ import javax.swing.JOptionPane;
 
 import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.nuklear.Nuklear.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFWVidMode;
@@ -194,9 +193,7 @@ public class Engine {
 	
 	private static void update() {
 		//refresh key/mouse/etc input
-		NuklearManager.preInput();
 		glfwPollEvents();
-		NuklearManager.postInput();
 		
 		scene.update();
 		game.update();
@@ -265,8 +262,6 @@ public class Engine {
 		if (isVR) {
 			VRManager.postRender();
 		}
-		
-		NuklearManager.render();
 
 		//now we swap buffers which updates the window
 		glfwSwapBuffers(window);
@@ -411,7 +406,6 @@ public class Engine {
 		glfwSetCursorPosCallback(window, (long window, double xpos, double ypos) -> Input.cursorEvent(window, xpos, ypos));
 		glfwSetMouseButtonCallback(window, (long window, int button, int action, int mods) -> Input.mouseEvent(window, button, action, mods));
 		glfwSetScrollCallback(window, (long window, double arg1, double scrollAmount) -> Input.scrollEvent(window, scrollAmount));
-		glfwSetCharCallback(Engine.window, (window, codepoint) -> nk_input_unicode(NuklearManager.ctx, codepoint));
 		
 		GL.createCapabilities();
 		
@@ -424,7 +418,6 @@ public class Engine {
 		AL.createCapabilities(deviceCaps);
 		
 		if (isVR) VRManager.setupVR();
-		NuklearManager.init();
 	}
 	
 	/**
