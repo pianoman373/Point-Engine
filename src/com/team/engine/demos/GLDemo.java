@@ -1,6 +1,7 @@
 package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
+import static org.lwjgl.stb.STBEasyFont.*;
 
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
@@ -49,6 +50,8 @@ public class GLDemo extends AbstractGame {
 
 	@Override
 	public void init() {
+		
+		
 		loadTexture("container2.png", false, true);
 		loadTexture("container2_specular.png");
 		loadTexture("brickwall.jpg", false, true);
@@ -97,6 +100,8 @@ public class GLDemo extends AbstractGame {
 		player = new FirstPersonController(vec3(10, 0, 0));
 		
 		Engine.scene.add(player);
+		
+		
 	}
 
 	private static float accum;
