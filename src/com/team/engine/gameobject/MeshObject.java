@@ -23,6 +23,12 @@ import com.team.engine.vecmath.Vec3;
 
 /**
  * MeshObject is a quick and easy to use implementation of GameObject. It handles simple physics and mesh rendering.
+ * 
+ * Your desired 3D game object should probably extend this instead of GameObject if you don't plan
+ * on doing all the manual rendering and physics yourself.
+ * 
+ * If you create a class that extends MeshObject and implements the same functions such as init and render,
+ * you must call super.functionName() at the beginning of that function, otherwise this class can't do it's job.
  */
 public class MeshObject implements GameObject {
 	public RigidBody rb;

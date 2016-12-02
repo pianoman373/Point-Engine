@@ -16,7 +16,8 @@ import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 
 /**
- * A demo utilizing sprite rendering, Grid2D's and box2D physics.
+ * Simple breakout game. Doesn't really work well as a game but it gets
+ * the point across.
  */
 public class BreakoutDemo extends AbstractGame {
 	public Player player;
@@ -31,12 +32,14 @@ public class BreakoutDemo extends AbstractGame {
 		2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2
 	};
 
+	//always needed for every runnable demo ever
 	public static void main(String[] args) {
 		Engine.start(true, false, new BreakoutDemo());
 	}
 
 	@Override
 	public void init() {
+		//load textures and sounds into memory at the very beginning
 		loadTexture("crate.png");
 		loadTexture("block.png");
 		loadTexture("block_solid.png");
@@ -56,6 +59,7 @@ public class BreakoutDemo extends AbstractGame {
 		Engine.scene.backgroundImage = getTexture("background.jpg");
 		paddle.setPosition(vec2(0.0f, -7.5f));
 
+		//create all the blocks from the values stored in level1
 		int i = 0;
 		for (int y = 0; y < 6; y++) {
 			for (int x = 0; x < 20; x++) {
@@ -90,27 +94,9 @@ public class BreakoutDemo extends AbstractGame {
 		}
 	}
 
-	@Override
-	public void update() {
-		
-	}
-
-	@Override
-	public void render() {
-
-	}
-
-	@Override
-	public void postRenderUniforms(Shader shader) {}
-
-	@Override
-	public void kill() {
-
-	}
-
-	@Override
-	public void renderShadow(Shader s) {}
-
+	/**
+	 * The paddle object you control.
+	 */
 	private class Paddle extends Sprite {
 		public Paddle() {
 			super("paddle.png", vec2(1.5f, 0.5f), false, false);
@@ -125,6 +111,7 @@ public class BreakoutDemo extends AbstractGame {
 
 		@Override
 		public void update() {
+			//get key events for movement
 			Vec2 pos = this.getPosition();
 
 			if (Input.isKeyDown(GLFW_KEY_LEFT)) {
@@ -136,6 +123,9 @@ public class BreakoutDemo extends AbstractGame {
 		}
 	}
 
+	/**
+	 * One of the breakable (or unbreakable actually) boxes.
+	 */
 	private class Box extends Sprite {
 		public boolean solid;
 		
@@ -153,26 +143,28 @@ public class BreakoutDemo extends AbstractGame {
 		}
 	}
 
+	/**
+	 * The happy smiley face dude.
+	 */
 	private class Player extends Sprite {
 
 		public Player() {
 			super("awesomeface.png", vec2(0.5f, 0.5f), true, true);
-
 		}
 
 		@Override
 		public void init(Scene scene) {
 			super.init(scene);
 			
-			//this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, false);
+			this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, false);
 			
 			body.setFixedRotation(true);
-			this.addSphere(vec2(), 0.5f, 0f, 0f, false);
 			this.setVelocity(vec2(8.0f, 8.0f));
 		}
 
 		@Override
 		public void update() {
+			//detect if outside of the box
 			Vec2 pos = this.getPosition();
 			Vec2 vel = this.getVelocity();
 
@@ -186,7 +178,15 @@ public class BreakoutDemo extends AbstractGame {
 		
 		@Override
 		public void endContact(Fixture f, GameObject2D other) {
+			/* When the ball comes in contact with a block we want it to
+			bounce off first, and then delete the cube it touched. 
+			So we use endContact instead of onContact. Now then the ball
+			hits a box it does collision first, bounces off, and as soon as it
+			stops touching this functions gets called. Now we can destroy the box
+			it came in contact with.
+			*/
 			if (other.tag.equals("box") && other instanceof Box) {
+				//don't break the unbreakable blocks
 				if (!((Box)other).solid) {
 					Engine.scene.delete(other);
 					getAudio("powerup.wav").play(false, 1.0f);

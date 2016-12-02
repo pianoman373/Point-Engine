@@ -14,6 +14,10 @@ import java.nio.file.Paths;
 
 import org.lwjgl.BufferUtils;
 
+/**
+ * Just a bunch of useful functions that didn't seem to fit inside Globals. Mostly IO stuff here
+ * for now.
+ */
 public class Util {
 	/**
 	 * Returns true if the specified file exists.
@@ -22,6 +26,9 @@ public class Util {
 		return Files.exists(Paths.get(file), LinkOption.NOFOLLOW_LINKS);
 	}
 	
+	/**
+	 * Reads the specified file and returns the ByteBuffer representation of the file. Dead simple.
+	 */
 	public static ByteBuffer readFile(String resource) {
 		ByteBuffer buffer;
 
@@ -41,6 +48,9 @@ public class Util {
 		return null;
 	}
 	
+	/**
+	 * Reads the specified file and returns the String representation of the file. Dead simple.
+	 */
 	public static String readFileString(String resource) {
 		String source = "";
 		try {
@@ -55,6 +65,9 @@ public class Util {
 		return source;
 	}
 	
+	/**
+	 * Turns a float array into a float buffer.
+	 */
 	public static FloatBuffer toBuffer(float[] contents) {
 		FloatBuffer buffer = BufferUtils.createFloatBuffer(contents.length);
 		for (float i : contents) {
@@ -65,6 +78,9 @@ public class Util {
 		return buffer;
 	}
 	
+	/**
+	 * Turns an int array into an int buffer.
+	 */
 	public static IntBuffer toBuffer(int[] contents) {
 		IntBuffer buffer = BufferUtils.createIntBuffer(contents.length);
 		for (int i : contents) {
@@ -75,6 +91,9 @@ public class Util {
 		return buffer;
 	}
 	
+	/**
+	 * Turns a byte array into a byte buffer.
+	 */
 	public static ByteBuffer toBuffer(byte[] contents) {
 		ByteBuffer buffer = BufferUtils.createByteBuffer(contents.length);
 		for (byte i : contents) {
@@ -85,6 +104,9 @@ public class Util {
 		return buffer;
 	}
 	
+	/**
+	 * Turns a float buffer into a float array.
+	 */
 	public static float[] toArray(FloatBuffer array) {
 		float[] ret = new float[array.capacity()];
 		
@@ -95,6 +117,9 @@ public class Util {
 		return ret;
 	}
 	
+	/**
+	 * Turns an int array into an int buffer.
+	 */
 	public static int[] toArray(IntBuffer array) {
 		int[] ret = new int[array.capacity()];
 		

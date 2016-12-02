@@ -5,7 +5,8 @@ import com.team.engine.rendering.Shader;
 import com.team.engine.AbstractGame;
 
 /**
- * A demo utilizing sprite rendering, Grid2D's and dyn4j physics.
+ * A template for any game ever.
+ * Serves no purpose, just here for convenience.
  */
 public class Template extends AbstractGame {
 	public static void main(String[] args) {
@@ -19,6 +20,11 @@ public class Template extends AbstractGame {
 	
 	@Override
 	public void update() {
+		
+	}
+	
+	@Override
+	public void postUpdate() {
 		
 	}
 

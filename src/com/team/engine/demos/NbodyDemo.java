@@ -25,6 +25,8 @@ import com.team.engine.vecmath.Vec3;
 
 /**
  * A demo that can simulate orbits, clustering, and gravitational interactions.
+ * 
+ * I'm not even gonna document this one too much mainly because it hardly uses the engine at all.
  */
 public class NbodyDemo extends AbstractGame implements ActionListener{
 	public static void main(String[] args) {

@@ -14,6 +14,9 @@ import com.team.engine.rendering.Material;
 import com.team.engine.rendering.ObjLoader;
 import com.team.engine.vecmath.Vec3;
 
+/**
+ * WIP test of a 3D character controller.
+ */
 public class FirstPersonController extends MeshObject {
 	private float angle = 0;
 

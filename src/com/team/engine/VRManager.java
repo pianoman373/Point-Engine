@@ -13,8 +13,11 @@ import vr.TrackedDevicePose_t;
 import vr.VR;
 import vr.VREvent_t;
 
+/**
+ * This is kind of a plugin for Engine that delegates VR when the isVR option is enabled in Engine.start().
+ * Basically there are just a bunch of function hooks that Engine calls to keep the file size of Engine down.
+ */
 public class VRManager {
-	//vr stuff
 	private static IVRCompositor_FnTable compositor;
 	
 	public static vr.HmdMatrix44_t lEyeProj;

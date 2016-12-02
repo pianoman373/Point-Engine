@@ -18,14 +18,14 @@ import com.team.engine.rendering.Primitives;
 import com.team.engine.rendering.Shader;
 
 /**
- * A demo showing off 3D rendering with openGL, bullet physics, skyboxes, and lighting shaders.
+ * Mainly a showcase of the engine's graphical capabilities. Also has a (buggy) 3rd person player test.
  */
 public class GLDemo extends AbstractGame {
 	public static Mesh cubeMesh;
 	public static Mesh groundMesh;
 	
-	public static Mesh mat1;
-	public static Mesh mat2;
+	public static Mesh blender1;
+	public static Mesh blender2;
 	
 	private Mesh sphere;
 	
@@ -37,14 +37,14 @@ public class GLDemo extends AbstractGame {
 	
 	FirstPersonController player;
 	
+	//always needed for every runnable demo ever
 	public static void main(String[] args) {
 		Engine.start(false, false, new GLDemo());
 	}
 
 	@Override
 	public void init() {
-		
-		
+		//lotta textures to load
 		loadTexture("container2.png", false, true);
 		loadTexture("container2_specular.png");
 		loadTexture("brickwall.jpg", false, true);
@@ -64,13 +64,16 @@ public class GLDemo extends AbstractGame {
 		loadTexture("stone_tile_normal.png");
 		loadTexture("stone_tile_specular.png");
 		
+		//all our meshes, some created in-engine and others imported via obj
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), false);
 		groundMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		sphere = ObjLoader.loadFile("sphere.obj");
-		mat1 = ObjLoader.loadFile("matmodel-1.obj");
-		mat2 = ObjLoader.loadFile("matmodel-2.obj");		
+		blender1 = ObjLoader.loadFile("matmodel-1.obj");
+		blender2 = ObjLoader.loadFile("matmodel-2.obj");		
 		
+		//sets the skybox, renders as an actual skybox, and also used for reflections
 		Engine.scene.skybox = new Cubemap("sunset");
+		//think of this as an ambient map
 		Engine.scene.irradiance = new Cubemap("sunset-irradiance");
 		
 		Engine.camera.setPosition(vec3(0, 0, 5));
@@ -78,9 +81,8 @@ public class GLDemo extends AbstractGame {
 		Engine.scene.sun.color = vec3(5, 5, 5);
 		Engine.scene.sun.direction = vec3(-1, -0.8, -0.7f);
 		
-		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, mat1,0.5f,  insideMaterial));
-		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, mat2,0.5f,  outsideMaterial));
-		
+		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new BoxShape(new Vector3f(2f, 5f, 2f)), 0f, blender1,0.5f,  insideMaterial));
+		Engine.scene.add(new MeshObject(vec3(-10, -10, -12), new Quat4f(), new SphereShape(0.5f), 0f, blender2,0.5f,  outsideMaterial));
 		Engine.scene.add(new MeshObject(vec3(0, -60f, 0), new Quat4f(), new BoxShape(new Vector3f(50f, 50f, 50f)), 0f, groundMesh, 100f, groundMaterial));
 		
 		for (int x = 0; x < 7; x++) {
@@ -93,16 +95,16 @@ public class GLDemo extends AbstractGame {
 		player = new FirstPersonController(vec3(10, 0, 0));
 		
 		Engine.scene.add(player);
-		
-		
 	}
 
+	//accumulator of time, useful for limiting how many times per second something can be done
 	private static float accum;
 
 	@Override
 	public void update() {
 		accum += Engine.deltaTime;
 		
+		//spawns cubes and lights, test if accum is a certain length
 		if (Input.isButtonDown(1) && accum > 0.1f) {
 			SpaceCamera cam = (SpaceCamera)Engine.camera;
 			MeshObject c = new MeshObject(cam.getPosition(), cam.front.multiply(30), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
@@ -122,18 +124,4 @@ public class GLDemo extends AbstractGame {
 		Engine.camera.setPosition(vec3(player.getTransform().origin) .add (vec3(0, 5, 0)) .subtract (player.getDirection().multiply(6)));
 		Engine.camera.setDirection(player.getDirection().normalize() .add (vec3(0, -0.5f, 0)));
 	}
-
-	@Override
-	public void render() {
-		
-	}
-
-	@Override
-	public void postRenderUniforms(Shader shader) {}
-
-	@Override
-	public void kill() {}
-
-	@Override
-	public void renderShadow(Shader s) {}
 }

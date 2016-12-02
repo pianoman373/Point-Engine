@@ -54,7 +54,9 @@ import com.sun.media.sound.WaveFileReader;
 
 /**
  *
- * Utitlity class for loading wavefiles.
+ * Utitlity class for loading wavefiles. This is pretty much used Exclusively
+ * by Audio. I wouldn't bother messing with this stuff (espeically since I have no clue
+ * what's going on here).
  *
  * @author Brian Matzon <brian@matzon.dk>
  * @version $Revision$

@@ -32,7 +32,8 @@ import com.team.engine.rendering.Texture;
 import com.team.engine.vecmath.Vec2i;
 
 /**
- * The main class of a game should extend this one. It contains Everything needed to set up a game loop, and the opengl context.
+ * This is the main class of the engine. All you really need to do here is call start() and the
+ * engine takes everything over, starting the game loop and just about everything.
  *
  * note: You cannot call any opengl functions before first calling start() since it starts up OpenGL.
  */
@@ -92,10 +93,22 @@ public class Engine {
 
 	/**
 	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
+	 * 
+	 * @param is2D basically changes how the whole engine sets itself up. If true then Engine.camera will be an OrthographicCamera
+	 * instance. Post processing will default use a simple shader, and overall it will just be more setup for a 2D game.
+	 * 
+	 * TODO: Maybe one day this option can be removed. I don't really like separating 2D from 3D so much. Sometimes
+	 * they need to mix.
+	 * 
+	 * @param vr enables the VRManager to be plugged into the engine. Windows only currently (even if it was setup for linux
+	 * steamvr doesn't work anyways....).
+	 * 
+	 * @param g Whatever you want that extends AbstractGame. Most of the time this is your main game class. It's your primary method
+	 * of communication with the engine.
 	 */
-	public static void start(boolean i2d, boolean vr, AbstractGame g) {
+	public static void start(boolean is2D, boolean vr, AbstractGame g) {
 		game = g;
-		is2d = i2d;
+		is2d = is2D;
 		isVR = vr;
 		
 		setupContext();
@@ -128,10 +141,13 @@ public class Engine {
 			update();
 			render();
 			
+			double nanoseconds = ((glfwGetTime() - begin) * 1000);
+			print(nanoseconds);
+			
 			//display fps every second
 			if (time >= 1.0f) {
 				time = 1.0f - time;
-				double nanoseconds = ((glfwGetTime() - begin) * 1000);
+				
 				glfwSetWindowTitle(window, ("Game Engine FPS: " + fps + " Delta: " + nanoseconds + " nanoseconds"));
 				fps = 0;
 			}
@@ -154,9 +170,6 @@ public class Engine {
 		loadShader("pbr-specular");
 		loadShader("gui");
 		loadShader("color");
-		
-		//TODO: why are we loading this default?
-		loadTexture("ascii.png", true, false);
 
 		//vital meshes
 		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);

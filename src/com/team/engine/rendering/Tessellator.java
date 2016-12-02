@@ -10,6 +10,10 @@ import org.lwjgl.BufferUtils;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+/**
+ * The Tessellator is very similar to ModelBuilder, except that it is meant to be given
+ * vertex data every frame, similar to fixed-function opengl.
+ */
 public class Tessellator {
 	private int VBO;
 	private int VAO;

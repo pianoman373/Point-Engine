@@ -279,6 +279,9 @@ public class Scene implements ContactListener {
 		}
 	}
 
+	/**
+	 * Internal use only
+	 */
 	@Override
 	public void beginContact(Contact contact) {
 		Body bodyA = contact.getFixtureA().getBody();
@@ -291,7 +294,10 @@ public class Scene implements ContactListener {
 			((GameObject2D)bodyB.getUserData()).onContact(contact.getFixtureB(), (GameObject2D)contact.getFixtureA().getBody().getUserData());
 		}
 	}
-
+	
+	/**
+	 * Internal use only
+	 */
 	@Override
 	public void endContact(Contact contact) {
 		Body bodyA = contact.getFixtureA().getBody();
@@ -305,11 +311,17 @@ public class Scene implements ContactListener {
 		}
 	}
 
+	/**
+	 * Internal use only
+	 */
 	@Override
 	public void preSolve(Contact contact, Manifold oldManifold) {
 		
 	}
 
+	/**
+	 * Internal use only
+	 */
 	@Override
 	public void postSolve(Contact contact, ContactImpulse impulse) {
 		

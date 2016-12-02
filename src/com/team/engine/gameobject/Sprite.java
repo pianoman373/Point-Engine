@@ -14,7 +14,7 @@ import com.team.engine.vecmath.Vec3;
  * automatically rendering your object with no work done on your end.
  * 
  * Notice this class is not abstract. It is primarily meant to be extended by another class, but it
- * works perfectly fine when constructed on it's own too.
+ * works perfectly fine when constructed on it's own too. Just don't expect it to do all that much.
  */
 public class Sprite extends PhysicsObject2D {
 	private String image;

@@ -18,6 +18,9 @@ import com.team.engine.Settings;
 import com.team.engine.Util;
 import com.team.engine.vecmath.Mat4;
 
+/**
+ * Representation of a .ttf file that contains helper functions for drawing to the screen.
+ */
 public class Font {
 	private int texID;
 	private int size;
@@ -26,7 +29,10 @@ public class Font {
 	
 	int BITMAP_W = 512;
 	int BITMAP_H = 512;
-	
+	/**
+	 * @param font The .ttf file to load
+	 * @param size The size in screen pixels that this font will be rendered in.
+	 */
 	public Font(String font, int size) {
 		this.texID = glGenTextures();
 		this.cdata = STBTTBakedChar.malloc(96);
@@ -42,6 +48,11 @@ public class Font {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	}
 	
+	/**
+	 * Draws The specified text on screen. Not suitable for drawing text into a 3D world yet.
+	 * 
+	 * Note: 0, 0 is the bottom left of the window.
+	 */
 	public void draw(float xpos, float ypos, String text) {
 		Tessellator ts = Engine.tessellator;
 		glDisable(GL_CULL_FACE);

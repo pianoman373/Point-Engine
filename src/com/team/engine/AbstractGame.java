@@ -10,24 +10,27 @@ public abstract class AbstractGame {
 	/**
 	 * Called one time only when the game is first loaded.
 	 */
-	public abstract void init();
+	public void init() {}
 	
 	/**
 	 * Called every update and should be used for non-rendering functions.
 	 */
 	public void update() {}
 	
+	/**
+	 * Use this if you need something updated after everything else
+	 */
 	public void postUpdate() {}
 
 	/**
 	 * Called every time the frame updates.
 	 */
-	public abstract void render();
+	public void render() {}
 
 	/**
 	 * Called when the game is closed.
 	 */
-	public abstract void kill();
+	public void kill() {}
 	
 	/**
 	 * Called before render() to render the entire scene from the light's perpsective.

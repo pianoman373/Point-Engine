@@ -13,7 +13,7 @@ import com.team.engine.Scene;
 import com.team.engine.vecmath.Vec2;
 
 /**
- * PhysicsObject2D is meant to simplify gameobjects affected by physics a bit more.
+ * PhysicsObject2D is meant to simplify game objects affected by physics a bit more.
  * If your GameObject2D implementation needs physics and/or collision detection, have it
  * extend PhysicsObject2D rather than GameObject2D.
  */

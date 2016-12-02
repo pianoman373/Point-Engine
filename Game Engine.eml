@@ -37,11 +37,6 @@
 		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-sources.jar!/"/>
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc.jar!/"/>
 	</lib>
-	<lib name="lwjgl-nuklear.jar" scope="COMPILE">
-		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-sources.jar!/"/>
-		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-sources.jar!/"/>
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear.jar!/"/>
-	</lib>
 	<lib name="lwjgl-openal.jar" scope="COMPILE">
 		<srcroot url="jar://$MODULE_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-sources.jar!/"/>
 		<relative-module-src project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-sources.jar!/"/>
@@ -83,15 +78,6 @@
 	</lib>
 	<lib name="lwjgl-jemalloc-natives-windows.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-jemalloc/lwjgl-jemalloc-natives-windows.jar!/"/>
-	</lib>
-	<lib name="lwjgl-nuklear-natives-linux.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-linux.jar!/"/>
-	</lib>
-	<lib name="lwjgl-nuklear-natives-macos.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-macos.jar!/"/>
-	</lib>
-	<lib name="lwjgl-nuklear-natives-windows.jar" scope="COMPILE">
-		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-nuklear/lwjgl-nuklear-natives-windows.jar!/"/>
 	</lib>
 	<lib name="lwjgl-openal-natives-linux.jar" scope="COMPILE">
 		<relative-module-cls project-related="jar://$PROJECT_DIR$/lib/lwjgl/lwjgl-openal/lwjgl-openal-natives-linux.jar!/"/>

@@ -12,6 +12,9 @@ import com.team.engine.vecmath.Vec2;
 import com.team.engine.vecmath.Vec3;
 import com.team.engine.vecmath.Vec4;
 
+/**
+ * This class contains a bunch of helper methods designed to be imported statically.
+ */
 public class Globals {
 	public static void print(Object obj) {
 		System.out.println(obj);

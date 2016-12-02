@@ -7,6 +7,9 @@ import com.team.engine.vecmath.Vec4;
 import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * A camera implementation with 3 degrees of rotation. Useful for space.
+ */
 public class SpaceCamera extends Camera {
 	public Vec3 position = vec3(0.0f, 0.0f, 15.0f);
 	public Vec3 front = vec3(0.0f, 0.0f, -1.0f);

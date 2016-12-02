@@ -6,7 +6,11 @@ import org.jbox2d.dynamics.Fixture;
 import com.team.engine.Camera;
 import com.team.engine.Scene;
 
-
+/**
+ * The superclass of all 2D objects wishing to be added to the Scene.
+ * 
+ * Pretty much just lays down the basics of that a game object should do.
+ */
 public abstract class GameObject2D {
 	public String tag = "";
 	public Body body;
