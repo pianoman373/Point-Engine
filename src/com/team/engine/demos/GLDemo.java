@@ -15,7 +15,6 @@ import com.team.engine.rendering.Mesh;
 import com.team.engine.rendering.ObjLoader;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Primitives;
-import com.team.engine.rendering.Shader;
 
 /**
  * Mainly a showcase of the engine's graphical capabilities. Also has a (buggy) 3rd person player test.

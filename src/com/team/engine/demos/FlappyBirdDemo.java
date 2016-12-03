@@ -10,11 +10,9 @@ import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
 import com.team.engine.Input;
 import com.team.engine.Scene;
-import com.team.engine.Settings;
 import com.team.engine.gameobject.GameObject2D;
 import com.team.engine.gameobject.Sprite;
 import com.team.engine.rendering.Font;
-import com.team.engine.rendering.Shader;
 import com.team.engine.vecmath.Vec2;
 
 /**
