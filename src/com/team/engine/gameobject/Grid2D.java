@@ -35,9 +35,9 @@ public class Grid2D extends PhysicsObject2D {
 	private Mesh mesh;
 	private Map map;
 	
-	public Grid2D(String tmxfile) {
+	public Grid2D(String tmxfile, String imageFile) {
 		super(false, false);
-		loadTexture("retro-terrain.png", true, false);
+		loadTexture(imageFile, true, false);
 		TMXMapReader reader = new TMXMapReader();
 		
 		width = 16;

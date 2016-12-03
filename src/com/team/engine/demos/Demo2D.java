@@ -34,7 +34,7 @@ public class Demo2D extends AbstractGame {
 
 		loadTexture("crate.png");
 
-		grid = new Grid2D("retro.tmx");
+		grid = new Grid2D("retro.tmx", "retro-terrain.png");
 		Engine.scene.add(grid);
 		
 		player = new Player();
