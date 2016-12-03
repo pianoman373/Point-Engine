@@ -24,7 +24,7 @@ public class Demo2D extends AbstractGame {
 
 	//always needed for every runnable demo ever
 	public static void main(String[] args) {
-		Engine.start(true, false, new Demo2D());
+		Engine.start(true, false, new Demo2D(), null);
 	}
 
 	@Override

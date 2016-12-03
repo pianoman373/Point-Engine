@@ -105,8 +105,10 @@ public class Engine {
 	 * 
 	 * @param g Whatever you want that extends AbstractGame. Most of the time this is your main game class. It's your primary method
 	 * of communication with the engine.
+	 * 
+	 * @param splashes is an array of the names of files starting from textures to be used in the splash screen. Can be null for no splash.
 	 */
-	public static void start(boolean is2D, boolean vr, AbstractGame g) {
+	public static void start(boolean is2D, boolean vr, AbstractGame g, String[] splashes) {
 		game = g;
 		is2d = is2D;
 		isVR = vr;
@@ -118,6 +120,54 @@ public class Engine {
 		float time = 0;
 		lastFrame = (float)glfwGetTime();
 		int fps = 0;
+		
+		if (splashes != null) {
+			glDisable(GL_FRAMEBUFFER_SRGB);
+			for (String i: splashes) {
+				loadTexture(i);
+				
+				float last = (float)glfwGetTime();
+				float fade = 0;
+				int stage = 0;
+				while (!glfwWindowShouldClose(window)) {
+					glfwPollEvents();
+					clear(0, 0, 0, 1);
+					
+					float delta = (float)glfwGetTime() - last;
+					
+					Shader s = getShader("splash");
+					s.bindSimple();
+					getTexture(i).bind();
+					
+					if (stage == 0) {
+						fade += delta / 500f;
+	
+						if (fade >= 3) {
+							stage++;
+							fade = 3;
+						}
+					}
+					if (stage == 1) {
+						fade += -delta / 2000f;
+						
+						if (fade <= -1) {
+							break;
+						}
+					}
+					
+					
+					print(fade);
+					
+					s.uniformFloat("fade", fade);
+					
+					framebufferMesh.draw();
+					
+					glfwSwapBuffers(window);
+				}
+			}
+			if (!is2d)
+				glEnable(GL_FRAMEBUFFER_SRGB);
+		}
 		
 		//the main game loop
 		while (!glfwWindowShouldClose(window)) {
@@ -159,6 +209,7 @@ public class Engine {
 		//load all our vital shaders
 		loadShader("hdr");
 		loadShader("framebuffer");
+		loadShader("splash");
 		loadShader("blur");
 		loadShader("skybox");
 		loadShader("light");

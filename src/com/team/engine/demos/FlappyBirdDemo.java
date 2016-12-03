@@ -24,7 +24,7 @@ public class FlappyBirdDemo extends AbstractGame {
 
 	//always needed for every runnable demo ever
 	public static void main(String[] args) {
-		Engine.start(true, false, new FlappyBirdDemo());
+		Engine.start(true, false, new FlappyBirdDemo(), new String[] {"splash.png", "point-engine.png"});
 	}
 
 	@Override

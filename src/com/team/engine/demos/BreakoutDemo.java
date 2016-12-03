@@ -33,7 +33,7 @@ public class BreakoutDemo extends AbstractGame {
 
 	//always needed for every runnable demo ever
 	public static void main(String[] args) {
-		Engine.start(true, false, new BreakoutDemo());
+		Engine.start(true, false, new BreakoutDemo(), null);
 	}
 
 	@Override
@@ -148,14 +148,14 @@ public class BreakoutDemo extends AbstractGame {
 	private class Player extends Sprite {
 
 		public Player() {
-			super("awesomeface.png", vec2(0.5f, 0.5f), true, true);
+			super("awesomeface.png", vec2(0.2f, 0.2f), true, true);
 		}
 
 		@Override
 		public void init(Scene scene) {
 			super.init(scene);
 			
-			this.addCube(vec2(), vec2(0.5f, 0.5f), 0f, false);
+			this.addCube(vec2(), vec2(0.2f, 0.2f), 0f, false);
 			
 			body.setFixedRotation(true);
 			this.setVelocity(vec2(8.0f, 8.0f));

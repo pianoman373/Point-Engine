@@ -10,7 +10,7 @@ import com.team.engine.AbstractGame;
  */
 public class Template extends AbstractGame {
 	public static void main(String[] args) {
-		Engine.start(false, false, new Template());
+		Engine.start(false, false, new Template(), null);
 	}
 
 	@Override

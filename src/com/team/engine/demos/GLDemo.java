@@ -38,7 +38,7 @@ public class GLDemo extends AbstractGame {
 	
 	//always needed for every runnable demo ever
 	public static void main(String[] args) {
-		Engine.start(false, false, new GLDemo());
+		Engine.start(false, false, new GLDemo(), null);
 	}
 
 	@Override

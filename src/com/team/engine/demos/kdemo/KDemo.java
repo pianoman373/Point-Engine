@@ -32,12 +32,11 @@ public class KDemo extends AbstractGame {
 	private Mesh boxMesh;
 	
 	public static void main(String[] args) {
-		Engine.start(false, false, new KDemo());
+		Engine.start(false, false, new KDemo(), null);
 	}
 
 	@Override
 	public void init() {
-		
 		Engine.scene.sun.direction = vec3(0.0f, -1.0f, 0.0f);
 		Engine.scene.sun.color = vec3(1.2f, 1.2f, 1.2f);
 		

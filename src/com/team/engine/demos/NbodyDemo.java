@@ -30,7 +30,7 @@ import com.team.engine.vecmath.Vec3;
  */
 public class NbodyDemo extends AbstractGame implements ActionListener{
 	public static void main(String[] args) {
-		Engine.start(false, false, new NbodyDemo());
+		Engine.start(false, false, new NbodyDemo(), null);
 	}
 	
 	private static final boolean POINT_TO_POINT_GRAVITY = false;
