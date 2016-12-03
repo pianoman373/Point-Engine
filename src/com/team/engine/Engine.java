@@ -142,7 +142,6 @@ public class Engine {
 			render();
 			
 			double nanoseconds = ((glfwGetTime() - begin) * 1000);
-			print(nanoseconds);
 			
 			//display fps every second
 			if (time >= 1.0f) {
