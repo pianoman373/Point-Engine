@@ -1,6 +1,6 @@
 ![Logo of Point Engine](point-engine.png "Point Engine Logo")
 
-Point Engine is a lightweight game engine written in Java that runs off [LWJGL](www.lwjgl.org). Aimed to help speed
+Point Engine is a lightweight game engine written in Java that runs off [LWJGL](http://www.lwjgl.org). Aimed to help speed
 up development with OpenGL by dealing with most of the boilerplate code and still
 giving the programmer full access.
 
