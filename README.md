@@ -14,7 +14,7 @@ Some of the features of Point Engine are:
 * Vec2 Vec3 Vec4 and Mat4 classes designed to be as close as possible to GLSL.
 * Resource management system to prevent game assets from ever being loaded from disk twice.
 * Shadow map rendering system.
-* [Bullet physics](https://github.com/nothings/stb) for 3D and [JBox2D](http://jbox2d.org/)for 2D with GameObject helper code to help simplify the libraries
+* [Bullet physics](https://github.com/nothings/stb) for 3D and [JBox2D](http://jbox2d.org/)for 2D with GameObject helper code to help simplify the libraries.
 
 #### Examples
 
