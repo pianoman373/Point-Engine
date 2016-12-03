@@ -2,7 +2,7 @@ package com.team.engine;
 
 public class Settings {
 	public static final boolean ENABLE_SHADOWS = true;
-	public static final int SHADOW_RESOLUTION = 1024;
+	public static final int SHADOW_RESOLUTION = 2048;
 	public static final boolean ENABLE_NORMAL_MAPPING = true;
 	public static final boolean ENABLE_BLOOM = false;
 	
