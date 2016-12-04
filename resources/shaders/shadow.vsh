@@ -1,0 +1,12 @@
+#version 330 core
+layout (location = 0) in vec3 position;
+
+out int discardThis;
+
+uniform mat4 lightSpace;
+uniform mat4 model;
+
+void main()
+{
+    gl_Position = lightSpace * model * vec4(position, 1.0f);
+}
