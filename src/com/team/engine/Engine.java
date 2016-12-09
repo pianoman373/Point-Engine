@@ -90,37 +90,8 @@ public class Engine {
 	public static void setFramebuffer(Shader shader) {
 		framebufferShader = shader;
 	}
-
-	/**
-	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
-	 * 
-	 * @param is2D basically changes how the whole engine sets itself up. If true then Engine.camera will be an OrthographicCamera
-	 * instance. Post processing will default use a simple shader, and overall it will just be more setup for a 2D game.
-	 * 
-	 * TODO: Maybe one day this option can be removed. I don't really like separating 2D from 3D so much. Sometimes
-	 * they need to mix.
-	 * 
-	 * @param vr enables the VRManager to be plugged into the engine. Windows only currently (even if it was setup for linux
-	 * steamvr doesn't work anyways....).
-	 * 
-	 * @param g Whatever you want that extends AbstractGame. Most of the time this is your main game class. It's your primary method
-	 * of communication with the engine.
-	 * 
-	 * @param splashes is an array of the names of files starting from textures to be used in the splash screen. Can be null for no splash.
-	 */
-	public static void start(boolean is2D, boolean vr, AbstractGame g, String[] splashes) {
-		game = g;
-		is2d = is2D;
-		isVR = vr;
-		
-		setupContext();
-		init();
-		
-		//variables for calculating delta time and fps
-		float time = 0;
-		lastFrame = (float)glfwGetTime();
-		int fps = 0;
-		
+	
+	private static void splashScreen(String[] splashes) {
 		if (splashes != null) {
 			glDisable(GL_FRAMEBUFFER_SRGB);
 			for (String i: splashes) {
@@ -167,6 +138,38 @@ public class Engine {
 			if (!is2d)
 				glEnable(GL_FRAMEBUFFER_SRGB);
 		}
+	}
+
+	/**
+	 * This is what kicks off the whole thing. You usually call this from main and let the engine do the work.
+	 * 
+	 * @param is2D basically changes how the whole engine sets itself up. If true then Engine.camera will be an OrthographicCamera
+	 * instance. Post processing will default use a simple shader, and overall it will just be more setup for a 2D game.
+	 * 
+	 * TODO: Maybe one day this option can be removed. I don't really like separating 2D from 3D so much. Sometimes
+	 * they need to mix.
+	 * 
+	 * @param vr enables the VRManager to be plugged into the engine. Windows only currently (even if it was setup for linux
+	 * steamvr doesn't work anyways....).
+	 * 
+	 * @param g Whatever you want that extends AbstractGame. Most of the time this is your main game class. It's your primary method
+	 * of communication with the engine.
+	 * 
+	 * @param splashes is an array of the names of files starting from textures to be used in the splash screen. Can be null for no splash.
+	 */
+	public static void start(boolean is2D, boolean vr, AbstractGame g, String[] splashes) {
+		game = g;
+		is2d = is2D;
+		isVR = vr;
+		
+		setupContext();
+		splashScreen(splashes);
+		init();
+		
+		//variables for calculating delta time and fps
+		float time = 0;
+		lastFrame = (float)glfwGetTime();
+		int fps = 0;
 		
 		//the main game loop
 		while (!glfwWindowShouldClose(window)) {
