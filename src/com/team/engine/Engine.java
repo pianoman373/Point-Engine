@@ -133,31 +133,30 @@ public class Engine {
 					glfwPollEvents();
 					clear(0, 0, 0, 1);
 					
-					float delta = (float)glfwGetTime() - last;
+					float now = (float)glfwGetTime();
+					float delta = now - last;
+					last = now;
 					
 					Shader s = getShader("splash");
 					s.bindSimple();
 					getTexture(i).bind();
 					
 					if (stage == 0) {
-						fade += delta / 500f;
+						fade += delta;
 	
-						if (fade >= 3) {
+						if (fade >= 1.5f) {
 							stage++;
-							fade = 3;
+							fade = 1.5f;
 						}
 					}
 					if (stage == 1) {
-						fade += -delta / 2000f;
+						fade -= delta;
 						
-						if (fade <= -1) {
+						if (fade <= -0.5f) {
 							break;
 						}
 					}
-					
-					
-					print(fade);
-					
+										
 					s.uniformFloat("fade", fade);
 					
 					framebufferMesh.draw();
