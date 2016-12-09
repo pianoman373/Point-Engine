@@ -391,7 +391,7 @@ public class Engine {
 	 */
 	public static void renderWorld(Framebuffer target, Camera cam) {
 		if (is2d)
-			glDepthMask(false);
+			glDisable(GL_DEPTH_TEST);
 		
 		target.bind();
 		glViewport(0, 0, target.dimensions.x, target.dimensions.y);
@@ -428,7 +428,7 @@ public class Engine {
 		}
 		
 		if (is2d)
-			glDepthMask(true);
+			glEnable(GL_DEPTH_TEST);
 	}
 
 	/**
