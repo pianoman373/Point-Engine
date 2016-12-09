@@ -17,7 +17,7 @@ import org.lwjgl.BufferUtils;
 
 import com.team.engine.AbstractGame;
 import com.team.engine.Engine;
-import com.team.engine.SpaceCamera;
+import com.team.engine.SpaceCameraController;
 import com.team.engine.Scene;
 import com.team.engine.rendering.PointLight;
 import com.team.engine.rendering.Shader;
@@ -61,7 +61,7 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 
 	@Override
 	public void init() {
-		SpaceCamera.WASD_SENSITIVITY = 25.0f;
+		SpaceCameraController.WASD_SENSITIVITY = 25.0f;
 		
 		loadShader("point");
 		
@@ -158,6 +158,8 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 			readyToRender = false;
 			updateVBO();
 		}
+		
+		SpaceCameraController.update();
 	}
 	
 	public Vec3 getInfluenceAt(Vec3 pos) {

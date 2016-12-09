@@ -241,14 +241,13 @@ public class Engine {
 
 		tessellator = new Tessellator();
 		scene = new Scene();
+		camera = new Camera(is2d);
 		
 		//create the camera depending on what mode we're in
 		if (is2d) {
-			camera = new OrthographicCamera();
 			framebufferShader = getShader("framebuffer");
 		}
 		else {
-			camera = new SpaceCamera();
 			framebufferShader = getShader("hdr");
 		}
 		
@@ -262,8 +261,6 @@ public class Engine {
 		
 		scene.update();
 		game.update();
-		//TODO: why is camera getting it's own update and why is it last?
-		camera.update();
 		
 		game.postUpdate();
 		

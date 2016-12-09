@@ -104,7 +104,7 @@ public class GLDemo extends AbstractGame {
 		
 		//spawns cubes and lights, test if accum is a certain length
 		if (Input.isButtonDown(1) && accum > 0.1f) {
-			SpaceCamera cam = (SpaceCamera)Engine.camera;
+			Camera cam = Engine.camera;
 			MeshObject c = new MeshObject(cam.getPosition(), cam.front.multiply(30), new Quat4f(1.0f, 0.3f, 0.5f, 0f), new BoxShape(new Vector3f(0.5f, 0.5f, 0.5f)), 1f, cubeMesh, 1f, crateMaterial);
 			Engine.scene.add(c);
 			accum = 0;
