@@ -46,7 +46,6 @@ public class KDemo extends AbstractGame {
 		loadTexture("planks.jpg", false, true);
 		loadTexture("planks_specular.jpg");
 		
-		loadShader("pbr");
 		planeMesh = Mesh.raw(Primitives.plane(16.0f), true);
 		boxMesh = Mesh.raw(Primitives.cube(16.0f), true);
 		sphereMesh = ObjLoader.loadFile("sphere.obj");

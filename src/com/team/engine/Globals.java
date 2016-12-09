@@ -33,6 +33,11 @@ public class Globals {
 		Engine.shaders.put(path, s);
 	}
 	
+	public static void loadShaderBuiltin(String path) {
+		Shader s = new Shader("builtin/shaders/" + path);
+		Engine.shaders.put(path, s);
+	}
+	
 	/**
 	 * This will return a shader object from memory ONLY if it has been loaded with loadShader.
 	 * The object will only be returned, you will have to bind it yourself.

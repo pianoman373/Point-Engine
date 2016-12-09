@@ -31,7 +31,6 @@ public class FlappyBirdDemo extends AbstractGame {
 	public void init() {
 		Engine.scene.skyColor = vec3(0.0f, 0.5f, 1.0f);
 
-		loadShader("sprite");
 		loadTexture("crate.png");
 		loadTexture("pipe.png", true, false);
 		loadTexture("bird.png", true, false);

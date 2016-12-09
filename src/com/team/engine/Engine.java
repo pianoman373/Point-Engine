@@ -90,7 +90,7 @@ public class Engine {
 	}
 	
 	private static void splashScreen(String[] splashes) {
-		loadShader("splash");
+		loadShaderBuiltin("splash");
 		
 		if (splashes != null) {
 			glDisable(GL_FRAMEBUFFER_SRGB);
@@ -211,17 +211,17 @@ public class Engine {
 	
 	private static void init() {
 		//load all our vital shaders
-		loadShader("hdr");
-		loadShader("framebuffer");
-		loadShader("blur");
-		loadShader("skybox");
-		loadShader("light");
-		loadShader("shadow");
-		loadShader("sprite");
-		loadShader("pbr");
-		loadShader("pbr-specular");
-		loadShader("gui");
-		loadShader("color");
+		loadShaderBuiltin("hdr");
+		loadShaderBuiltin("framebuffer");
+		loadShaderBuiltin("blur");
+		loadShaderBuiltin("skybox");
+		loadShaderBuiltin("light");
+		loadShaderBuiltin("shadow");
+		loadShaderBuiltin("sprite");
+		loadShaderBuiltin("pbr");
+		loadShaderBuiltin("pbr-specular");
+		loadShaderBuiltin("gui");
+		loadShaderBuiltin("color");
 
 		//vital meshes
 		skyboxMesh = Mesh.raw(Primitives.skybox(), false);

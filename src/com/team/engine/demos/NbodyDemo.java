@@ -64,7 +64,6 @@ public class NbodyDemo extends AbstractGame implements ActionListener{
 		SpaceCamera.WASD_SENSITIVITY = 25.0f;
 		
 		loadShader("point");
-		loadShader("light");
 		
 		Random rand = new Random();
 		
