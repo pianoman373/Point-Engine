@@ -7,7 +7,6 @@ import javax.vecmath.Vector3f;
 import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.SphereShape;
 import com.team.engine.*;
-import com.team.engine.gameobject.FirstPersonController;
 import com.team.engine.gameobject.MeshObject;
 import com.team.engine.rendering.Cubemap;
 import com.team.engine.rendering.Material;
@@ -34,7 +33,7 @@ public class GLDemo extends AbstractGame {
 	public static Material outsideMaterial = new Material("metal/albedo.png", "metal/roughness.png", "metal/normal.png", "metal/metallic.png");
 	public static Material insideMaterial = new Material("plastic/albedo.png", "plastic/roughness.png", "plastic/normal.png", "plastic/metallic.png");
 	
-	FirstPersonController player;
+	ThirdPersonController player;
 	
 	//always needed for every runnable demo ever
 	public static void main(String[] args) {
@@ -91,7 +90,7 @@ public class GLDemo extends AbstractGame {
 			}
 		}
 		
-		player = new FirstPersonController(vec3(10, 0, 0));
+		player = new ThirdPersonController(vec3(10, 0, 0));
 		
 		Engine.scene.add(player);
 	}

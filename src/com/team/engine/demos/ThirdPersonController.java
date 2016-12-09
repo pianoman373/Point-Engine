@@ -1,4 +1,4 @@
-package com.team.engine.gameobject;
+package com.team.engine.demos;
 
 import static com.team.engine.Globals.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -10,6 +10,7 @@ import javax.vecmath.Vector3f;
 import com.bulletphysics.collision.shapes.CapsuleShape;
 import com.bulletphysics.linearmath.Transform;
 import com.team.engine.Input;
+import com.team.engine.gameobject.MeshObject;
 import com.team.engine.rendering.Material;
 import com.team.engine.rendering.ObjLoader;
 import com.team.engine.vecmath.Vec3;
@@ -17,10 +18,10 @@ import com.team.engine.vecmath.Vec3;
 /**
  * WIP test of a 3D character controller.
  */
-public class FirstPersonController extends MeshObject {
+public class ThirdPersonController extends MeshObject {
 	private float angle = 0;
 
-	public FirstPersonController(Vec3 pos) {
+	public ThirdPersonController(Vec3 pos) {
 		super(pos, new Quat4f(), new CapsuleShape(1, 2), 10, ObjLoader.loadFile("cool-dude.obj"), 1, new Material(vec3(0.7, 0.7, 0.7), 0.0f, 0.0f));
 		this.rb.setFriction(100);
 		this.rb.setAngularFactor(0);
