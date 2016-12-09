@@ -41,8 +41,6 @@ public class Engine {
 	public static Camera camera;
 	
 	public static Mesh cubeMesh;
-	public static Mesh debugCubeMesh;
-	public static Mesh debugSphereMesh;
 	public static Mesh spriteMesh;
 	public static Mesh framebufferMesh;
 	
@@ -92,6 +90,8 @@ public class Engine {
 	}
 	
 	private static void splashScreen(String[] splashes) {
+		loadShader("splash");
+		
 		if (splashes != null) {
 			glDisable(GL_FRAMEBUFFER_SRGB);
 			for (String i: splashes) {
@@ -163,6 +163,8 @@ public class Engine {
 		isVR = vr;
 		
 		setupContext();
+
+		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);
 		splashScreen(splashes);
 		init();
 		
@@ -211,24 +213,19 @@ public class Engine {
 		//load all our vital shaders
 		loadShader("hdr");
 		loadShader("framebuffer");
-		loadShader("splash");
 		loadShader("blur");
 		loadShader("skybox");
 		loadShader("light");
 		loadShader("shadow");
 		loadShader("sprite");
-		loadShader("debug");
 		loadShader("pbr");
 		loadShader("pbr-specular");
 		loadShader("gui");
 		loadShader("color");
 
 		//vital meshes
-		framebufferMesh = Mesh.raw(Primitives.framebuffer(), false);
 		skyboxMesh = Mesh.raw(Primitives.skybox(), false);
 		cubeMesh = Mesh.raw(Primitives.cube(1.0f), true);
-		debugCubeMesh = Primitives.debugCube();
-		debugSphereMesh = Primitives.debugSphere(64);
 		spriteMesh = Mesh.raw(Primitives.sprite(vec2(0, 0), vec2(1, 1)), true);
 
 		//initialize the main framebuffer
